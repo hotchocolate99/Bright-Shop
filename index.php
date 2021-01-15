@@ -34,14 +34,44 @@ $secondNewestGirlsProductDatas = getSecondNewestProductsDatas(2, $newest_id);
 $second_newest_girls = $secondNewestGirlsProductDatas[0];
 //-----------------------------------------------------------------------------------------
 //お気に入りに追加（同じ商品が被らないようにしたい。）
-$_SESSION['favorites'];
-if($_GET['favorite_product_id']){
 
-  $_SESSION['favorites'][] = $_GET['favorite_product_id'];
+if($_GET['favorite_product_id']){
+  $posted_favorite = $_GET['favorite_product_id'];
+//var_dump($posted_favorite);//55
+      if(empty($_SESSION['favorites'])){
+        $_SESSION['favorites'] = [];
+        $_SESSION['favorites'][]= $posted_favorite;
+
+       }else{
+  //カートに登録するフラグ？？　tureなら登録する。　emptyでなかったら、それをショッピングカートに入れる。そして下で、カートの中身を一つひとつ照合処理。
+  //$register = true;
+
+  // sessionのitem_idとpostのitem_idで照合。合致したら、幾つあるかのチェック。なのでforeach使ってる。$indexはインデックス番号で０が商品Aで１が商品B。
+  foreach($_SESSION['favorites'] as $favorite =>$val){
+    //var_dump($val);//55
+       if($val !== $posted_favorite){
+            //echo 'かぶってnないよ'; //被っっている時は上書きにしたいけど、やり方がわからない。。。
+            $_SESSION['favorites'][] = $posted_favorite;
+            header("Location:" .$_SERVER['PHP_SELF']);
+            
+ 
+       }//else{
+        //$_SESSION['favorites'][] = $posted_favorite;
+       //}
+  }
+}
 }
 
+//よくわからなくなったので、この関数で、配列内の同じ値を削除することにした。。。これをfavorite.phpに渡す。
+$unique = array_unique($_SESSION['favorites']);
+var_dump($unique);
+$_SESSION['favorites'] = [];
+$_SESSION['favorites'][] = $unique;
 var_dump($_SESSION['favorites']);
-//$_SESSION['favorites']=[];
+//var_dump($_SESSION['favorites']);//array(1) { [0]=> string(2) "55" }
+//var_dump($favorite);
+//var_dump($_SESSION['favorites']);
+//session_destroy();
 
 ?>
 

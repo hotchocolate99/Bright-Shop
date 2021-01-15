@@ -8,8 +8,8 @@ h1, h2, h3, h4, h5, h6, div {
 }
 
 body{
-    font-family:'Javanese Text','Mongolian Baiti','Palatino Linotype';
-    min-height: 100vh;
+  font-family:'Hiragino Mincho ProN','Javanese Text','Mongolian Baiti','Palatino Linotype';
+  min-height: 100vh;
 }
 
 li{
@@ -38,9 +38,9 @@ li{
     width: 1000px;
     margin: 0 auto;
     position: relative;
+    height: 800px;
 
     justify-content: space-evenly;
-    margin: 0 auto;
     display: flex;
     align-items: stretch;
     
@@ -142,7 +142,7 @@ li{
 }
 
 .text_part{
-  padding-left: 30px;
+  padding-left: 0px;
 }
 
 .img_box {

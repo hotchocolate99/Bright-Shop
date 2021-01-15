@@ -12,7 +12,7 @@ if($_GET['id']){
 }
 
 $commons = getProductData($product_id);
-var_dump($commons);
+//var_dump($commons);
 foreach($commons as $common){
     //echo $common['product_name'];
 }
@@ -23,7 +23,7 @@ $details = getProductDetails($product_id);
 $colors = getProductColorsCount($product_id);
 var_dump($colors);//2
 
-//}
+
 
 
 $productsByColor = getProductByColor($product_id);
@@ -36,7 +36,8 @@ $productsByColor = getProductByColor($product_id);
 //$productCount = getProdcutsCount(13);
 //var_dump($productCount);
 
-//$colors = getProdcutsColors(13);
+//no need
+//$colors = getProdcutsColors($product_id);
 //var_dump($colors);
 
 //$details = getProductDetails(13);
