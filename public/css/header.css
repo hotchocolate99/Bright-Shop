@@ -9,6 +9,8 @@ h1, h2, h3, h4, h5, h6, div ,a{
 }
 
 header{
+
+    font-family:'Hiragino Mincho ProN','Javanese Text','Mongolian Baiti','Palatino Linotype';
     background-color: white;
 }
 

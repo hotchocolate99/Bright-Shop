@@ -17,7 +17,7 @@ if(!empty($_POST)){
         session_regenerate_id(true);
         $_SESSION['login'] = true;
         $_SESSION['user'] = $user;
-        header('Location: ./../../../index.php');
+        header('Location: ./../../../public/index.php');
         exit();
 
       }else{
@@ -40,14 +40,14 @@ if(!empty($_POST)){
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Log In</title>
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css">
-        <link rel="stylesheet" href="./../../css/form.css">
-        <link rel="stylesheet" href="./../../css/header.css">
+        <link rel="stylesheet" href="./../../public/css/form.css">
+        <link rel="stylesheet" href="./../../public/css/header.css">
     
     </head>
 
     <body>
 
-     　<?php include './../../header.php';?>
+     　<?php include './../../public/header.php';?>
 
    
         <label for="check">

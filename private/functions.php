@@ -174,6 +174,41 @@ function getProductDetails($product_id){
     
     }
 
+    //商品の詳細データを表示順に取得したい
+  //まず色でグループ分けして、サイズが小さい順に取得
+
+//色の種類の数を取得ーーー！SQL文を書く時の注意　⇨　順番はWHEREが先（処理される順番が先だから）。GROUP BYは後。それから、HAVING、SELECTの順に処理される。
+function getProductColors($product_id){
+    $sql = "SELECT color FROM product_details WHERE product_id = :product_id GROUP BY color";
+
+             $dbh = dbConnect();
+     
+             $stmt = $dbh->prepare($sql);
+             $stmt->bindValue(':product_id', $product_id,PDO::PARAM_INT);
+             $stmt->execute();
+             $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+             return $results;
+    
+    }
+
+//上で取得した色とproduct_idで、サイズが小さい順にdetails.idなどの全てのデータを取得。（これらは全て同じテーブルに表示する。）
+  function getProductDetailsByColor($product_id, $color){
+   
+    $sql = "SELECT * FROM product_details WHERE product_id = :product_id AND color = :color ORDER BY size ASC";
+
+             $dbh = dbConnect();
+     
+             $stmt = $dbh->prepare($sql);
+             $stmt->bindValue(':product_id', $product_id,PDO::PARAM_INT);
+             $stmt->bindValue(':color', $color,PDO::PARAM_INT);
+             $stmt->execute();
+             $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+     
+             return $results;
+    
+    }
+
 
     function getProductByColor($product_id){
         $sql = "SELECT id, color, size FROM product_details WHERE product_id = :product_id";
@@ -190,20 +225,7 @@ function getProductDetails($product_id){
         }
 
 
-        //色の種類の数を取得ーーー！SQL文を書く時の注意　⇨　順番はWHEREが先（処理される順番が先だから）。GROUP BYは後。それから、HAVING、SELECTの順に処理される。
-        function getProductColorsCount($product_id){
-            $sql = "SELECT count(color) AS count_colors, color FROM product_details WHERE product_id = :product_id GROUP BY color";
         
-                     $dbh = dbConnect();
-             
-                     $stmt = $dbh->prepare($sql);
-                     $stmt->bindValue(':product_id', $product_id,PDO::PARAM_INT);
-                     $stmt->execute();
-                     $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-                     return $results;
-            
-            }
 
 
 //扱いにくいので、やっぱり、product table　と details table　のデータは別々に取得することにした。　全商品詳細データ(product　details table)の取得
@@ -315,7 +337,7 @@ function getNewestProductsDatas($gender){
             
             }*/
 
-            //detailsの数を取得
+            //detailsの数を取得 no need?????
             function getCountProductDetails($product_id){
                 $sql = "SELECT count(*) FROM product_details WHERE product_id = :product_id";
             
@@ -347,6 +369,82 @@ function getNewestProductsDatas($gender){
         }*/
 
 
+
+//shopping-------------------------------------------------------------------------
+
+//detail_idからproduct tableのproduct_name、画像を取得する------これは使えない。no need
+function getProductDataByDetail($detail_id){
+
+    $sql = "SELECT product_id FROM product_details WHERE id = :id";
+    
+             $dbh = dbConnect();
+     
+             $stmt = $dbh->prepare($sql);
+             $stmt->bindValue(':id', $detail_id,PDO::PARAM_INT);
+             $stmt->execute();
+             $product_id = $stmt->fetch();
+     
+    $sql = "SELECT product_name, save_path FROM products WHERE id = :id";
+    
+             $dbh = dbConnect();
+     
+             $stmt = $dbh->prepare($sql);
+             $stmt->bindValue(':id', $product_id,PDO::PARAM_INT);
+             $stmt->execute();
+             $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+     
+             return $results;
+}
+
+
+//上のが使えないので、まず、detail_idからproduct_idを取得し、それからproducts table　のデータを取得する。
+
+//これでproduct_id,color,sizeを取得
+function getProductByDetail($detail_id){
+    
+    $sql = "SELECT * FROM product_details WHERE id = :id";
+    
+             $dbh = dbConnect();
+     
+             $stmt = $dbh->prepare($sql);
+             $stmt->bindValue(':id', $detail_id,PDO::PARAM_INT);
+             $stmt->execute();
+             $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+     
+             return $results;
+
+}
+
+//次にproduct_name, save_pathを取得
+function getProductNameFile($product_id){
+$sql = "SELECT product_name, save_path FROM products WHERE id = :id";
+    
+             $dbh = dbConnect();
+     
+             $stmt = $dbh->prepare($sql);
+             $stmt->bindValue(':id', $product_id,PDO::PARAM_INT);
+             $stmt->execute();
+             $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+     
+             return $results;
+
+}
+//--------------------------------------------------------------------------------------
+
+function getColorSize($detail_id){
+
+    $sql = "SELECT color, size FROM product_details WHERE id = :id";
+    
+             $dbh = dbConnect();
+     
+             $stmt = $dbh->prepare($sql);
+             $stmt->bindValue(':id', $detail_id,PDO::PARAM_INT);
+             $stmt->execute();
+             $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+     
+             return $results;
+             
+}
 
 //--------------------------------------------------------------------------------------------
 

@@ -8,7 +8,7 @@
 
             <div class="navi">
             <ul>
-                　<li class="adj"><a href="/public/shopping/shopping_cart.php" class="link_a"><span><i class="fas fa-shopping-cart"></i><?php// echo '('.$UnreadCommentCount['COUNT(*)'].')';?></span></a></li>
+                　<li class="adj"><a href="/public/shopping/shopping_cart.php" class="link_a"><span><i class="fas fa-shopping-cart"></i><?php echo $total_in_cart;?></span></a></li>
 
                   <li class="adj"><a href="/public/view/favorites.php" class="link_a"><span><i class="fas fa-heart"></i><?php// echo '('.$UnreadCommentCount['COUNT(*)'].')';?></span></a></li>
 

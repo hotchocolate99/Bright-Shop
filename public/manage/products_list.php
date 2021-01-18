@@ -7,8 +7,8 @@ if ($_SESSION['login']= true) {
 //--------------------------------
 ini_set('display_errors', true);
 
-require_once './../private/database.php';
-require_once './../private/functions.php';
+require_once './../../private/database.php';
+require_once './../../private/functions.php';
 
 $AllProductsDatas = getAllProductsDatas();
 //print_r($AllProductsDatas);
@@ -31,7 +31,7 @@ print_r($productDtailsDatas);
         <title>Products List</title>
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css">
         <link rel="stylesheet" href="./../css/products_list.css">
-        <link rel="stylesheet" href="./../../css/header.css">
+        <link rel="stylesheet" href="./../../../public/css/header.css">
     
     </head>
 
@@ -66,7 +66,7 @@ print_r($productDtailsDatas);
                                           <tr><td>Name</td><td><?php echo h($AllProductsData['product_name'])?></td></tr>
                                           <tr><td>Category</td><td><?php echo h($AllProductsData['category'])?></td></tr>
                                           <tr><td>Description</td><td><?php echo h($AllProductsData['description'])?></td></tr>
-                                          <tr><td rowspan=2>Image</td><td rowspan=2><img src="/manage/<?php echo "{$AllProductsData['save_path']}";?>"　width="120px" height="200px" alt="product_image" ></td></tr>
+                                          <tr><td rowspan=2>Image</td><td rowspan=2><img src="/public//manage/<?php echo "{$AllProductsData['save_path']}";?>"　width="120px" height="200px" alt="product_image" ></td></tr>
                                         </table>
                                       </a>
                                           <div class="details">

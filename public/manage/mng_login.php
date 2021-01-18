@@ -3,8 +3,8 @@ session_start();
 
 ini_set('display_errors', true);
 
-require_once './../private/database.php';
-require_once './../private/functions.php';
+require_once './../../private/database.php';
+require_once './../../private/functions.php';
 
 $errors =[];
 var_dump($_POST);

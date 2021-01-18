@@ -82,10 +82,11 @@ li{
     width: 40%;
     height: 600px;
     padding: 1rem;
+
 }
 
 .right_side h3{
-  padding-top: 40px;
+  padding-top: 4rem;
 }
 
 .btn{
@@ -157,8 +158,8 @@ li{
 .favorite{
   font-size: 40px;
   position: absolute;
-  bottom: 0%;
-  right: -5.5%;
+  bottom: 1.5%;
+  right: -5.0%;
   padding:0;
   color: white;
   background-color: #707070;
@@ -169,7 +170,7 @@ li{
   color: #f5b2ac;
 }
 
-a .btn{
+.btn{
   margin-top: 20px;
   margin-bottom: 20px;;
   width: 120px;
@@ -182,8 +183,8 @@ a .btn{
   border: none;  /* 枠線を消す */
   outline: none;
   position: absolute;
-  bottom: -3%;
-  right: 0px;
+  bottom: 38%;
+  right: 15%;
   
 }
 
@@ -206,4 +207,19 @@ a .btn{
     right:20px;
 
   }
+
+  table{
+    outline: none;
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+    width: 20rem;
+    text-align: center;
+  }
+
+/*.round input[type=”checkbox”]{
+  border-radius: 50px;;
+}*/
+.form{
+  position: relative;
+}
 

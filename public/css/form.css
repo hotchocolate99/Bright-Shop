@@ -8,7 +8,7 @@ h1, h2, h3, h4, h5, h6, div {
 }
 
 body{
-    font-family:'Javanese Text','Mongolian Baiti','Palatino Linotype';
+    font-family:'Hiragino Mincho ProN','Javanese Text','Mongolian Baiti','Palatino Linotype';
     min-height: 100vh;
 }
 
@@ -139,5 +139,36 @@ li{
 .btn_b:hover{
     cursor:pointer;
 }
+
+/*shopping cart image*/
+.img_box img{
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border: solid #707070 4px;
+    
+  }
+  
+.img_box {
+    width: 100%;
+    /*text-align: center;*/
+    margin: 0;
+    padding: 0;
+  }
+
+  .row_box{
+     
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    height: 4rem;
+  }
+
+  .item{
+      display: inline-block;
+      margin-right: 1rem;
+  }
+
+
 
 

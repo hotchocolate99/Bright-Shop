@@ -7,8 +7,8 @@ if ($_SESSION['login']= true) {
 //--------------------------------
 ini_set('display_errors', true);
 
-require_once './../private/database.php';
-require_once './../private/functions.php';
+require_once './../../private/database.php';
+require_once './../../private/functions.php';
 
 $count_usrss = getCountUsers();
 $count_usrs = $count_usrss[0];
@@ -33,7 +33,7 @@ foreach($usrDatas as $usrData){
         <title>Members List</title>
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css">
         <link rel="stylesheet" href="./../css/form.css">
-        <link rel="stylesheet" href="./../../css/header.css">
+        <link rel="stylesheet" href="./../../../public/css/header.css">
     
     </head>
 
