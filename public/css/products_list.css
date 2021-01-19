@@ -35,6 +35,7 @@ li{
     width: 800px;
     margin: 0 auto;
     position: relative;
+    height: 20rem;
 }
 
 .error-box li{
@@ -81,62 +82,31 @@ table{
     border-bottom: solid #707070 2px;
 }
 
-.btn{
-    margin-top: 20px;
-    margin-bottom: 20px;;
-    width: 120px;
-    line-height: 20px;
-    border-radius: 50px;
-    padding: 8px;
-    font-size: 14px;
-    font-weight: bold;
-    color: #fcf6e8;
-    border: none;  /* 枠線を消す */
-    outline: none;
-    
-  }
 .btn_b{
-    width: 120px;
+    width: 200px;
     line-height: 20px;
     border-radius: 50px;
     padding: 3px;
     font-size: 14px;
     font-weight: bold;
     color: #fcf6e8;
-    background-color: #ecac73;
     border: none;  /* 枠線を消す */
     outline: none;
+    text-decoration: none;
 
-}
-
-.bg_blue{
-    background-color:#4768f2;
-    border: none;  /* 枠線を消す */
-    outline: none;
-}
-
-.bg_green{
-    background-color:#8fd2c5;
-}
-
-.btn:hover{
-    cursor:pointer;
 }
 
 .btn_b:hover{
     cursor:pointer;
-}
-
-.link_aa{
-    text-decoration: none;
-    display:inlin-block;
-    color:#626063;
-    
-}
-
-.link_aa:hover{
-    background-color: #a2c2e6;
     text-decoration: none;
 }
 
+.bg_blue{
+    background-color: #4768f2;
+}
+
+.bg_gray{
+    background-color: #707070;
+}
+/*
 

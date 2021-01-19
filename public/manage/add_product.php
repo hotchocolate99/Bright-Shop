@@ -274,7 +274,7 @@ print_r($array);*/
                             <br>
 
                             <div class="form_item">
-                                <label>Photo<br>
+                                <label>Image<br>
                                     　<input name="img" type="file" accept="image/*"/><br>
                                     　<input type="hidden" name="MAX_FILE_SIZE" value="1048576" />
                                 </label>

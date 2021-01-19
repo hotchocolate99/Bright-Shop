@@ -12,6 +12,22 @@ ini_set('display_errors', true);
 require_once './../../private/database.php';
 require_once './../../private/functions.php';
 
+if($_GET['product_id']){
+    $product_id = $_GET['product_id'];
+}
+
+$productDatas = getProductData($product_id);
+$productDetails = getProductDetails($product_id);
+
+var_dump($productDatas[0]['product_name']);
+foreach($productDatas as $productData){
+    echo $productData;
+}
+
+
+echo' ディテール';
+var_dump($productDtails);
+
 $errors =[];
 
 ini_set('display_errors', true);
@@ -226,22 +242,22 @@ print_r($array);*/
                             
                             <div class="form_item">
                                 <label>Product Name<br>
-                                　　<input class="wide" type="text" name="product_name" value="<?php if(isset($_POST['product_name'])){ echo h($_POST['product_name']);}?>" required>
+                                　　<input class="wide" type="text" name="product_name" value="<?php if(isset($productData['product_name'])){ echo h($productData['product_name']);}?>" required>
                                 </label>
                         　　</div>
                             <br>
 
                             <div class="form-item">
                                 <label>Price<br>
-                                　　¥&nbsp;<input class="wide" type="text" name="price" value="<?php if(isset($_POST['price'])){ echo h($_POST['price']);}?>" required>
+                                　　¥&nbsp;<input class="wide" type="text" name="price" value="<?php if(isset($productDetails[0]['price'])){ echo h($productDetails[0]['price']);}?>" required>
                                 </label>
                             </div>
                             <br>
 
                             <div class="form_item">
                                 <label>Gender<br>
-                                    <input class="radio" type="radio" name="gender" value="1" checked>Boys
-                                    <input class="radio" type="radio" name="gender" value="2">Girls
+                                    <input class="radio" type="radio" name="gender" value="1" <?php echo $productDetails[0]['gender'] == '1' ? 'checked' : '' ?>>Boys
+                                    <input class="radio" type="radio" name="gender" value="2" <?php echo $productDetails[0]['gender'] == '2' ? 'checked' : '' ?>>Girls
                                 </label>
                             </div>
                             <br>
@@ -249,15 +265,15 @@ print_r($array);*/
                             <div class="form_item">
                                 <label>Category<br>
                                     <select class="wide" name="category">
-                                        <option value=Dress>Dress</option>
-                                        <option value=Jaket>Jaket</option>
-                                        <option value=Pants>Pants</option>
-                                        <option value=Shirt>Shirt</option>
-                                        <option value=Skirt>Skirt</option>
-                                        <option value=Shoes>Shoes</option>
-                                        <option value=Sleeper>Sleeper</option>
-                                        <option value=Sweater>Sweater</option>
-                                        <option value=Other>Other</option>
+                                        <option value="Dress" <?php echo $productData['category'] == 'Dress' ? 'selected' : '' ?>>Dress</option>
+                                        <option value="Jaket" <?php echo $productData['category'] == 'Jaket' ? 'selected' : '' ?>>Jaket</option>
+                                        <option value="Pants" <?php echo $productData['category'] == 'Pants' ? 'selected' : '' ?>>Pants</option>
+                                        <option value="Shirt" <?php echo $productData['category'] == 'Shirt' ? 'selected' : '' ?>>Shirt</option>
+                                        <option value="Skirt" <?php echo $productData['category'] == 'Skirt' ? 'selected' : '' ?>>Skirt</option>
+                                        <option value="Shoes" <?php echo $productData['category'] == 'Shoes' ? 'selected' : '' ?>>Shoes</option>
+                                        <option value="Sleeper" <?php echo $productData['category'] == 'Sleeper' ? 'selected' : '' ?>>Sleeper</option>
+                                        <option value="Sweater" <?php echo $productData['category'] == 'Sweater' ? 'selected' : '' ?>>Sweater</option>
+                                        <option value="Other" <?php echo $productData['category'] == 'Other' ? 'selected' : '' ?>>Other</option>
                                     </select>
                                 </label>
                             </div>
@@ -265,28 +281,35 @@ print_r($array);*/
 
                             <div class="form_item">
                                 <label>Description(in 400 words or less)<br>
-                            　　　　　<textarea class="description" name="description" cols="80" rows="6"></textarea>
-                            　　
+                            　　　　　<textarea class="description" name="description" cols="80" rows="6">
+                                       <?php if(isset($productData['description'])){echo h($productData['description']);}?>
+                                    </textarea>
+                            　　<!--descriptionにnl2brは不要。-->
                                 </label>
                             </div>
                             <br>
 
                             <div class="form-item">
                                 <label>Weight<br>
-                                　　<input class="wide" type="text" name="weight" value="<?php if(isset($_POST['weight'])){ echo h($_POST['weight']);}?>" required>&nbsp;g
+                                　　<input class="wide" type="text" name="weight" value="<?php if(isset($productDetails[0]['weight'])){ echo h($productDetails[0]['weight']);}?>" required>&nbsp;g
                                 </label>
                             </div>
                             <br>
 
                             <div class="form_item">
-                                <label>Photo<br>
+                                <label>Image<br>
+                                <?php if(!empty($productData['save_path'])):?>
+                                    <img src="/public/manage/<?php echo "{$productData['save_path']}";?>"　width="120px" height="200px" alt="product_image" >
+                                <?php endif ;?>
+                                    <br>
+                                    <br>
+                                    <p>If you would like, choose new image to replace the original one with.</p>
                                     　<input name="img" type="file" accept="image/*"/><br>
                                     　<input type="hidden" name="MAX_FILE_SIZE" value="1048576" />
                                 </label>
                             </div>
                             <br>
 
-                            
 
                         <h2 class="border_top">Product details</h2>
                         
@@ -302,21 +325,29 @@ print_r($array);*/
                     <!-- 1st  ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
                     
                         <div class="form_item_box">
+
+                                <div class="form-item">
+                                    <?php if(isset($productDetails[0]['color'])):?>
+                                        <p>Detail ID:<?php echo $productDetails[0]['id'];?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                                    <?php endif;?>
+                                </div>
+
+
                                 <div class="form-item">
                                     <label>Color<br>
-                                    　　<input calss="narrow inline" type="text" name="color[]" value="opt">
+                                    　　<input calss="narrow inline" type="text" name="color[]" value="<?php if(isset($productDetails[0]['color'])){ echo h($productDetails[0]['color']);}else{echo 'opt';}?>">
                                     </label>
                                 </div>
                                 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
                                 <div class="form_item">
                                     <label>Size<br>
-                                    　　<input calss="narrow inline" type="text" name="size[]" value="opt">&nbsp;cm
+                                    　　<input calss="narrow inline" type="text" name="size[]" value="<?php if(isset($productDetails[0]['size'])){ echo h($productDetails[0]['size']);}else{echo 'opt';}?>">&nbsp;cm
                                     </label>
                             　　</div>
 
                                 <div class="form-item ">
                                     <label>Stock<br>
-                                    　　<input calss="narrow inline" type="text" name="stock[]" value="opt">
+                                    　　<input calss="narrow inline" type="text" name="stock[]" value="<?php if(isset($productDetails[0]['stock'])){ echo h($productDetails[0]['stock']);}else{echo 'opt';}?>">
                                     </label>
                                 </div>
                         </div><!--form_item_box-->
@@ -326,45 +357,60 @@ print_r($array);*/
                     <!-- 2nd ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
 
                        <div class="form_item_box">
+
+                                    <div class="form-item">
+                                        <?php if(isset($productDetails[1]['color'])):?>
+                                            <p>Detail ID:<?php echo $productDetails[1]['id'];?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                                        <?php endif;?>
+                                    </div>
+
                                     <div class="form-item">
                                         <label>Color<br>
-                                        　　<input calss="narrow inline" type="text" name="color[]" value="opt">
+                                        　　<input calss="narrow inline" type="text" name="color[]" value="<?php if(isset($productDetails[1]['color'])){ echo h($productDetails[1]['color']);}else{echo 'opt';}?>">
                                         </label>
                                     </div>
                                     <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
                                     <div class="form_item">
                                         <label>Size<br>
-                                        　　<input calss="narrow inline" type="text" name="size[]" value="opt">&nbsp;cm
+                                        　　<input calss="narrow inline" type="text" name="size[]" value="<?php if(isset($productDetails[1]['size'])){ echo h($productDetails[1]['size']);}else{echo 'opt';}?>">&nbsp;cm
                                         </label>
                                 　　</div>
 
                                     <div class="form-item ">
                                         <label>Stock<br>
-                                        　　<input calss="narrow inline" type="text" name="stock[]" value="opt">
+                                        　　<input calss="narrow inline" type="text" name="stock[]" value="<?php if(isset($productDetails[1]['stock'])){ echo h($productDetails[1]['stock']);}else{echo 'opt';}?>">
                                         </label>
                                     </div>
                             </div><!--form_item_box-->
                             <br>
                             <br>
 
-                        <!--3rd  ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
+                        <!--3rd----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
                     
-                            <div class="form_item_box">
+                           <div class="form_item_box">
+
+                                    <div class="form-item">
+                                        <?php if(isset($productDetails[2]['color'])):?>
+                                             <p>Detail ID:<?php echo $productDetails[2]['id'];?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                                         <?php endif;?>
+                                    </div>
+
+
                                     <div class="form-item">
                                         <label>Color<br>
-                                        　　<input calss="narrow inline" type="text" name="color[]" value="opt">
+                                        　　<input calss="narrow inline" type="text" name="color[]" value="<?php if(isset($productDetails[2]['color'])){ echo h($productDetails[2]['color']);}else{echo 'opt';}?>">
                                         </label>
                                     </div>
                                     <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
                                     <div class="form_item">
                                         <label>Size<br>
-                                        　　<input calss="narrow inline" type="text" name="size[]" value="opt">&nbsp;cm
+                                        　　<input calss="narrow inline" type="text" name="size[]" value="<?php if(isset($productDetails[2]['size'])){ echo h($productDetails[2]['size']);}else{echo 'opt';}?>">&nbsp;cm
                                         </label>
                                 　　</div>
 
                                     <div class="form-item ">
                                         <label>Stock<br>
-                                        　　<input calss="narrow inline" type="text" name="stock[]" value="opt">
+                                        　　<input calss="narrow inline" type="text" name="stock[]" value="<?php if(isset($productDetails[2]['stock'])){ echo h($productDetails[2]['stock']);}else{echo 'opt';}?>">
                                         </label>
                                     </div>
                             </div><!--form_item_box-->
@@ -374,21 +420,30 @@ print_r($array);*/
                         <!-- 4th  ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
 
                              <div class="form_item_box">
+
+
+                                    <div class="form-item">
+                                        <?php if(isset($productDetails[3]['color'])):?>
+                                             <p>Detail ID:<?php echo $productDetails[3]['id'];?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                                         <?php endif;?>
+                                    </div>
+
+
                                     <div class="form-item">
                                         <label>Color<br>
-                                        　　<input calss="narrow inline" type="text" name="color[]" value="opt">
+                                        　　<input calss="narrow inline" type="text" name="color[]" value="<?php if(isset($productDetails[3]['color'])){ echo h($productDetails[3]['color']);}else{echo 'opt';}?>">
                                         </label>
                                     </div>
                                     <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
                                     <div class="form_item">
                                         <label>Size<br>
-                                        　　<input calss="narrow inline" type="text" name="size[]" value="opt">&nbsp;cm
+                                        　　<input calss="narrow inline" type="text" name="size[]" value="<?php if(isset($productDetails[3]['size'])){ echo h($productDetails[3]['size']);}else{echo 'opt';}?>">&nbsp;cm
                                         </label>
                                 　　</div>
 
                                     <div class="form-item ">
                                         <label>Stock<br>
-                                        　　<input calss="narrow inline" type="text" name="stock[]" value="opt">
+                                        　　<input calss="narrow inline" type="text" name="stock[]" value="<?php if(isset($productDetails[3]['stock'])){ echo h($productDetails[3]['stock']);}else{echo 'opt';}?>">
                                         </label>
                                     </div>
                             </div><!--form_item_box-->
@@ -398,21 +453,29 @@ print_r($array);*/
                         <!-- 5th  ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
 
                             <div class="form_item_box">
+
+                                    <div class="form-item">
+                                        <?php if(isset($productDetails[4]['color'])):?>
+                                             <p>Detail ID:<?php echo $productDetails[4]['id'];?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                                         <?php endif;?>
+                                    </div>
+
+
                                     <div class="form-item">
                                         <label>Color<br>
-                                        　　<input calss="narrow inline" type="text" name="color[]" value="opt">
+                                        　　<input calss="narrow inline" type="text" name="color[]" value="<?php if(isset($productDetails[4]['color'])){ echo h($productDetails[4]['color']);}else{echo 'opt';}?>">
                                         </label>
                                     </div>
                                     <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
                                     <div class="form_item">
                                         <label>Size<br>
-                                        　　<input calss="narrow inline" type="text" name="size[]" value="opt">&nbsp;cm
+                                        　　<input calss="narrow inline" type="text" name="size[]" value="<?php if(isset($productDetails[4]['size'])){ echo h($productDetails[4]['size']);}else{echo 'opt';}?>">&nbsp;cm
                                         </label>
                                 　　</div>
 
                                     <div class="form-item ">
                                         <label>Stock<br>
-                                        　　<input calss="narrow inline" type="text" name="stock[]" value="opt">
+                                        　　<input calss="narrow inline" type="text" name="stock[]" value="<?php if(isset($productDetails[4]['stock'])){ echo h($productDetails[4]['stock']);}else{echo 'opt';}?>">
                                         </label>
                                     </div>
                             </div><!--form_item_box-->
@@ -422,21 +485,29 @@ print_r($array);*/
                         <!-- 6th  ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
 
                             <div class="form_item_box">
+
+                                    <div class="form-item">
+                                        <?php if(isset($productDetails[5]['color'])):?>
+                                             <p>Detail ID:<?php echo $productDetails[5]['id'];?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                                         <?php endif;?>
+                                    </div>
+
+
                                     <div class="form-item">
                                         <label>Color<br>
-                                        　　<input calss="narrow inline" type="text" name="color[]" value="opt">
+                                        　　<input calss="narrow inline" type="text" name="color[]" value="<?php if(isset($productDetails[5]['color'])){ echo h($productDetails[5]['color']);}else{echo 'opt';}?>">
                                         </label>
                                     </div>
                                     <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
                                     <div class="form_item">
                                         <label>Size<br>
-                                        　　<input calss="narrow inline" type="text" name="size[]" value="opt">&nbsp;cm
+                                        　　<input calss="narrow inline" type="text" name="size[]" value="<?php if(isset($productDetails[5]['size'])){ echo h($productDetails[5]['size']);}else{echo 'opt';}?>">&nbsp;cm
                                         </label>
                                 　　</div>
 
                                     <div class="form-item ">
                                         <label>Stock<br>
-                                        　　<input calss="narrow inline" type="text" name="stock[]" value="opt">
+                                        　　<input calss="narrow inline" type="text" name="stock[]" value="<?php if(isset($productDetails[5]['stock'])){ echo h($productDetails[5]['stock']);}else{echo 'opt';}?>">
                                         </label>
                                     </div>
                             </div><!--form_item_box-->
@@ -444,22 +515,30 @@ print_r($array);*/
                             <br>
 
                         <!-- 7th  ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
-                             <div class="form_item_box">
+                            <div class="form_item_box">
+
+                                    <div class="form-item">
+                                        <?php if(isset($productDetails[6]['color'])):?>
+                                             <p>Detail ID:<?php echo $productDetails[6]['id'];?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                                         <?php endif;?>
+                                    </div>
+
+
                                     <div class="form-item">
                                         <label>Color<br>
-                                        　　<input calss="narrow inline" type="text" name="color[]" value="opt">
+                                        　　<input calss="narrow inline" type="text" name="color[]" value="<?php if(isset($productDetails[6]['color'])){ echo h($productDetails[6]['color']);}else{echo 'opt';}?>">
                                         </label>
                                     </div>
                                     <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
                                     <div class="form_item">
                                         <label>Size<br>
-                                        　　<input calss="narrow inline" type="text" name="size[]" value="opt">&nbsp;cm
+                                        　　<input calss="narrow inline" type="text" name="size[]" value="<?php if(isset($productDetails[6]['size'])){ echo h($productDetails[6]['size']);}else{echo 'opt';}?>">&nbsp;cm
                                         </label>
                                 　　</div>
 
                                     <div class="form-item ">
                                         <label>Stock<br>
-                                        　　<input calss="narrow inline" type="text" name="stock[]" value="opt">
+                                        　　<input calss="narrow inline" type="text" name="stock[]" value="<?php if(isset($productDetails[6]['stock'])){ echo h($productDetails[6]['stock']);}else{echo 'opt';}?>">
                                         </label>
                                     </div>
                             </div><!--form_item_box-->
@@ -469,21 +548,28 @@ print_r($array);*/
                         <!-- 8th  ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
 
                              <div class="form_item_box">
+
+                                    <div class="form-item">
+                                        <?php if(isset($productDetails[7]['color'])):?>
+                                             <p>Detail ID:<?php echo $productDetails[7]['id'];?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                                         <?php endif;?>
+                                    </div>
+
                                     <div class="form-item">
                                         <label>Color<br>
-                                        　　<input calss="narrow inline" type="text" name="color[]" value="opt">
+                                        　　<input calss="narrow inline" type="text" name="color[]" value="<?php if(isset($productDetails[7]['color'])){ echo h($productDetails[7]['color']);}else{echo 'opt';}?>">
                                         </label>
                                     </div>
                                     <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
                                     <div class="form_item">
                                         <label>Size<br>
-                                        　　<input calss="narrow inline" type="text" name="size[]" value="opt">&nbsp;cm
+                                        　　<input calss="narrow inline" type="text" name="size[]" value="<?php if(isset($productDetails[7]['size'])){ echo h($productDetails[7]['size']);}else{echo 'opt';}?>">&nbsp;cm
                                         </label>
                                 　　</div>
 
                                     <div class="form-item ">
                                         <label>Stock<br>
-                                        　　<input calss="narrow inline" type="text" name="stock[]" value="opt">
+                                        　　<input calss="narrow inline" type="text" name="stock[]" value="<?php if(isset($productDetails[7]['stock'])){ echo h($productDetails[7]['stock']);}else{echo 'opt';}?>">
                                         </label>
                                     </div>
                             </div><!--form_item_box-->

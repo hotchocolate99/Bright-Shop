@@ -2,7 +2,7 @@
 require_once 'database.php';
 
 //management_side------------------------------------------------------------------------
-//create account of manager
+//create account of manager  ok
 function createManager($mngData){
 
     $result = false;
@@ -22,6 +22,8 @@ function createManager($mngData){
 
 }
 
+
+// to log in as a mananger   ok
 function findManagerByName($dbh, $mgr_name){
 
     $sql = "SELECT * FROM managers WHERE mgr_name = :mgr_name";
@@ -37,7 +39,7 @@ function findManagerByName($dbh, $mgr_name){
 }
 
 
-//no need
+/*no need
 function getProductCommon($id){
     
         $sql = "SELECT * FROM product_commons WHERE id = :id";
@@ -50,9 +52,9 @@ function getProductCommon($id){
 
         return $results;
 
-}
+}*/
 
-//no need
+/*no need
 function getProdcutsCount($common_id){
 
         $sql = "SELECT count(*) as products_count FROM products WHERE common_id = :common_id";
@@ -66,7 +68,7 @@ function getProdcutsCount($common_id){
         return $result;
 }
 
-//no need
+/*no need
 function getProdcutsColors($common_id){
 
     $sql = "SELECT color,count(*) FROM products GROUP BY color WHERE common_id = :common_id";
@@ -78,9 +80,9 @@ function getProdcutsColors($common_id){
     $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     return $result;
-}
+}*/
 
-//no need
+/*no need
 function getProducts($common_id){
     $sql = "SELECT * FROM products WHERE common_id = :common_id";
 
@@ -91,11 +93,11 @@ function getProducts($common_id){
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         return $results;
-}
+}*/
 
 
 
-//最新の商品登録方法
+//最新の商品登録方法  ok
 function registerProduct($product_name, $category, $description, $filename, $save_path){
 
         $sql = "INSERT INTO products(product_name, category, description, filename, save_path)
@@ -123,7 +125,7 @@ function registerProduct($product_name, $category, $description, $filename, $sav
          return $product_id;
 }
 
-//商品の詳細(色、サイズ、在庫)の登録
+//商品の詳細(色、サイズ、在庫)の登録  ok
 function registerProductDetail($product_id, $price, $gender, $weight, $color, $size, $stock){
 
     $sql = "INSERT INTO product_details(product_id, price, gender, weight, color, size, stock)VALUES(:product_id, :price, :gender, :weight, :color, :size, :stock)";
@@ -228,7 +230,7 @@ function getProductColors($product_id){
         
 
 
-//扱いにくいので、やっぱり、product table　と details table　のデータは別々に取得することにした。　全商品詳細データ(product　details table)の取得
+/*扱いにくいので、やっぱり、product table　と details table　のデータは別々に取得することにした。　全商品詳細データ(product　details table)の取得
 function getNewestProductsDatas($gender){
     
     $sql = "SELECT products.*, product_details.price FROM products JOIN product_details ON products.id = product_details.product_id WHERE gender = :gender ORDER BY products.id DESC LIMIT 1";
@@ -242,7 +244,7 @@ function getNewestProductsDatas($gender){
      
              return $results;
     
-    }
+    }*/
 
     function getSecondNewestProductsDatas($gender, $newest_id){
         
@@ -263,7 +265,7 @@ function getNewestProductsDatas($gender){
 
 
 
-//no need
+/*no need
     function getCountDetails($product_id){
     
         $sql = "SELECT count(product_id) FROM product_details WHERE product_id = :product_id";
@@ -278,8 +280,8 @@ function getNewestProductsDatas($gender){
                  return $results;
         
         }
-
-//no need
+*/
+/*no need
         function getSecoundNewestProductsDatas($gender, $count_details){
             $sql = "SELECT products.*, price FROM products JOIN product_details ON products.id = product_details.product_id WHERE gender = :gender ORDER BY products.id DESC LIMIT :LIMIT";
     
@@ -292,7 +294,7 @@ function getNewestProductsDatas($gender){
              $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
      
              return $results;
-        }
+        }*/
     
         
 
@@ -447,7 +449,7 @@ function getColorSize($detail_id){
 }
 
 //--------------------------------------------------------------------------------------------
-
+//register to become a member  ok
 function createUser($userData, $addr_pref, $ship_area){
 
     $result = false;
@@ -478,6 +480,7 @@ function createUser($userData, $addr_pref, $ship_area){
 
 }
 
+// to log in  ok
 function findUserByEmail($dbh, $usr_email){
 
     $sql = "SELECT * FROM users WHERE usr_email = :usr_email";
@@ -492,6 +495,8 @@ function findUserByEmail($dbh, $usr_email){
   
 }
 
+
+//users_list ok
 function getAllusersDatas(){
 
     $sql = "SELECT * FROM users";
@@ -505,6 +510,7 @@ function getAllusersDatas(){
   
 }
 
+//users_list ok
 function getCountUsers(){
 
     $sql = "SELECT count(*) as count_usrs FROM users";
@@ -519,7 +525,7 @@ function getCountUsers(){
 }
 
 
-/**XSS対策エスケープ
+/**XSS対策エスケープ  ok
      * ＠param str $s
      * return method htmlspecialchars($s, ENT_QUOTES, "UTF-8");
      */
@@ -529,13 +535,13 @@ function getCountUsers(){
         }
     }
 
-    //数字を値段表示にする
+    //数字を値段表示にする  ok
     function n($price){
         return number_format($price);
     }
 
 
-    //genderを数字から文字列へ変換
+    //genderを数字から文字列へ変換  ok
     function setGender($gender){
         if($gender ===1){
             return 'Boys';
@@ -544,4 +550,27 @@ function getCountUsers(){
         if($gender=== 2){
             return 'Girls';
         }
+    }
+
+
+   //delete product from products table  ok
+    function deleteProduct($product_id){
+        
+        $sql = "DELETE FROM products WHERE id = :id";
+        
+        $dbh = dbConnect();
+        $stmt = $dbh->prepare($sql);
+        $stmt->bindValue(':id', (int)$product_id, PDO::PARAM_INT);
+        $stmt->execute();
+    }
+
+    //delete detail from product details table  ok
+    function deleteDetails($productDetail_id){
+        
+        $sql = "DELETE FROM product_details WHERE id = :id";
+        
+        $dbh = dbConnect();
+        $stmt = $dbh->prepare($sql);
+        $stmt->bindValue(':id', $productDetail_id, PDO::PARAM_INT);
+        $stmt->execute();
     }

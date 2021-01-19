@@ -16,8 +16,8 @@ $AllProductsDatas = getAllProductsDatas();
 $count_products = getCountProducts();
 //var_dump($count_products);
 
-$productDtailsDatas = getProductDetails(13);
-print_r($productDtailsDatas);
+//$productDtailsDatas = getProductDetails(13);
+//print_r($productDtailsDatas);
 
 
 
@@ -58,25 +58,26 @@ print_r($productDtailsDatas);
                                   
                                     <div class="result_box"> 
                                       <h5 class="number"><strong><?php echo $i+1;?>.</strong></P>
-                                      
+                                      <a class="btn_b bg_blue" href="./update_product.php?product_id=<?php echo h($AllProductsData['id']);?>">Go To Update</a>
+                                            <a class="btn_b bg_gray" href="./delete_product.php?product_id=<?php echo h($AllProductsData['id']);?>">Delete Whole Data</a>
 
-                                       <a class="link_aa" href="./update_product.php?product_id=<?php echo h($AllProductsData['id'])?>">
+                                       
                                         <table border=1>
                                           <tr><td>Product ID</td><td><?php echo h($AllProductsData['id'])?></td></tr>
                                           <tr><td>Name</td><td><?php echo h($AllProductsData['product_name'])?></td></tr>
                                           <tr><td>Category</td><td><?php echo h($AllProductsData['category'])?></td></tr>
-                                          <tr><td>Description</td><td><?php echo h($AllProductsData['description'])?></td></tr>
-                                          <tr><td rowspan=2>Image</td><td rowspan=2><img src="/public//manage/<?php echo "{$AllProductsData['save_path']}";?>"　width="120px" height="200px" alt="product_image" ></td></tr>
+                                          <tr><td>Description</td><td><?php echo nl2br(h($AllProductsData['description']))?></td></tr>
+                                          <tr><td rowspan=2>Image</td><td rowspan=2><img src="/public/manage/<?php echo "{$AllProductsData['save_path']}";?>"　width="120px" height="200px" alt="product_image" ></td></tr>
                                         </table>
-                                      </a>
+
                                           <div class="details">
-                                              
+
                                             <?php $productDtails = getProductDetails($AllProductsData['id']);?>
                                             <?php $count_productDetails = getCountProductDetails($AllProductsData['id']);?>
                                                 <?php for($j=0; $j<$count_productDetails[0]; $j++):?>
                                                   <?php $productDtail = $productDtails[$j];?>
 
-                                                  <a class="link_aa" href="./update_product.php?product_id=<?php echo h($AllProductsData['id'])?>&details_id=<?php echo h($productDtail['id'])?>">
+                                                  <!--<a class="link_aa" href="./update_product.php?product_id=<?php //echo h($AllProductsData['id'])?>&details_id=<?php //echo h($productDtail['id'])?>">-->
                                                     <table class="details_table" border=1>
                                                     <tr><td>Details ID</td><td><?php echo h($productDtail['id'])?></td></tr>
                                                       <tr><td>Price(¥)</td><td><?php echo n($productDtail['price'])?></td></tr>
@@ -85,9 +86,11 @@ print_r($productDtailsDatas);
                                                       <tr><td>Size(cm)</td><td><?php echo h($productDtail['size'])?></td></tr>
                                                       <tr><td>Stocks</td><td><?php echo h($productDtail['stock'])?></td></tr>
                                                     </table>
-                                                </a>
+                                                    <a class="btn_b bg_gray" href="./delete_product.php?productDetail_id=<?php echo h($productDtail['id']);?>"><p><?php echo h('Delete Detail ID'.$productDtail['id']);?></p></a>
+                                                <!--</a>-->
                                                 <?php endfor;?>
                                             </div><!--details-->
+                                           
                                             <p class="dividing"></p>
                                       </div><!--result_box-->
                                       <br>
