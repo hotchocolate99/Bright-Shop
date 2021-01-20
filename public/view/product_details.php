@@ -13,6 +13,8 @@ ini_set('display_errors', true);
 require_once './../../private/database.php';
 require_once './../../private/functions.php';
 
+
+
 //var_dump($_GET['id']);
 if($_GET['id']){
     $product_id = $_GET['id'];
@@ -88,8 +90,8 @@ for($a=0;$a<$count_colors;$a++){
 
 
 //-----------------------------------------------------------------
-
- for($i=0;$i<$count_colors;$i++){
+// for($i=0;$i<$count_colors;$i++){ 商品登録のところでdetailsのフォームを８つ用意したので、８にしてみた。
+ for($i=0;$i<8;$i++){
      $detailCS[$i] = getProductDetailsByColor($product_id, $colors[$i]['color']);
      $detailCSs[] = $detailCS[$i];
  
@@ -145,7 +147,7 @@ foreach($_SESSION['shopping_cart'] as $detail){
 
     <body>
 
-     　<?php include './../../header.php';?>
+     　<?php include './../header.php';?>
 
    
         <label for="check">
@@ -175,60 +177,187 @@ foreach($_SESSION['shopping_cart'] as $detail){
                               
                                 <?php if($count_colors>1):?>
                                       <h3><?php echo 'Choose color and size from below.';?></h3>
-                                
+
+                               <!--色が８色になる可能性ある。なので、thが８個いる。そしてそれぞれのサイズも７つずつ用意することになる--> 
                                     <table border=1>
-                                        <tr><th><?php echo $detailCSs[0][0]['color'] ;?></th><th><?php echo $detailCSs[1][0]['color'];?></th></td></tr>
-                                        
-                                        <tr><td class="top_left">Size:<?php echo $detailCSs[0][0]['size'] ;?><br>
-                                                <input type="checkbox" name="detail_id[]" value="<?php echo h($detailCSs[0][0]['id'])?>" >
-                    
-                                            </td>
 
-                                            <td class="top_right">Size:<?php echo $detailCSs[1][0]['size'] ;?><br>
-                                                <input type="checkbox" name="detail_id[]" value="<?php echo h($detailCSs[1][0]['id'])?>" >
-                                                <!--<input type="hidden" name="product_name" value="<?php// echo h($common['product_name'])?>" >-->
-                                                
-                                            </td>
-                                        </tr>
+                            <!--colors up to 8--> 
+                                   <tr>
+                                        <?php for($a=0; $a<8; $a++):?>
+                                           
+                                                <?php if(!empty($detailCSs[$a][0]['color'])):?>
+                                                    <th>
+                                                      <?php echo $detailCSs[$a][0]['color'] ;?>
+                                                   </th>
+                                                <?php endif;?>
+                                        <?php endfor ;?>
+                                    </tr>
+                            <!---------------------------------------------------------------------->
 
-                                        <tr><td class="bottom_left">Size:<?php echo $detailCSs[0][1]['size'] ;?><br>
-                                                <input type="checkbox" name="detail_id[]" value="<?php echo h($detailCSs[0][1]['id'])?>" >
+                                <!--1st row for size-->
+                                    <tr>
+                                        <?php for($a=0; $a<8; $a++):?>
+                                            <?php if(!empty($detailCSs[$a][0])):?>
+                                            <td class="top_left">Size:<?php echo $detailCSs[$a][0]['size'] ;?><br>
+                                                <input type="checkbox" name="detail_id[]" value="<?php echo h($detailCSs[$a][0]['id'])?>" >
+                                                <!--<input type="hidden" name="detail_count" value="1" >
+                                                <input type="hidden" name="count_updated_method" value="add">-->
                                             </td>
+                                            <?php else:?>
+                                               <?php echo '';?>
+                                            <?php endif;?>
 
-                                            <td class="bottom_right">Size:<?php echo $detailCSs[1][1]['size'] ;?><br>
-                                                <input class="round" type="checkbox" name="detail_id[]" value="<?php echo h($detailCSs[1][1]['id'])?>" >
+                                        <?php endfor ;?>
+                                    </tr>
+
+                                <!--2nd row for size-->
+                                    <tr>
+                                        <?php for($a=0; $a<8; $a++):?>
+                                            <?php if(!empty($detailCSs[$a][1])):?>
+                                            <td class="top_left">Size:<?php echo $detailCSs[$a][1]['size'] ;?><br>
+                                                <input type="checkbox" name="detail_id[]" value="<?php echo h($detailCSs[$a][1]['id'])?>" >
+                                                <!--<input type="hidden" name="detail_count" value="1" >
+                                                <input type="hidden" name="count_updated_method" value="add">-->
                                             </td>
-                                        </tr>
-                                    </table>
+                                            <?php else:?>
+                                               <?php echo '';?>
+                                            <?php endif;?>
 
+                                        <?php endfor ;?>
+                                    </tr>
+
+                                <!--3rd row for size-->
+                                    <tr>
+                                        <?php for($a=0; $a<8; $a++):?>
+                                            <?php if(!empty($detailCSs[$a][2])):?>
+                                            <td class="top_left">Size:<?php echo $detailCSs[$a][2]['size'] ;?><br>
+                                                <input type="checkbox" name="detail_id[]" value="<?php echo h($detailCSs[$a][2]['id'])?>" >
+                                                <!--<input type="hidden" name="detail_count" value="1" >
+                                                <input type="hidden" name="count_updated_method" value="add">-->
+                                            </td>
+                                            <?php else:?>
+                                               <?php echo '';?>
+                                            <?php endif;?>
+
+                                        <?php endfor ;?>
+                                    </tr>
+
+                                    <!--4th row for size-->
+                                    <tr>
+                                        <?php for($a=0; $a<8; $a++):?>
+                                            <?php if(!empty($detailCSs[$a][3])):?>
+                                            <td class="top_left">Size:<?php echo $detailCSs[$a][3]['size'] ;?><br>
+                                                <input type="checkbox" name="detail_id[]" value="<?php echo h($detailCSs[$a][3]['id'])?>" >
+                                                <!--<input type="hidden" name="detail_count" value="1" >
+                                                <input type="hidden" name="count_updated_method" value="add">-->
+                                            </td>
+                                            <?php else:?>
+                                               <?php echo '';?>
+                                            <?php endif;?>
+
+                                        <?php endfor ;?>
+                                    </tr>
+
+                                    <!--5th row for size-->
+                                    <tr>
+                                        <?php for($a=0; $a<8; $a++):?>
+                                            <?php if(!empty($detailCSs[$a][4])):?>
+                                            <td class="top_left">Size:<?php echo $detailCSs[$a][4]['size'] ;?><br>
+                                                <input type="checkbox" name="detail_id[]" value="<?php echo h($detailCSs[$a][4]['id'])?>" >
+                                                <!--<input type="hidden" name="detail_count" value="1" >
+                                                <input type="hidden" name="count_updated_method" value="add">-->
+                                            </td>
+                                            <?php else:?>
+                                               <?php echo '';?>
+                                            <?php endif;?>
+
+                                        <?php endfor ;?>
+                                    </tr>
+
+                                    <!--6th row for size-->
+                                    <tr>
+                                        <?php for($a=0; $a<8; $a++):?>
+                                            <?php if(!empty($detailCSs[$a][5])):?>
+                                            <td class="top_left">Size:<?php echo $detailCSs[$a][5]['size'] ;?><br>
+                                                <input type="checkbox" name="detail_id[]" value="<?php echo h($detailCSs[$a][5]['id'])?>" >
+                                                <!--<input type="hidden" name="detail_count" value="1" >
+                                                <input type="hidden" name="count_updated_method" value="add">-->
+                                            </td>
+                                            <?php else:?>
+                                               <?php echo '';?>
+                                            <?php endif;?>
+
+                                        <?php endfor ;?>
+                                    </tr>
+
+                                    <!--7th row for size-->
+                                    <tr>
+                                        <?php for($a=0; $a<8; $a++):?>
+                                            <?php if(!empty($detailCSs[$a][6])):?>
+                                            <td class="top_left">Size:<?php echo $detailCSs[$a][6]['size'] ;?><br>
+                                                <input type="checkbox" name="detail_id[]" value="<?php echo h($detailCSs[$a][6]['id'])?>" >
+                                                <!--<input type="hidden" name="detail_count" value="1" >
+                                                <input type="hidden" name="count_updated_method" value="add">-->
+                                            </td>
+                                            <?php else:?>
+                                               <?php echo '';?>
+                                            <?php endif;?>
+
+                                        <?php endfor ;?>
+                                    </tr>
+
+                                    <!--8th row for size-->
+                                    <tr>
+                                        <?php for($a=0; $a<8; $a++):?>
+                                            <?php if(!empty($detailCSs[$a][7])):?>
+                                            <td class="top_left">Size:<?php echo $detailCSs[$a][7]['size'] ;?><br>
+                                                <input type="checkbox" name="detail_id[]" value="<?php echo h($detailCSs[$a][7]['id'])?>" >
+                                                <!--<input type="hidden" name="detail_count" value="1" >
+                                                <input type="hidden" name="count_updated_method" value="add">-->
+                                            </td>
+                                            <?php else:?>
+                                               <?php echo '';?>
+                                            <?php endif;?>
+
+                                        <?php endfor ;?>
+                                    </tr>
+
+                                    
+                                </table>
+
+
+
+
+                            <!--the case of one color------------------------------------------------>
                                 <?php else:?>
                                     <h3><?php echo 'Choose size from below.';?></h3>
 
                                     <table border=1>
-                                        <tr><th><?php echo $detailCSs[0][0]['color'] ;?></th></td></tr>
-
-                                        <tr><td class="first">Size:<?php echo $detailCSs[0][0]['size'] ;?><br>
+                                    　　<tr><th><?php echo $detailCSs[0][0]['color'] ;?></th></tr>
+                                        <?php// if(isset($productData['product_id'])){ echo h($productData['product_id']);}?>
+                                        <tr><td class="first">Size:<?php echo $detailCSs[0][0]['size'];?><br>
                                                 <input type="checkbox" name="detail_id[]" value="<?php echo h($detailCSs[0][0]['id'])?>" >
+                                                <!--<input type="hidden" name="detail_count" value="1" >
+                                                <input type="hidden" name="count_updated_method" value="add">-->
                                             </td>
                                     　　 </tr>
 
-                                        <tr><td class="second">Size:<?php echo $detailCSs[0][1]['size'] ;?><br>
-                                                <input type="checkbox" name="detail_id[]" value="<?php echo h($detailCSs[0][1]['id'])?>" >
+                                 <?php for($b=0;$b<8;$b++):?>
+                                    <?php if(!empty($detailCSs[0][$b+1])):?>
+                                        <tr><td class="second">Size:<?php echo $detailCSs[0][$b+1]['size'];?><br>
+                                                <input type="checkbox" name="detail_id[]" value="<?php echo h($detailCSs[0][$b+1]['id'])?>" >
+                                                <!--<input type="hidden" name="detail_count" value="1" >
+                                                <input type="hidden" name="count_updated_method" value="add">-->
                                             </td>
                                     　　 </tr>
+                                    <?php else:?>
+                                        <?php echo '';?>
+                                    <?php endif;?>
+                                <?php endfor;?>
 
-                                        <tr><td class="third">Size:<?php echo $detailCSs[0][2]['size'] ;?><br>
-                                                <input type="checkbox" name="detail_id[]" value="<?php echo h($detailCSs[0][2]['id'])?>" >
-                                            </td>
-                                        </tr>
-
-                                        <tr><td class="4th">Size:<?php echo $detailCSs[0][3]['size'] ;?><br>
-                                                <input type="checkbox" name="detail_id[]" value="<?php echo h($detailCSs[0][3]['id'])?>" >
-                                            </td>
-                                        </tr>
                                     </table>
 
-                                <?php endif;?>
+                               <?php endif;?>
 
                                     <input class="btn bg_green" type="submit" value="Add To Cart">
                                       <!--問題点　ラジオボックスではなく、チェックボックスなのに何故か複数の商品のデータは送れない。(複数を選択は出来る。けど、データは商品一つ分だけ。)
