@@ -21,67 +21,166 @@ ini_set('display_errors',true);
 require_once './../../private/database.php';
 require_once './../../private/functions.php';
 
+var_dump($user);
+foreach($user as $usr){
+   echo $usr['ship_area'];
+   $ship_area = $usr['ship_area'];
+}
+
 echo 'ポスト';
-print_r($_POST);
+var_dump($_POST);
+print_r($_POST['detail_count']);
 
-//↓は、index.phpから渡ってくるpostと、このページから渡ってくるpostのどちらにも対応しているの？
-if(!empty($_POST) && $_POST['detail_id'] !== null){
-    $posted_detail = [
-        'detail_id' => $_POST['detail_id'],
-        'detail_count' => $_POST['detail_count'],
-    ];
-//var_dump($posted_detail);
-//var_dump($_SESSION['shopping_cart']);
+if(is_array($_POST['detail_id'])){
+    $detail_ids = $_POST['detail_id'];
+        foreach($detail_ids as $detail_id){
+           echo $detail_id;
+        }
 
-//カートが空の時、postで送られて来たデータを代入する。
-    if(empty($_SESSION['shopping_cart'])){
-       $_SESSION['shopping_cart'] = [];
-       //↑初期化
-       //↓sessionにpostの内容を入れる。　　　　　
-       $_SESSION['shopping_cart'][]= $posted_detail;
+        var_dump($detail_id);
+        //var_dump(count($detail_ids));//2
+        //↓は、index.phpから渡ってくるpostと、このページから渡ってくるpostのどちらにも対応しているの？
+        if(!empty($_POST) && $detail_id !== null){
+            
 
-       //echo 'セッション';
-       //var_dump($_SESSION['shopping_cart']);
-       //session_destroy();
+            for($i=0;$i<count($detail_ids);$i++){
+                $posted_detail = [
+                    'detail_id' => $detail_ids[$i],
+                    'detail_count' => $_POST['detail_count'],
+                ];
+            
+        echo 'ポステッドディテール';
+        var_dump($posted_details);//array(2) { ["detail_id"]=>"80" ["detail_count"]=>"1" }
+        //var_dump($_SESSION['shopping_cart']);//array(3) { [0]=> array(2) { ["detail_id"]=> array(1) { [0]=>"82" } ["detail_count"]=>"1" }      [1]=> array(2) { ["detail_id"]=> array(2) { [0]=> "81" [1]=> "82" } ["detail_count"]=>"1" }      [2]=> array(2) { ["detail_id"]=>"82" ["detail_count"]=> "1" } } 
+        echo 'セッション終わり';//array(1) { [0]=> array(2) { ["detail_id"]=>"80" ["detail_count"]=>"1" } } 
 
-       //カートが空でない時
-    }else{
-       //カートに登録するフラグ？？　tureなら登録する。　emptyでなかったら、それをショッピングカートに入れる。そして下で、カートの中身を一つひとつ照合処理。
-       $register = true;
+        //カートが空の時、postで送られて来たデータを代入する。
+            if(empty($_SESSION['shopping_cart'])){
+            $_SESSION['shopping_cart'] = [];
+            //↑初期化
+            //↓sessionにpostの内容を入れる。　　　　　
+            $_SESSION['shopping_cart'][]= $posted_detail;
+            
+            echo 'セッション';
+            //var_dump($_SESSION['shopping_cart']);
+            //session_destroy();
 
-       // sessionに既に存在するdetail_idと今送られてきたpostのdetail_idで照合。合致したら、幾つあるかのチェック。なのでforeach使ってる。$indexはインデックス番号で０が商品Aで１が商品B。
-       foreach($_SESSION['shopping_cart'] as $index => $detail){
-            if ($detail['detail_id'] == $posted_detail['detail_id']){
-                 //セッションに入っているdetail_id      postの方のdetail_id.(cart.phpで追加される商品のidとindex.phpの２ページに対応している。いづれかのページで追加されるdetail_id)
+            //カートが空でない時
+            }else{
+            //カートに登録するフラグ？？　tureなら登録する。　emptyでなかったら、それをショッピングカートに入れる。そして下で、カートの中身を一つひとつ照合処理。
+            $register = true;
 
-                //index.phpのカートに入れるボタンを何度も押された場合、その回数に従ってitem_countが増える。（上書き作業）
-                if(isset($_POST['count_updated_method']) && $_POST['count_updated_method'] === 'add'){
-                    $posted_detail['detail_count'] = $detail['detail_count'];
-                    //postのカウント数？それともindex.php　　+　　　　　　　セッションのカウント数?それともこのページのセレクトボックスのカウント数
-                    //index.phpの「カートに入れる」で増えた数に足すのは、　cart.phpのセレクトボックスで選ばれた数（cart.phpのページで操作するなら、index.phpの「カートに入れる」を押すことではもう増えない。変わらない数に足す）
-                    //ここで＋を付けないで＝のみだと、index.phpの「カートに入れる」で追加した分＝（必ず一つずつ）が、cart.phpで表示される個数(select box)に反映されない。なので、＋が必要。
+            // sessionに既に存在するdetail_idと今送られてきたpostのdetail_idで照合。合致したら、幾つあるかのチェック。なのでforeach使ってる。$indexはインデックス番号で０が商品Aで１が商品B。
+            foreach($_SESSION['shopping_cart'] as $index => $detail){
+                echo'変数ディテール';
+                var_dump($detail);//array(2) { ["detail_id"]=> string(2) "80" ["detail_count"]=> string(1) "1" }
+                    if ($detail['detail_id'] == $posted_detail['detail_id']){
+                        //セッションに入っているdetail_id      postの方のdetail_id.(cart.phpで追加される商品のidとindex.phpの２ページに対応している。いづれかのページで追加されるdetail_id)
+
+                        //index.phpのカートに入れるボタンを何度も押された場合、その回数に従ってitem_countが増える。（上書き作業）
+                        if(isset($_POST['count_updated_method']) && $_POST['count_updated_method'] === 'add'){
+                            $posted_detail['detail_count'] += $detail['detail_count'];
+                            //postのカウント数？それともindex.php　　+　　　　　　　セッションのカウント数?それともこのページのセレクトボックスのカウント数
+                            //index.phpの「カートに入れる」で増えた数に足すのは、　cart.phpのセレクトボックスで選ばれた数（cart.phpのページで操作するなら、index.phpの「カートに入れる」を押すことではもう増えない。変わらない数に足す）
+                            //ここで＋を付けないで＝のみだと、index.phpの「カートに入れる」で追加した分＝（必ず一つずつ）が、cart.phpで表示される個数(select box)に反映されない。なので、＋が必要。
+                            }
+
+
+                        $_SESSION['shopping_cart'][$index] = $posted_detail;
+                        //var_dump($_SESSION['shopping_cart'][0]);
+                        //(商品Aはindexが０、商品Bはindexが１)。
+                        //商品Aが２つの時　⇨　array(3) { ["item_id"]=> string(1) "1" ["item_name"]=> string(7) "商品A" ["item_count"]=> int(2) } 
+                        //$postedItemの中身はitem_id,　item_name,　item_count。
+
+                        //上書き作業が終わったら、追加はもうしないので。
+                        $register = false;
                     }
-
- 
-                $_SESSION['shopping_cart'][$index] = $posted_detail;
-                //var_dump($_SESSION['shopping_cart'][0]);
-                //(商品Aはindexが０、商品Bはindexが１)。
-                 //商品Aが２つの時　⇨　array(3) { ["item_id"]=> string(1) "1" ["item_name"]=> string(7) "商品A" ["item_count"]=> int(2) } 
-                 //$postedItemの中身はitem_id,　item_name,　item_count。
-
-                //上書き作業が終わったら、追加はもうしないので。
-                $register = false;
             }
-       }
 
-        if($register){
-            $_SESSION['shopping_cart'][] = $posted_detail;
+                if($register){
+                    $_SESSION['shopping_cart'][] = $posted_detail;
+                }
+            }
+        }
+
+    }
+}else{
+    $detail_id = $_POST['detail_id'];
+
+    if(!empty($_POST) && $detail_id !== null){
+
+            $posted_detail = [
+                'detail_id' => $detail_id,
+                'detail_count' => $_POST['detail_count'],
+            ];
+        
+    echo 'ポステッドディテール';
+    var_dump($posted_detail);//array(2) { ["detail_id"]=>"80" ["detail_count"]=>"1" }
+    //var_dump($_SESSION['shopping_cart']);//array(3) { [0]=> array(2) { ["detail_id"]=> array(1) { [0]=>"82" } ["detail_count"]=>"1" }      [1]=> array(2) { ["detail_id"]=> array(2) { [0]=> "81" [1]=> "82" } ["detail_count"]=>"1" }      [2]=> array(2) { ["detail_id"]=>"82" ["detail_count"]=> "1" } } 
+    echo 'セッション終わり';//array(1) { [0]=> array(2) { ["detail_id"]=>"80" ["detail_count"]=>"1" } } 
+
+    //カートが空の時、postで送られて来たデータを代入する。
+        if(empty($_SESSION['shopping_cart'])){
+        $_SESSION['shopping_cart'] = [];
+        //↑初期化
+        //↓sessionにpostの内容を入れる。　　　　　
+        $_SESSION['shopping_cart'][]= $posted_detail;
+        
+        echo 'セッション';
+        //var_dump($_SESSION['shopping_cart']);
+        //session_destroy();
+
+        //カートが空でない時
+        }else{
+        //カートに登録するフラグ？？　tureなら登録する。　emptyでなかったら、それをショッピングカートに入れる。そして下で、カートの中身を一つひとつ照合処理。
+        $register = true;
+
+        // sessionに既に存在するdetail_idと今送られてきたpostのdetail_idで照合。合致したら、幾つあるかのチェック。なのでforeach使ってる。$indexはインデックス番号で０が商品Aで１が商品B。
+        foreach($_SESSION['shopping_cart'] as $index => $detail){
+            echo'変数ディテール';
+            var_dump($detail);//array(2) { ["detail_id"]=> string(2) "80" ["detail_count"]=> string(1) "1" }
+                if ($detail['detail_id'] == $posted_detail['detail_id']){
+                    //セッションに入っているdetail_id      postの方のdetail_id.(cart.phpで追加される商品のidとindex.phpの２ページに対応している。いづれかのページで追加されるdetail_id)
+
+                    //index.phpのカートに入れるボタンを何度も押された場合、その回数に従ってitem_countが増える。（上書き作業）
+                    if(isset($_POST['count_updated_method']) && $_POST['count_updated_method'] === 'add'){
+                        $posted_detail['detail_count'] += $detail['detail_count'];
+                        //postのカウント数？それともindex.php　　+　　　　　　　セッションのカウント数?それともこのページのセレクトボックスのカウント数
+                        //index.phpの「カートに入れる」で増えた数に足すのは、　cart.phpのセレクトボックスで選ばれた数（cart.phpのページで操作するなら、index.phpの「カートに入れる」を押すことではもう増えない。変わらない数に足す）
+                        //ここで＋を付けないで＝のみだと、index.phpの「カートに入れる」で追加した分＝（必ず一つずつ）が、cart.phpで表示される個数(select box)に反映されない。なので、＋が必要。
+                        }
+
+
+                    $_SESSION['shopping_cart'][$index] = $posted_detail;
+                    //var_dump($_SESSION['shopping_cart'][0]);
+                    //(商品Aはindexが０、商品Bはindexが１)。
+                    //商品Aが２つの時　⇨　array(3) { ["item_id"]=> string(1) "1" ["item_name"]=> string(7) "商品A" ["item_count"]=> int(2) } 
+                    //$postedItemの中身はitem_id,　item_name,　item_count。
+
+                    //上書き作業が終わったら、追加はもうしないので。
+                    $register = false;
+                }
+        }
+
+            if($register){
+                $_SESSION['shopping_cart'][] = $posted_detail;
+            }
         }
     }
+
 }
+
+
+
+
+
+
+
 echo 'カート';
 var_dump($_SESSION['shopping_cart']);
 $details = $_SESSION['shopping_cart'];
+echo 'あああああ';
+var_dump($details);
 
 //var_dump($details[0]['detail_count']);//1  $detail['detail_count']と同じ
 foreach($details as $detail){
@@ -123,52 +222,64 @@ $productDatas = getProductDataByDetail($detail['detail_id']);
         <link rel="stylesheet" href="./../../public/css/header.css">
 </head>
 <body>
-    
+
 　　　　<?php include './../header.php';?>
 
-   
+
         <label for="check">
             <div class="wrapper">
                 <div class="container">
                 　<div class="typein">
                 　　　<h1 class="form_title orange">Your Shopping Cart</h1>
 
+                <?php $total_s_total= [];?>
+
                     <?php if(empty($detail)):?>
                     　　<h2>Your cart is empty.</h2>
                     <?php else : ?>
                     <!--details=$_SESSION['shopping_cart']ということ-->
                         <?php// foreach ($details as $detail): ?>
-                            <?php for($i=0;$i<count($details);$i++):?>
+                    <?php for($i=0;$i<count($details);$i++):?>
                             <?php $detail = $details[$i];?>
                         <!--$itemsは商品AとBの両方のデータ。 $itemは商品ごとのデータ。ここでの$itmeを使って、下のようにhiddenでvalueを書いている？-->
                         <?php// var_dump($detail);?>
                         <?php $product_datas = getProductByDetail($detail['detail_id']);?>
+
                                     <?php// var_dump($product_datas);?>
-                                    <?php $product_id = $product_datas[0]['product_id'];?>
-                                    <?php $product_name_file= getProductNameFile($product_id);?>
-                                    <?php// var_dump($product_name_file);?>
+                                    <?php foreach($product_datas as $product_data):?>
+                                        <?php //echo $product_data;?>
+                                    <?php endforeach;?>
+
+                                    <?php $product_id = $product_data['product_id'];?>
+                                    <?php $product_name_files= getProductNameFile($product_id);?>
+                                    <?php// echo 'プロダクトネームファイル';?>
+                                    <?php// var_dump($product_name_files);?>
+                                    <?php foreach($product_name_files as $product_name_file):?>
+                                        <?php// echo $product_name_file;?>
+                                    <?php endforeach;?>
+
 
 
             <div class="pickup_box">
-                <p><?php echo $i+1;?>.&nbsp;<strong><?php echo "{$product_name_file[0]['product_name']}"?><?php echo "{$detail['detail_id']}";?></strong></p>
-                
+                <p><?php echo $i+1;?>.&nbsp;<strong><?php echo "{$product_name_file['product_name']}"?><?php echo "{$detail['detail_id']}";?></strong></p>
+
                 <div class="row_box">
                         <div class="img_box item">
-                            <img src="/manage/<?php echo "{$product_name_file[0]['save_path']}";?>" alt="product_image" >
+                            <img src="/public/manage/<?php echo "{$product_name_file['save_path']}";?>" alt="product_image" >
                         </div>
 
-                
-                        <p class="item">Price:&nbsp;￥<?php echo n("{$product_datas[0]['price']}");?></p>
-                        <p class="item">Color:&nbsp;<?php echo "{$product_datas[0]['color']}";?></p>
-                        <p class="item">Size:&nbsp;<?php echo "{$product_datas[0]['size']}";?></p>
-                        
+
+                        <p class="item">Price:&nbsp;￥<?php echo n("{$product_data['price']}");?></p>
+                        <p class="item">Color:&nbsp;<?php echo "{$product_data['color']}";?></p>
+                        <p class="item">Size:&nbsp;<?php echo "{$product_data['size']}";?></p>
+
 
                         <form class="item" action="./shopping_cart.php" method="post">
                         <!--echoの部分はhtmlエスケープなしでOK？？重要なデータではない？？ hiddenの時はエスケープいらない？ あと、フォームにはsubmitボタンが必要な気がするけど、なくてもちゃんとpostで飛んでる。。-->
                             <input type="hidden" name="detail_id" value="<?php echo $detail['detail_id']?>">
                             <input type="hidden" name="detail_count" value="<?php echo $detail['detail_count']?>">
 
-                    
+
                            <?php echo 'Qty:'.$detail['detail_count']; ?>
                            <select name="detail_count" class="change_detail_count">
                                 <option value="1" <?php echo $detail['detail_count'] == '1' ? 'selected' : '' ?>>Qty:1</option>
@@ -180,7 +291,7 @@ $productDatas = getProductDataByDetail($detail['detail_id']);
                         </form>
 
 　　　　　　　　　　　　　　
-                        <?php $s_total = $product_datas[0]['price'] * $detail['detail_count']?>
+                        <?php $s_total = $product_data['price'] * $detail['detail_count']?>
                         <p class="item">Total:&nbsp;¥<?php echo n("{$s_total}");?></p>
 
                        <div class=item>
@@ -189,27 +300,43 @@ $productDatas = getProductDataByDetail($detail['detail_id']);
                     </div><!--row_box-->
 
                 </div><!--pickup_box-->
+
+                <?php $total_s_total[] += $s_total;?>
+
              <?php endfor ;?>
           <?php endif ;?>
 
-          <?php $total_s_total=0;
-foreach($details as $detail){
-    if(!empty($details)){
-        $s_total = $product_datas[0]['price'] * $detail['detail_count'];
+          <?php// echo $total_s_total;?>
+
+    <!--if(!empty($details)){
+        $s_total = $product_data['price'] * $detail['detail_count'];
         $total_s_total += $s_total;
-      echo '小計の合計';
-      var_dump($total_s_total);
-     }
-  }?>
+    }?>-->
+<?php //
+      //echo '小計の合計';
+//var_dump($total_s_total);?>
+<?php $sum_total_s_total = array_sum($total_s_total);?>
+
 
                 <div class="row_box">
                     <p class="item">Total Qty:&nbsp;<?php echo "{$total_in_cart}";?></p>
-                    <!--<p class="item">Sub Total:¥&nbsp;<?php echo n("{}");?></p>-->
-                    <!--<p class="item">Sipping Fee:¥&nbsp;<?php echo n("{}");?></p>-->
-                    <!--<p class="item">Total Charge:¥&nbsp;<?php echo n( "{}");?></p>-->
+                    <p class="item">Sub Total:&nbsp;¥<?php echo n("{$sum_total_s_total}");?></p>
+                    <?php $tax = $sum_total_s_total*0.1;?>
+                    <p class="item">Tax:&nbsp;¥<?php echo n("{$tax}");?></p>
+
+                    <?php if(!$user):?>
+                        <p><?php echo'Please log in to find out what your shipping fee is.';?></p>
+                    <?php else :?>
+                        <?php $shipping_fee = setShippingFee($ship_area);?>
+                        <p class="item">Sipping Fee:&nbsp;¥<?php echo n("{$shipping_fee}");?></p>
+                    <?php endif ;?>
+
+                    <?php $sub_tax_shippingfee = [$sum_total_s_total, $tax, $shipping_fee];?>
+                    <?php $total_charge = array_sum($sub_tax_shippingfee);?>
+                    <p class="item">Total Charge:&nbsp;¥<?php echo n( "{$total_charge}");?></p>
                </div>
           <div class="link_box">
-              <a class="link_a line_color_green" href="./../../index.php">Continue shopping</a>
+              <a class="link_a line_color_green" href="/public/index.php">Continue shopping</a>
               <a class="link_a line_color_orange" href="./purchase.php">Proceed with purchase</a>
           </div>
      
