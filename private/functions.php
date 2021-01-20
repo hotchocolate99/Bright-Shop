@@ -230,7 +230,7 @@ function getProductColors($product_id){
         
 
 
-/*扱いにくいので、やっぱり、product table　と details table　のデータは別々に取得することにした。　全商品詳細データ(product　details table)の取得
+//扱いにくいので、やっぱり、product table　と details table　のデータは別々に取得することにした。　全商品詳細データ(product　details table)の取得
 function getNewestProductsDatas($gender){
     
     $sql = "SELECT products.*, product_details.price FROM products JOIN product_details ON products.id = product_details.product_id WHERE gender = :gender ORDER BY products.id DESC LIMIT 1";
@@ -244,7 +244,7 @@ function getNewestProductsDatas($gender){
      
              return $results;
     
-    }*/
+    }
 
     function getSecondNewestProductsDatas($gender, $newest_id){
         
@@ -355,7 +355,7 @@ function getNewestProductsDatas($gender){
                 }
 
             
-    //products table　の最新データを取得 no need
+    //products table　の最新データを取得 
     /*function getNewProductsDatas($limit){
         $sql = "SELECT * FROM products ORDER BY id DESC LIMIT :LIMIT";
     
@@ -543,14 +543,63 @@ function getCountUsers(){
 
     //genderを数字から文字列へ変換  ok
     function setGender($gender){
-        if($gender ===1){
+        if($gender == 1){
             return 'Boys';
         }
 
-        if($gender=== 2){
+        if($gender == 2){
             return 'Girls';
         }
     }
+
+    //ship_areaから送料を算出  ok
+    function setShippingFee($ship_area){
+
+        //北海道
+        if($ship_area == 1){
+            return 1300;
+        }
+
+        //東北
+        if($ship_area == 2){
+            return 1000;
+        }
+
+        //関東
+        if($ship_area == 3){
+            return 800;
+        }
+
+        //北信越
+        if($ship_area == 4){
+            return 800;
+        }
+
+        //中部
+        if($ship_area == 5){
+            return 800;
+        }
+
+        //関西
+        if($ship_area == 6){
+            return 1000;
+        }
+
+        //中国、四国
+        if($ship_area == 7 || 8){
+            return 1200;
+        }
+
+        //九州、沖縄
+        if($ship_area == 9 || 10){
+            return 1300;
+        }
+        //その他
+        if($ship_area == 11){
+            return 1500;
+        }
+    }
+
 
 
    //delete product from products table  ok
@@ -573,4 +622,22 @@ function getCountUsers(){
         $stmt = $dbh->prepare($sql);
         $stmt->bindValue(':id', $productDetail_id, PDO::PARAM_INT);
         $stmt->execute();
+    }
+
+
+    function updateProduct($product_id, $product_name, $category, $description, $filename, $save_path){
+
+        $sql = "UPDATE products SET
+                    product_name = :product_name, category = :category, description = :description, filename = :filename, save_path = :save_path
+                    WHERE id = :id;";
+
+            $dbh = dbConnect();
+            $stmt = $dbh->prepare($sql);
+            $stmt->bindValue(':product_name', $product_name,PDO::PARAM_STR);
+            $stmt->bindValue(':category', $category,PDO::PARAM_STR);
+            $stmt->bindValue(':description', $description,PDO::PARAM_STR);
+            $stmt->bindValue(':filename', $filename,PDO::PARAM_STR);
+            $stmt->bindValue(':save_path', $save_path,PDO::PARAM_STR);
+            $stmt->bindValue(':id', $product_id,PDO::PARAM_INT);
+            $stmt->execute();
     }
