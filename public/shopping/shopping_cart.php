@@ -16,7 +16,7 @@ session_start();
 //against click junction ボタンがある時はこれいる？？いらない？？
 header('X-FRAME-OPTION:DENY');
 
-ini_set('display_errors',true);
+//ini_set('display_errors',true);
 
 require_once './../../private/database.php';
 require_once './../../private/functions.php';
@@ -172,10 +172,6 @@ if(is_array($_POST['detail_id'])){
 
 
 
-
-
-
-
 echo 'カート';
 var_dump($_SESSION['shopping_cart']);
 $details = $_SESSION['shopping_cart'];
@@ -261,7 +257,7 @@ $productDatas = getProductDataByDetail($detail['detail_id']);
 
 
             <div class="pickup_box">
-                <p><?php echo $i+1;?>.&nbsp;<strong><?php echo "{$product_name_file['product_name']}"?><?php echo "{$detail['detail_id']}";?></strong></p>
+                <p><?php echo $i+1;?>.&nbsp;<strong><?php echo "{$product_name_file['product_name']}"?>(detail_id:<?php echo "{$detail['detail_id']}";?>)</strong></p>
 
                 <div class="row_box">
                         <div class="img_box item">
@@ -325,19 +321,56 @@ $productDatas = getProductDataByDetail($detail['detail_id']);
                     <p class="item">Tax:&nbsp;¥<?php echo n("{$tax}");?></p>
 
                     <?php if(!$user):?>
-                        <p><?php echo'Please log in to find out what your shipping fee is.';?></p>
-                    <?php else :?>
-                        <?php $shipping_fee = setShippingFee($ship_area);?>
-                        <p class="item">Sipping Fee:&nbsp;¥<?php echo n("{$shipping_fee}");?></p>
-                    <?php endif ;?>
+                        <p class="attention"><strong><?php echo'You are not logged in.';?></strong></p>
 
-                    <?php $sub_tax_shippingfee = [$sum_total_s_total, $tax, $shipping_fee];?>
-                    <?php $total_charge = array_sum($sub_tax_shippingfee);?>
-                    <p class="item">Total Charge:&nbsp;¥<?php echo n( "{$total_charge}");?></p>
+                    <?php elseif(!empty($_SESSION['shopping_cart']) && $user):?>
+
+                        <?php foreach($user as $usr):?>
+                             <?php// echo $usr['ship_area'];?>
+                             <?php $ship_area = $usr['ship_area'];?>
+                             <?php $shipping_fee = setShippingFee($usr['ship_area']);?>
+                        <?php endforeach;?>
+
+                        <p class="item">Sipping Fee:&nbsp;¥<?php echo n("{$shipping_fee}");?></p>
+                    <?php endif;?>
+
+
+                        <?php if($user):?>
+                            <?php foreach($user as $usr):?>
+                                    <?php// echo $usr['ship_area'];?>
+                                    <?php $ship_area = $usr['ship_area'];?>
+                                    <?php $shipping_fee = setShippingFee($usr['ship_area']);?>
+                            <?php endforeach;?>
+                        <?php endif;?>
+
+                        <?php if(!empty($shipping_fee)):?>
+                            <?php if($shipping_fee !== 0 && $total_in_cart !== 0):?>
+                                <?php $sub_tax_shippingfee = [$sum_total_s_total, $tax, $shipping_fee];?>
+                                <?php $total_charge = array_sum($sub_tax_shippingfee);?>
+                                <p class="item">Total Charge:&nbsp;¥<?php echo n( "{$total_charge}");?></p>
+                            <?php elseif($shipping_fee == 0 && $total_in_cart !== 0):?>
+                                <p class="attention"><strong><?php echo'Please log in to proceed.';?></strong></p>
+                                <?php $total_charge = 0;?>
+                                <p class="item">Total Charge:&nbsp;¥<?php echo n( "{$total_charge}");?></p>
+                            <?php endif;?>
+                        <?php endif;?>
+
                </div>
+
+               <?php if(!empty($_SESSION['shopping_cart']) && $user):?>
+                   <?php $_SESSION['sub_datas'] = ['total_qty' => $total_in_cart, 'total_charge' => '¥'.n($total_charge),];?>
+                   <?php var_dump($_SESSION['sub_datas']);?>
+
+               <?php endif;?>
+
           <div class="link_box">
               <a class="link_a line_color_green" href="/public/index.php">Continue shopping</a>
-              <a class="link_a line_color_orange" href="./purchase.php">Proceed with purchase</a>
+
+              <?php if($user && $total_in_cart !== 0 && $shipping_fee !== 0):?>
+                  <a class="link_a line_color_orange" href="./purchase.php">Proceed with purchase</a>
+              <?php else:?>
+                <a class="link_a line_color_orange" href="./shopping_cart.php">Proceed with purchase</a>
+              <?php endif;?>
           </div>
      
 
