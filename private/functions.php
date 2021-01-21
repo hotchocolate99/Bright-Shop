@@ -552,8 +552,8 @@ function getCountUsers(){
         }
     }
 
-    //ship_areaから送料を算出  ok
-    function setShippingFee($ship_area){
+    //ship_areaから送料を算出  no need
+    /*function setShippingFee($ship_area){
 
         //北海道
         if($ship_area == 1){
@@ -598,8 +598,57 @@ function getCountUsers(){
         if($ship_area == 11){
             return 1500;
         }
-    }
+    }*/
 
+//ship_areaから送料を算出 
+    function setShippingFee($ship_area){
+
+        //北海道
+        switch($ship_area){
+            case 1:
+                return 1300;
+                break;
+        
+
+        //東北
+            case 2:
+                return 1000;
+                break;
+        
+
+        //関東
+            case 3:
+                return 800;
+                break;
+        
+
+        //北信越、中部
+            case 4 || 5:
+                return 800;
+                break;
+
+        //関西
+            case 6:
+                return 1000;
+                break;
+
+        //中国、四国
+            case 7 || 8:
+                return 1200;
+                break;
+
+        //九州、沖縄
+            case 9 || 10:
+                return 1300;
+                break;
+        
+        //その他
+            case 11:
+                return 1500;
+                break;
+
+       }
+    }
 
 
    //delete product from products table  ok
@@ -641,3 +690,8 @@ function getCountUsers(){
             $stmt->bindValue(':id', $product_id,PDO::PARAM_INT);
             $stmt->execute();
     }
+
+//token for purchase.php
+    function generateCsrfToken() {
+        return hash('sha256', session_id());
+    } 
