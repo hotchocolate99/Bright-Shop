@@ -81,8 +81,8 @@ if (empty($_POST['token']) || $_POST['token'] !== $csrfToken) {
 
     //$_SESSION['shopping_history']を使って、orders tableにデータを入れる。戻り値としてorders table　のidとordered_atを受け取る。ordered_atを使って、照合して合っていれば、order_details tableに詳細データを入れる。
 
-        $ordersId_and_orderedAts = putOrderData($user_data['id'], $sub_datas['shipping_fee'],$sub_datas['sum_total_s_total'], $sub_datas['tax'], $sub_datas['total_charge'], $_POST['pay_ways'], $ordered_at);
-
+    $ordersId_and_orderedAts = putOrderDatas($user_data['id'], $sub_datas['shipping_fee'],$sub_datas['sum_total_s_total'], $sub_datas['tax'], $sub_datas['total_charge'], $_POST['pay_ways'], $ordered_at);
+          //getNewestId();
         var_dump($ordersId_and_orderedAts);
         foreach($ordersId_and_orderedAts as $ordersId_and_orderedAt){
           //echo $ordersId_and_orderedAt['id'];
@@ -107,7 +107,7 @@ if (empty($_POST['token']) || $_POST['token'] !== $csrfToken) {
 
         }
 
-//使い終わった配列を空にする。　　注意　$_SESSION['shopping_history']は次のページで使うのでまだ残しておく。
+//使い終わった配列を空にする。　　注意　$_SESSION['shopping_history']は次のページで使うかもしれないのでまだ残しておく。
     $_SESSION['shopping_cart'] = [];
     $_SESSION['checkout'] = [];
     $_SESSION['sub_datas'] = [];

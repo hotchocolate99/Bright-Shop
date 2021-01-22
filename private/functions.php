@@ -394,8 +394,8 @@ function updateStock($detail_id, $detail_count){
     
 }
 
-//注文内容を登録(order table　が先)をしたら、orders tableのidとordered_atを戻り値にする。
-function putOrderData($user_id, $shipping_fee, $sub_total, $tax, $total_charge, $pay_ways, $ordered_at){
+//注文内容を登録(order table　が先)をしたら、orders tableのidとordered_atを戻り値にする。　OK 問題はreturnの後にcommitしていたことだった。。。ドジさに悲しくなる。。。
+function putOrderDatas($user_id, $shipping_fee, $sub_total, $tax, $total_charge, $pay_ways, $ordered_at){
 
         $sql = "INSERT INTO orders (user_id, shipping_fee, sub_total, tax, total_charge, pay_ways, ordered_at)
                             VALUES(:user_id, :shipping_fee, :sub_total, :tax, :total_charge, :pay_ways, :ordered_at)";
@@ -419,19 +419,56 @@ function putOrderData($user_id, $shipping_fee, $sub_total, $tax, $total_charge, 
             $sql = "SELECT id, ordered_at FROM orders WHERE id = :id";
             
             $stmt = $dbh->prepare($sql);
-            $stmt->bindValue(':id', $id,PDO::PARAM_STR);
+            $stmt->bindValue(':id', $id,PDO::PARAM_INT);
             $stmt->execute();
             $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-            return $results;
+            
             $dbh->commit();
+            return $results;
+            
 
             }catch(PDOException $e){
                 $dbh->rollBack();
-                exit($e);
+            exit($e);
             }
 
 }
+
+//第二案　no need
+/*function putOrderDatas($user_id, $shipping_fee, $sub_total, $tax, $total_charge, $pay_ways, $ordered_at){
+
+    $sql = "INSERT INTO orders (user_id, shipping_fee, sub_total, tax, total_charge, pay_ways, ordered_at)
+                        VALUES(:user_id, :shipping_fee, :sub_total, :tax, :total_charge, :pay_ways, :ordered_at)";
+
+        $dbh = dbConnect();
+       
+        $stmt = $dbh->prepare($sql);
+        $stmt->bindValue(':user_id',$user_id,PDO::PARAM_INT);
+        $stmt->bindValue(':shipping_fee', $shipping_fee,PDO::PARAM_INT);
+        $stmt->bindValue(':sub_total', $sub_total,PDO::PARAM_INT);
+        $stmt->bindValue(':tax', $tax,PDO::PARAM_INT);
+        $stmt->bindValue(':total_charge',$total_charge,PDO::PARAM_INT);
+        $stmt->bindValue(':pay_ways',$pay_ways,PDO::PARAM_INT);
+        $stmt->bindValue(':ordered_at',$ordered_at,PDO::PARAM_STR);
+        $stmt->execute();
+
+}       
+
+function getNewestId(){
+
+        $sql = "SELECT id, ordered_at FROM orders ORDER BY id DESC limit 1";
+        
+        $dbh = dbConnect();
+
+        $stmt = $dbh->prepare($sql);
+        //$stmt->bindValue(':id', $id,PDO::PARAM_STR);
+        $stmt->execute();
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        return $results;
+        
+
+}*/
 
 //上で取得したordered_atで照合してから、idをorder_idとしてorder_details tableに詳細を登録する。
 function putOrderDetails($order_id, $detail_id, $price, $qty){
@@ -449,6 +486,21 @@ function putOrderDetails($order_id, $detail_id, $price, $qty){
     $result = $stmt->execute();
 
 } 
+
+//idでorders tableの全データを取得
+function getAllFromAordersTable($id){
+
+    $dbh = dbConnect();
+
+    $sql = "SELECT * FROM orders WHERE id = :id";
+            
+            $stmt = $dbh->prepare($sql);
+            $stmt->bindValue(':id', $id,PDO::PARAM_INT);
+            $stmt->execute();
+            $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            return $results;
+}
 
 //第二案detail_orders tableも同時にinsertと思ったけど、やめた。。。トランザクションを使いたいと思ったけど、oder_idは一度登録するだけだった。。 no need
 /*function putOrderDatas($user_id, $shipping_fee, $sub_total, $tax, $total_charge, $pay_ways){
