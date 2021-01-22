@@ -4,7 +4,7 @@
 
     <div class="h_container">
 
-            <div class="logo"><a href="/" class="link_a"><span>Bright-Shop</span></a></div>
+            <div class="logo"><a href="/public/index.php" class="link_a"><span><i class="fas fa-paw"></i>Bright-Shop</span></a></div>
 
             <div class="navi">
             <ul>
