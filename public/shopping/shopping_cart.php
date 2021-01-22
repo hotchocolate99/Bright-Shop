@@ -230,9 +230,9 @@ $productDatas = getProductDataByDetail($detail['detail_id']);
 
                 <?php $total_s_total= [];?>
 
-                    <?php if(empty($detail)):?>
+                <?php if(empty($detail)):?>
                     　　<h2>Your cart is empty.</h2>
-                    <?php else : ?>
+                <?php else : ?>
                     <!--details=$_SESSION['shopping_cart']ということ-->
                         <?php// foreach ($details as $detail): ?>
                     <?php for($i=0;$i<count($details);$i++):?>
@@ -254,53 +254,68 @@ $productDatas = getProductDataByDetail($detail['detail_id']);
                                         <?php// echo $product_name_file;?>
                                     <?php endforeach;?>
 
+　　　　　　　　　　　　　　<!--商品の在庫数を取得-->
+                        <?php $detail_stocks = getStockByDetailId($detail['detail_id']);?>
+                        　　<?php //echo 'ストック';?>
+                        　　<?php //var_dump($detail_stocks);?>
+                        　　<?php foreach($detail_stocks as $detail_stock):?>
+                            <?php $stock =  $detail_stock['stock'];?>
+                                <?php //echo $stock;?>
+                            <?php endforeach;?>
 
 
-            <div class="pickup_box">
-                <p><?php echo $i+1;?>.&nbsp;<strong><?php echo "{$product_name_file['product_name']}"?>(detail_id:<?php echo "{$detail['detail_id']}";?>)</strong></p>
 
-                <div class="row_box">
-                        <div class="img_box item">
-                            <img src="/public/manage/<?php echo "{$product_name_file['save_path']}";?>" alt="product_image" >
-                        </div>
+                            <div class="pickup_box">
+                                <p><?php echo $i+1;?>.&nbsp;<strong><?php echo "{$product_name_file['product_name']}"?>(stock:&nbsp;<?php echo $detail_stock['stock'];?>&nbsp;left)(detail_id:<?php echo "{$detail['detail_id']}";?>)</strong></p>
+                                <?php if($detail_stock['stock'] > 0 && $detail['detail_count'] > $detail_stock['stock']):?>
+                                        <p class="attention"><strong><?php echo"Sorry. We don't have enough stock. Please change the Qty less than".$detail_stock['stock'].".";?></strong></p>
+                                <?php elseif($detail_stock['stock'] < 1 && $detail['detail_count'] > $detail_stock['stock']):?>
+                                        <p class="attention"><strong><?php echo"Sorry. This product is currently out of stock.";?></strong></p>
+                                <?php endif;?>
+
+                                <div class="row_box">
+                                        <div class="item">
+                                           <div class="img_box item">
+                                              <img src="/public/manage/<?php echo "{$product_name_file['save_path']}";?>" alt="product_image" >
+                                           </div>
+                                        </div>
+
+                                        <p class="item">Price:&nbsp;￥<?php echo n("{$product_data['price']}");?></p>
+                                        <p class="item">Color:&nbsp;<?php echo "{$product_data['color']}";?></p>
+                                        <p class="item">Size:&nbsp;<?php echo "{$product_data['size']}";?></p>
 
 
-                        <p class="item">Price:&nbsp;￥<?php echo n("{$product_data['price']}");?></p>
-                        <p class="item">Color:&nbsp;<?php echo "{$product_data['color']}";?></p>
-                        <p class="item">Size:&nbsp;<?php echo "{$product_data['size']}";?></p>
+                                        <form class="item" action="./shopping_cart.php" method="post">
+                                          <!--echoの部分はhtmlエスケープなしでOK？？重要なデータではない？？ hiddenの時はエスケープいらない？ あと、フォームにはsubmitボタンが必要な気がするけど、なくてもちゃんとpostで飛んでる。。-->
+                                            <input type="hidden" name="detail_id" value="<?php echo $detail['detail_id']?>">
+                                            <input type="hidden" name="detail_count" value="<?php echo $detail['detail_count']?>">
 
 
-                        <form class="item" action="./shopping_cart.php" method="post">
-                        <!--echoの部分はhtmlエスケープなしでOK？？重要なデータではない？？ hiddenの時はエスケープいらない？ あと、フォームにはsubmitボタンが必要な気がするけど、なくてもちゃんとpostで飛んでる。。-->
-                            <input type="hidden" name="detail_id" value="<?php echo $detail['detail_id']?>">
-                            <input type="hidden" name="detail_count" value="<?php echo $detail['detail_count']?>">
+                                          <?php echo 'Qty:'.$detail['detail_count']; ?>
+                                          <select name="detail_count" class="change_detail_count">
+                                                <option value="1" <?php echo $detail['detail_count'] == '1' ? 'selected' : '' ?>>Qty:1</option>
+                                                <option value="2" <?php echo $detail['detail_count'] == '2' ? 'selected' : '' ?>>Qty:2</option>
+                                                <option value="3" <?php echo $detail['detail_count'] == '3' ? 'selected' : '' ?>>Qty:3</option>
+                                                <option value="4" <?php echo $detail['detail_count'] == '4' ? 'selected' : '' ?>>Qty:4</option>
+                                                <option value="5" <?php echo $detail['detail_count'] == '5' ? 'selected' : '' ?>>Qty:5</option>
+                                           </select>
+                                        </form>
 
+                                        <?php $s_total = $product_data['price'] * $detail['detail_count']?>
+                                        <p class="item">Total:&nbsp;¥<?php echo n("{$s_total}");?></p>
 
-                           <?php echo 'Qty:'.$detail['detail_count']; ?>
-                           <select name="detail_count" class="change_detail_count">
-                                <option value="1" <?php echo $detail['detail_count'] == '1' ? 'selected' : '' ?>>Qty:1</option>
-                                <option value="2" <?php echo $detail['detail_count'] == '2' ? 'selected' : '' ?>>Qty:2</option>
-                                <option value="3" <?php echo $detail['detail_count'] == '3' ? 'selected' : '' ?>>Qty:3</option>
-                                <option value="4" <?php echo $detail['detail_count'] == '4' ? 'selected' : '' ?>>Qty:4</option>
-                                <option value="5" <?php echo $detail['detail_count'] == '5' ? 'selected' : '' ?>>Qty:5</option>
-                           </select>
-                        </form>
+                                       <div class=item>
+                                          <a class="btn bg_gray" href="./shopping_delete.php?detail_id=<?php echo $detail['detail_id'] ?>">Delete</a>
+                                       </div>
 
-　　　　　　　　　　　　　　
-                        <?php $s_total = $product_data['price'] * $detail['detail_count']?>
-                        <p class="item">Total:&nbsp;¥<?php echo n("{$s_total}");?></p>
+                                </div><!--row_box-->
 
-                       <div class=item>
-                           <a class="btn bg_gray" href="./shopping_delete.php?detail_id=<?php echo $detail['detail_id'] ?>">Delete</a>
-                        </div>
-                    </div><!--row_box-->
+                            </div><!--pickup_box-->
 
-                </div><!--pickup_box-->
+                                <?php $total_s_total[] += $s_total;?>
 
-                <?php $total_s_total[] += $s_total;?>
-
-             <?php endfor ;?>
-          <?php endif ;?>
+                    <?php endfor ;?>
+                <?php endif ;?>
 
           <?php// echo $total_s_total;?>
 
@@ -357,26 +372,37 @@ $productDatas = getProductDataByDetail($detail['detail_id']);
 
                </div>
 
+
+              <!--purchase.phpへ送るデータとして３つの配列がある。　$_SESSION['shopping_cart']、$_SESSION['sub_datas']、　$_SESSION['stock_count']-->
                <?php if(!empty($_SESSION['shopping_cart']) && $user):?>
-                   <?php $_SESSION['sub_datas'] = ['total_qty' => $total_in_cart, 'total_charge' => '¥'.n($total_charge),];?>
+
+                   <?php $_SESSION['sub_datas'] = ['total_qty' => $total_in_cart, 'sum_total_s_total' => $sum_total_s_total, 'tax' => $tax, 'shipping_fee' => $shipping_fee, 'total_charge' => $total_charge,];?>
                    <?php var_dump($_SESSION['sub_datas']);?>
+                   <?php// $_SESSION['shopping_cart']['stock'] = $detail_stock['stock'];?>
+
+
+                   <?php var_dump($_SESSION['shopping_cart']);?>
+
+
+                   <!--これは要らなかった？次のページで使おうと思ったけど、在庫数は必要な時にテーブルから取得した方が確実なのでそうした。-->
+                   <!--<?php// $_SESSION['stock_count'] = ['detail_id' => $detail['detail_id'], 'stock' => $detail_stock['stock'],];?>
+                   <?php// var_dump($_SESSION['stock_count']);?>-->
 
                <?php endif;?>
 
-          <div class="link_box">
-              <a class="link_a line_color_green" href="/public/index.php">Continue shopping</a>
 
-              <?php if($user && $total_in_cart !== 0 && $shipping_fee !== 0):?>
-                  <a class="link_a line_color_orange" href="./purchase.php">Proceed with purchase</a>
+          <div class="link_box">
+              <a class="link_a line_color_orange" href="/public/index.php">Continue shopping</a>
+
+              <?php if($user && $total_in_cart !== 0 && $shipping_fee !== 0 && $detail['detail_count'] <= $detail_stock['stock']):?>
+                  <a class="link_a line_color_green" href="./purchase.php">Proceed with purchase</a>
               <?php else:?>
-                <a class="link_a line_color_orange" href="./shopping_cart.php">Proceed with purchase</a>
+                <a class="link_a line_color_green" href="./shopping_cart.php">Proceed with purchase</a>
               <?php endif;?>
           </div>
      
 
-<!--↓　理解してないけど、とりあえず数量変更の更新ということだけ覚えておく
-上のselectタグのclass名.change_item_countの要素を全て取得？それをエレメントとして、関数を実行。引数はelem。どんな関数か⇨changeというイベントで関数を実行。
-要素.addEventListener(イベント, 関数, オプション);-->
+
     <script>
         // 数量が変更されたら更新を行う
 
@@ -389,10 +415,10 @@ $productDatas = getProductDataByDetail($detail['detail_id']);
          //引数のelemのchangeというイベントで関数を実行。
         elem.addEventListener('change', function(elem) {
 
-            //elemのターゲット属性のparentNode??? をformという定数に代入。
+            //elemのターゲット属性のparentNode(親要素) をformという定数に代入。
             const form = elem.target.parentNode;
 
-            //formの中から input[name="item_count"]の値（value）を取得？？　エレメントのtarget属性の属性値と同じ。
+            //formの中から input[name="item_count"]の値（value）を取得？？　
             form.querySelector('input[name="detail_count"]').value = elem.target.value
 
             //最後にformのサブミット関数？？
