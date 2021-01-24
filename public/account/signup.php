@@ -139,7 +139,7 @@ if(!empty($_POST)){
                             <br>
 
                             <div class="form_item">
-                                <label>Email<br>
+                                <label>E-mail<br>
                                 　　<input type="text" name="usr_email" value="<?php if(isset($_POST['usr_email'])){echo h($usr_email);}?>" placeholder="Email"required>
                                 </label>
                         　　</div>

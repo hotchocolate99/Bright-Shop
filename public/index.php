@@ -15,6 +15,9 @@ require_once './../private/database.php';
 require_once './../private/functions.php';
 //var_dump($_SESSION['user']);
 
+//$getall = getAllFromAordersTable(1);
+//var_dump($getall);
+
 var_dump($_SESSION['shopping_cart']);
 $total_in_cart = 0;
 foreach($_SESSION['shopping_cart'] as $detail){

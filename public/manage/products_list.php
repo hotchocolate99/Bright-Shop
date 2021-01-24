@@ -72,21 +72,21 @@ $count_products = getCountProducts();
 
                                           <div class="details">
 
-                                            <?php $productDtails = getProductDetails($AllProductsData['id']);?>
+                                            <?php $productDetails = getProductDetails($AllProductsData['id']);?>
                                             <?php $count_productDetails = getCountProductDetails($AllProductsData['id']);?>
                                                 <?php for($j=0; $j<$count_productDetails[0]; $j++):?>
-                                                  <?php $productDtail = $productDtails[$j];?>
+                                                  <?php $productDetail = $productDetails[$j];?>
 
                                                   <!--<a class="link_aa" href="./update_product.php?product_id=<?php //echo h($AllProductsData['id'])?>&details_id=<?php //echo h($productDtail['id'])?>">-->
                                                     <table class="details_table" border=1>
-                                                    <tr><td>Details ID</td><td><?php echo h($productDtail['id'])?></td></tr>
-                                                      <tr><td>Price(¥)</td><td><?php echo n($productDtail['price'])?></td></tr>
-                                                      <tr><td>Gender</td><td><?php echo setGender($productDtail['gender'])?></td></tr>
-                                                      <tr><td>Color</td><td><?php echo h($productDtail['color'])?></td></tr>
-                                                      <tr><td>Size(cm)</td><td><?php echo h($productDtail['size'])?></td></tr>
-                                                      <tr><td>Stocks</td><td><?php echo h($productDtail['stock'])?></td></tr>
+                                                    <tr><td>Details ID</td><td><?php echo h($productDetail['id'])?></td></tr>
+                                                      <tr><td>Price(¥)</td><td><?php echo n($productDetail['price'])?></td></tr>
+                                                      <tr><td>Gender</td><td><?php echo setGender($productDetail['gender'])?></td></tr>
+                                                      <tr><td>Color</td><td><?php echo h($productDetail['color'])?></td></tr>
+                                                      <tr><td>Size(cm)</td><td><?php echo h($productDetail['size'])?></td></tr>
+                                                      <tr><td>Stocks</td><td><?php echo h($productDetail['stock'])?></td></tr>
                                                     </table>
-                                                    <a class="btn_b bg_gray" href="./delete_product.php?productDetail_id=<?php echo h($productDtail['id']);?>"><p><?php echo h('Delete Detail ID'.$productDtail['id']);?></p></a>
+                                                    <a class="btn_b bg_gray" href="./delete_product.php?productDetail_id=<?php echo h($productDetail['id']);?>"><p><?php echo h('Delete Detail ID'.$productDetail['id']);?></p></a>
                                                 <!--</a>-->
                                                 <?php endfor;?>
                                             </div><!--details-->

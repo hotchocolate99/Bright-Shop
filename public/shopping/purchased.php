@@ -150,7 +150,7 @@ foreach($_SESSION['shopping_cart'] as $detail){
                <?php if(!empty($errors)): ?>
                <h1 class="form_title orange">Oops!</h1>
                <br>
-                    <h2>Something went wrong.<br>Your order could not to be completed.<br>Please try again.</h2>
+                    <h2>Something went wrong.<br>Your order(s) could not to be completed.<br>Please try again.</h2>
                     <ul class="error-box">
                     <?php foreach($errors as $error): ?> 
                         <li><?php echo $error; ?></li>

@@ -63,10 +63,10 @@ foreach($usrDatas as $usrData){
                                       <table border=1>
                                           <tr><td>ID</td><td><?php echo h($usrData['id'])?></td></tr>
                                           <tr><td>Name</td><td><?php echo h($usrData['usr_name'])?>&nbsp;さん</td></tr>
-                                          <tr><td>Email</td><td><?php echo h($usrData['usr_email'])?></td></tr>
-                                          <tr><td>Tel</td><td><?php echo h($usrData['tel'])?></td></tr>
-                                          <tr><td>shopping history</td><td>---</td></tr>
-                                          <tr><td>order</td><td>---</td></tr>
+                                          <tr><td>E-mail</td><td><?php echo h($usrData['usr_email'])?></td></tr>
+                                          <tr><td>Phone number</td><td><?php echo h($usrData['tel'])?></td></tr>
+                                          <tr><td>Shopping history</td><td>---</td></tr>
+                                          <tr><td>Order</td><td>---</td></tr>
                                           <tr><td rowspan=2>Address</td><td rowspan=2>〒<?php echo h($usrData['postal'])?><br><?php echo h($usrData['addr_pref'].$usrData['addr_city'].$usrData['addr_last'])?></td></tr>
                                           
                                         </table>

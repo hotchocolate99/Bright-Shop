@@ -1,5 +1,11 @@
 <?php
 session_start();
+$total_in_cart = 0;
+foreach($_SESSION['shopping_cart'] as $detail){
+  if(!empty($details)){
+    $total_in_cart += $detail['detail_count'];
+  }
+}
 
 ini_set('display_errors', true);
 
@@ -29,6 +35,8 @@ if(!empty($_POST)){
     }
 
 }
+
+
 
 ?>
 

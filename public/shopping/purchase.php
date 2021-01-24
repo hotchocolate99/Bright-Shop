@@ -123,11 +123,11 @@ foreach($_SESSION['checkout'] as $detail){
 
 
 　　　　　　　　　　　　　　　　　<!--連想配列の要素の数をcountする時は、第二引数に　COUNT_RECURSIVE　を入れること！  勘違い。第二引数を入れると要素全ての数になるので、入れなくて良い。-->
-                            <h2>Your order</h2>
+                            <h2>Your order(s)</h2>
                   　　　　　　<div>
 
                                    
-                  <?php $errors = [];?>
+                              <?php $errors = [];?>
                                    <?php for($i=0;$i<count($checkouts);$i++):?>
                                        <?php $checkout = $checkouts[$i];?>
                                        <?php //var_dump($checkout['detail_id']);?>
@@ -191,9 +191,9 @@ foreach($_SESSION['checkout'] as $detail){
                                                 <?php else:?>
                                                   <div class="row_box2">
                                                      <a class="btn_b bg_orange item spase" href="./../account/update_account.php">Change your info</a>
-                                                     <a class="btn_b bg_gray item" href="./shopping_cart.php">Cancel all orders</a>
+                                                     <a class="btn_b bg_gray item" href="./shopping_cart.php">Cancel all order(s)</a>
                                                      <form class="item" action="./purchased.php" method="post" id="pay_ways">
-                                          　　           <input class="btn bg_green" type="submit" value="Finalize your orders">
+                                          　　           <input class="btn bg_green" type="submit" value="Finalize your order(s)">
                                                         <input type="hidden" name="token" value="<?php echo $csrfToken;?>">
                                                     </form>
                                                   </div>

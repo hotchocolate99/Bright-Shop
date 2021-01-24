@@ -47,20 +47,20 @@ li{
 }
 
 .typein2{
-  background-color: #f8f4e6;
-  border-radius: 15px;
-  margin-top: 1rem;
-  padding: 2rem;
-  width: 1000px;
-  margin: 0 auto;
-  position: relative;
-  height: 400px;
+    background-color: #f8f4e6;
+    border-radius: 15px;
+    margin-top: 1rem;
+    padding: 2rem;
+    width: 1000px;
+    margin: 0 auto;
+    position: relative;
+    height: 400px;
 }
 
 .form_title{
     display: inline-block;
     text-align: center;
-    width: 360px;
+    width: 500px;
     margin-bottom: 25px;
     margin-left: 160px;
 }

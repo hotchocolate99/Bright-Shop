@@ -470,7 +470,7 @@ function getNewestId(){
 
 }*/
 
-//上で取得したordered_atで照合してから、idをorder_idとしてorder_details tableに詳細を登録する。
+//上で取得したordered_atで照合してから、idをorder_idとしてorder_details tableに詳細を登録する。 ok
 function putOrderDetails($order_id, $detail_id, $price, $qty){
 
     $sql = "INSERT INTO order_details (order_id, detail_id, price, qty)VALUES(:order_id, :detail_id, :price, :qty)";
@@ -487,7 +487,7 @@ function putOrderDetails($order_id, $detail_id, $price, $qty){
 
 } 
 
-//idでorders tableの全データを取得
+//orders.idでorders tableの全データを取得
 function getAllFromAordersTable($id){
 
     $dbh = dbConnect();
@@ -501,6 +501,123 @@ function getAllFromAordersTable($id){
 
             return $results;
 }
+
+
+//ユーザーidでそのユーザーの注文全てをorders tableから取得する
+function getAllOrders($user_id){
+
+    $sql = "SELECT * FROM orders WHERE user_id = :user_id ORDER BY id";
+            
+            $dbh = dbConnect();
+            $stmt = $dbh->prepare($sql);
+            $stmt->bindValue(':user_id', $user_id,PDO::PARAM_INT);
+            $stmt->execute();
+            $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            return $results;
+}
+
+//orders table のidを使って、紐づけられた　order_details tableのデータを取得
+function getOrderDetails($order_id){
+
+    $sql = "SELECT * FROM order_details WHERE order_id = :order_id ORDER BY id";
+
+            $dbh = dbConnect();
+            $stmt = $dbh->prepare($sql);
+            $stmt->bindValue(':order_id', $order_id,PDO::PARAM_INT);
+            $stmt->execute();
+            $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            return $results;
+}
+
+//product_details table のid を使ってproduct_details tableからそのidの商品のデータを取得
+function getProductDetailsByDetailId($detail_id){
+
+    $sql = "SELECT * FROM product_details WHERE id = :id ORDER BY id";
+
+            $dbh = dbConnect();
+            $stmt = $dbh->prepare($sql);
+            $stmt->bindValue(':id', $detail_id,PDO::PARAM_INT);
+            $stmt->execute();
+            $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            return $results;
+
+}
+
+
+//product_details table のid を使ってproducts tableからその商品のデータを取得 これは上手くいくけど、問題ある？index０のところが心配。
+/*function getProductDataByDetailId($detail_id){
+
+    $sql = "SELECT product_id FROM product_details WHERE id = :id";
+
+    $dbh = dbConnect();
+            $stmt = $dbh->prepare($sql);
+            $stmt->bindValue(':id', $detail_id,PDO::PARAM_INT);
+            $stmt->execute();
+            $products_id = $stmt->fetch();
+
+            $product_id = $products_id[0];
+
+    $sql = "SELECT * FROM products WHERE id = :id";
+
+            $dbh = dbConnect();
+            $stmt = $dbh->prepare($sql);
+            $stmt->bindValue(':id', $product_id,PDO::PARAM_INT);
+            $stmt->execute();
+            $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            return $results;
+}*/
+
+//第二案 失敗no need
+/*function getProductDataByDetailId($detail_id){
+
+    $sql = "SELECT products.* FROM products JOIN product_details ON products.id = product_details.product_id WHERE products.id = :id";
+
+    $dbh = dbConnect();
+            $stmt = $dbh->prepare($sql);
+            $stmt->bindValue(':id', $detail_id,PDO::PARAM_INT);
+            $stmt->execute();
+            $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            return $results;
+} */
+
+
+//第３案は２回に分けて処理をする。
+function getProductIdByDetailId($detail_id){
+
+    $sql = "SELECT product_id FROM product_details WHERE id = :id";
+
+    $dbh = dbConnect();
+            $stmt = $dbh->prepare($sql);
+            $stmt->bindValue(':id', $detail_id,PDO::PARAM_INT);
+            $stmt->execute();
+            $products_id = $stmt->fetch();
+
+            return $products_id;
+}
+
+function getProductDatasById($product_id){
+    $sql = "SELECT * FROM products WHERE id = :id";
+
+            $dbh = dbConnect();
+            $stmt = $dbh->prepare($sql);
+            $stmt->bindValue(':id', $product_id,PDO::PARAM_INT);
+            $stmt->execute();
+            $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            return $results;
+}
+
+
+
+
+
+
+
 
 //第二案detail_orders tableも同時にinsertと思ったけど、やめた。。。トランザクションを使いたいと思ったけど、oder_idは一度登録するだけだった。。 no need
 /*function putOrderDatas($user_id, $shipping_fee, $sub_total, $tax, $total_charge, $pay_ways){
@@ -802,3 +919,135 @@ function getCountUsers(){
     function generateCsrfToken() {
         return hash('sha256', session_id());
     } 
+
+
+    //get all girls products
+    //まず、details table　でgenderごとに分けてprodut_id を取得
+    function getAllProductsIdByGender($gender){
+    
+        $sql = "SELECT product_id FROM product_details WHERE gender = :gender GROUP BY product_id";
+            
+            $dbh = dbConnect();
+             
+            $stmt = $dbh->prepare($sql);
+            $stmt->bindValue(':gender', $gender,PDO::PARAM_INT);
+            $stmt->execute();
+            $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+             
+            return $results;
+    }
+
+//次にproduct id で　products tableからデータを取得する。
+    function getProductsDataById($girls_product_id){
+
+        $sql = "SELECT * FROM products WHERE id = :id ORDER BY id DESC";
+            
+            $dbh = dbConnect();
+             
+            $stmt = $dbh->prepare($sql);
+            $stmt->bindValue(':id', $girls_product_id,PDO::PARAM_INT);
+            $stmt->execute();
+            $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+             
+            return $results;
+    }
+
+    //product_id でproduct_details table からpriceを取得
+    function getPriceByProductId($product_id){
+
+        $sql = "SELECT price FROM product_details WHERE product_id = :product_id";
+            
+            $dbh = dbConnect();
+             
+            $stmt = $dbh->prepare($sql);
+            $stmt->bindValue(':product_id', $product_id,PDO::PARAM_INT);
+            $stmt->execute();
+            $result = $stmt->fetch();
+             
+            return $result;
+    }
+
+
+    //レビューの投稿
+    function postedReview($user_id, $product_id, $code_name, $review_comment){
+
+        $result = false;
+
+        $sql = "INSERT INTO reviews (user_id, product_id, code_name, review_comment) 
+                              VALUE(:user_id, :product_id, :code_name, :review_comment)";
+
+        $dbh = dbConnect();
+        $stmt = $dbh->prepare($sql);
+        $stmt->bindValue(':user_id', $user_id,PDO::PARAM_INT);
+        $stmt->bindValue(':product_id', $product_id,PDO::PARAM_INT);
+        $stmt->bindValue(':code_name', $code_name,PDO::PARAM_STR);
+        $stmt->bindValue(':review_comment', $review_comment,PDO::PARAM_STR);
+
+        $result = $stmt->execute();
+
+        return $result;
+
+    }
+
+    //レビューの取得
+    function getAllReviewsByProductId($product_id){
+
+        $sql = "SELECT * FROM reviews WHERE product_id = :product_id";
+            
+            $dbh = dbConnect();
+             
+            $stmt = $dbh->prepare($sql);
+            $stmt->bindValue(':product_id', $product_id,PDO::PARAM_INT);
+            $stmt->execute();
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+             
+            return $result;
+    }
+
+
+
+    //order_idでproduct_details_id 取得する。それと、購入時の値段、数量も。ok
+    function getAllOrderDetailsByOrderId($order_id){
+
+        $sql = "SELECT detail_id, price, qty FROM order_details WHERE order_id = :order_id";
+            
+            $dbh = dbConnect();
+             
+            $stmt = $dbh->prepare($sql);
+            $stmt->bindValue(':order_id', $order_id,PDO::PARAM_INT);
+            $stmt->execute();
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+             
+            return $result;
+    }
+
+
+//orders table から　取得した$detail_id　を使ってprodcut_details table からprice、product_idを取得する。ok
+    function get_Id_productId_color_size_BydetailId($detail_id){
+
+        $sql = "SELECT id, product_id, color, size FROM product_details WHERE id = :id";
+            
+            $dbh = dbConnect();
+             
+            $stmt = $dbh->prepare($sql);
+            $stmt->bindValue(':id', $detail_id,PDO::PARAM_INT);
+            $stmt->execute();
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+             
+            return $result;
+    }
+
+    //$product_idを使って、product tableから商品名と画像を取得する。
+    function getProductName_savePath($product_id){
+
+        $sql = "SELECT product_name, save_path FROM products WHERE id = :id";
+            
+            $dbh = dbConnect();
+             
+            $stmt = $dbh->prepare($sql);
+            $stmt->bindValue(':id', $product_id,PDO::PARAM_INT);
+            $stmt->execute();
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+             
+            return $result;
+    }

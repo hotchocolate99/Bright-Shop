@@ -8,14 +8,15 @@ session_start();
   $users_id = $user[0]['usr_id'];
 //--------------------------------
 
-ini_set('display_errors', true);
+//ini_set('display_errors', true);
+error_reporting(E_ALL & ~ E_DEPRECATED & ~ E_USER_DEPRECATED & ~ E_NOTICE);
 
 require_once './../../private/database.php';
 require_once './../../private/functions.php';
 
 
 
-//var_dump($_GET['id']);
+var_dump($_GET['id']);
 if($_GET['id']){
     $product_id = $_GET['id'];
 }
@@ -122,13 +123,21 @@ for($a=0;$a<$count_colors;$a++){
 //print_r($detailCSs[1][1]);//[id] => 3 [product_id] => 55 [price] => 3000 [gender] => 1 [weight] => 200 [color] => Light Gray [size] => 70 [stock] => 10 [created_at] => 2021-01-09 17:03:20 [updated_at] => 2021-01-09 17:03:20 ) 
 //----------------------------------------------
 
-$total_in_cart = 0;
-foreach($_SESSION['shopping_cart'] as $detail){
-  if(!empty($details)){
-    $total_in_cart += $detail['detail_count'];
-  }
+if($_SESSION['shopping_cart']){
+    $total_in_cart = 0;
+    foreach($_SESSION['shopping_cart'] as $detail){
+      if(!empty($details)){
+         $total_in_cart += $detail['detail_count'];
+      }
+    }
 }
 
+//reviews
+$allReviews = getAllReviewsByProductId(47);
+//var_dump($allReviews);
+foreach($allReviews as $allReview){
+    var_dump($allReview);
+}
 
 ?>
 
@@ -366,9 +375,21 @@ foreach($_SESSION['shopping_cart'] as $detail){
                             </div>
                     </div><!--typein-->
 
-                    <div class="">
-                        <div class="review">review</div>
-                    </div>
+                    <div class="typein2">
+
+                            <h2 class="form_title">Reviews</h2>
+                            <?php $allReviews = getAllReviewsByProductId($product_id);?>
+
+                            <?php for($i=0;$i<count($allReviews);$i++):?>
+                                <div class="review_box">
+                                       <p><?php echo $i+1;?></p>
+                                        <p>Date:<?php echo $allReview['created_at'];?></p>
+                                        <p>Code name:<?php echo $allReview['code_name'];?></p>
+                                        <p>Review comment:</p>
+                                        <p><?php echo $allReview['review_comment'];?></p>
+                                </div>
+                            <?php endfor;?>
+                    </div><!--typein-->
 
                 </div><!--container-->
         　　 </div><!--wrappr-->
