@@ -137,7 +137,7 @@ function getProductColors($product_id){
     }
 
 //上で取得した色とproduct_idで、サイズが小さい順にdetails.idなどの全てのデータを取得。（これらは全て同じテーブルに表示する。）
-  function getProductDetailsByColor($product_id, $color){
+function getProductDetailsByColor($product_id, $color){
    
     $sql = "SELECT * FROM product_details WHERE product_id = :product_id AND color = :color ORDER BY size ASC";
 
@@ -151,10 +151,10 @@ function getProductColors($product_id){
      
              return $results;
     
-    }
+}
 
 
-    function getProductByColor($product_id){
+function getProductByColor($product_id){
         $sql = "SELECT id, color, size FROM product_details WHERE product_id = :product_id";
     
                  $dbh = dbConnect();
@@ -166,7 +166,7 @@ function getProductColors($product_id){
          
                  return $results;
         
-        }
+}
 
 
         
@@ -186,9 +186,9 @@ function getNewestProductsDatas($gender){
      
              return $results;
     
-    }
+}
 
-    function getSecondNewestProductsDatas($gender, $newest_id){
+function getSecondNewestProductsDatas($gender, $newest_id){
         
         $sql = "SELECT products.*, price FROM products JOIN product_details ON products.id = product_details.product_id WHERE gender = :gender AND products.id < :id ORDER BY products.id DESC LIMIT 1";
     
@@ -202,16 +202,10 @@ function getNewestProductsDatas($gender){
 
         return $results;
 
-    }
+}
 
-
-
-
-
-        
-
-    //products table　の全データを取得
-    function getAllProductsDatas(){
+//products table　の全データを取得
+function getAllProductsDatas(){
         $sql = "SELECT * FROM products";
     
                  $dbh = dbConnect();
@@ -222,58 +216,59 @@ function getNewestProductsDatas($gender){
          
                  return $results;
         
-        }
+}
 
-        function getCountProducts(){
-            $sql = "SELECT count(*) AS count_products FROM products";
+function getCountProducts(){
+        $sql = "SELECT count(*) AS count_products FROM products";
         
-                     $dbh = dbConnect();
+                $dbh = dbConnect();
              
-                     $stmt = $dbh->prepare($sql);
-                     $stmt->execute();
-                     $result = $stmt->fetch();
+                $stmt = $dbh->prepare($sql);
+                $stmt->execute();
+                $result = $stmt->fetch();
              
-                     return $result;
+                return $result;
             
-            }
+ }
 
 
-            //detailsの数を取得 no need?????
-            function getCountProductDetails($product_id){
-                $sql = "SELECT count(*) FROM product_details WHERE product_id = :product_id";
+//detailsの数を取得 no need?????
+function getCountProductDetails($product_id){
+        $sql = "SELECT count(*) FROM product_details WHERE product_id = :product_id";
             
-                         $dbh = dbConnect();
+                $dbh = dbConnect();
                  
-                         $stmt = $dbh->prepare($sql);
-                         $stmt->bindValue(':product_id', $product_id,PDO::PARAM_INT);
-                         $stmt->execute();
-                         $result = $stmt->fetch();
+                $stmt = $dbh->prepare($sql);
+                $stmt->bindValue(':product_id', $product_id,PDO::PARAM_INT);
+                $stmt->execute();
+                $result = $stmt->fetch();
                  
-                         return $result;
+                return $result;
                 
-                }
-
-            
-    //products table　の最新データを取得 
-    /*function getNewProductsDatas($limit){
-        $sql = "SELECT * FROM products ORDER BY id DESC LIMIT :LIMIT";
-    
-                 $dbh = dbConnect();
-         
-                 $stmt = $dbh->prepare($sql);
-                 $stmt->bindValue(':LIMIT', $limit,PDO::PARAM_INT);
-                 $stmt->execute();
-                 $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-         
-                 return $results;
-        
-        }*/
-
+}
 
 
 //shopping-------------------------------------------------------------------------
 
-//detail_idからproduct tableのproduct_name、画像を取得する------これは使えない。no need
+//上のが使えないので、まず、detail_idからproduct_idを取得し、それからproducts table　のデータを取得する。
+
+//これでproduct_id,color,sizeを取得
+function getProductByDetail($detail_id){
+    
+    $sql = "SELECT * FROM product_details WHERE id = :id";
+    
+             $dbh = dbConnect();
+     
+             $stmt = $dbh->prepare($sql);
+             $stmt->bindValue(':id', $detail_id,PDO::PARAM_INT);
+             $stmt->execute();
+             $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+     
+             return $results;
+
+}
+
+//detail_idからproduct tableのproduct_name、画像を取得する ok
 function getProductDataByDetail($detail_id){
 
     $sql = "SELECT product_id FROM product_details WHERE id = :id";
@@ -298,23 +293,7 @@ function getProductDataByDetail($detail_id){
 }
 
 
-//上のが使えないので、まず、detail_idからproduct_idを取得し、それからproducts table　のデータを取得する。
 
-//これでproduct_id,color,sizeを取得
-function getProductByDetail($detail_id){
-    
-    $sql = "SELECT * FROM product_details WHERE id = :id";
-    
-             $dbh = dbConnect();
-     
-             $stmt = $dbh->prepare($sql);
-             $stmt->bindValue(':id', $detail_id,PDO::PARAM_INT);
-             $stmt->execute();
-             $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-     
-             return $results;
-
-}
 
 //次にproduct_name, save_pathを取得
 function getProductNameFile($product_id){
@@ -434,43 +413,9 @@ function putOrderDatas($user_id, $shipping_fee, $sub_total, $tax, $total_charge,
 
 }
 
-//第二案　no need
-/*function putOrderDatas($user_id, $shipping_fee, $sub_total, $tax, $total_charge, $pay_ways, $ordered_at){
 
-    $sql = "INSERT INTO orders (user_id, shipping_fee, sub_total, tax, total_charge, pay_ways, ordered_at)
-                        VALUES(:user_id, :shipping_fee, :sub_total, :tax, :total_charge, :pay_ways, :ordered_at)";
 
-        $dbh = dbConnect();
-       
-        $stmt = $dbh->prepare($sql);
-        $stmt->bindValue(':user_id',$user_id,PDO::PARAM_INT);
-        $stmt->bindValue(':shipping_fee', $shipping_fee,PDO::PARAM_INT);
-        $stmt->bindValue(':sub_total', $sub_total,PDO::PARAM_INT);
-        $stmt->bindValue(':tax', $tax,PDO::PARAM_INT);
-        $stmt->bindValue(':total_charge',$total_charge,PDO::PARAM_INT);
-        $stmt->bindValue(':pay_ways',$pay_ways,PDO::PARAM_INT);
-        $stmt->bindValue(':ordered_at',$ordered_at,PDO::PARAM_STR);
-        $stmt->execute();
-
-}       
-
-function getNewestId(){
-
-        $sql = "SELECT id, ordered_at FROM orders ORDER BY id DESC limit 1";
-        
-        $dbh = dbConnect();
-
-        $stmt = $dbh->prepare($sql);
-        //$stmt->bindValue(':id', $id,PDO::PARAM_STR);
-        $stmt->execute();
-        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-        return $results;
-        
-
-}*/
-
-//上で取得したordered_atで照合してから、idをorder_idとしてorder_details tableに詳細を登録する。 ok
+//上で取得したidをorder_idとしてorder_details tableに詳細を登録する。 ok
 function putOrderDetails($order_id, $detail_id, $price, $qty){
 
     $sql = "INSERT INTO order_details (order_id, detail_id, price, qty)VALUES(:order_id, :detail_id, :price, :qty)";
@@ -504,13 +449,12 @@ function getAllFromAordersTable($id){
 
 
 //ユーザーidでそのユーザーの注文全てをorders tableから取得する
-function getAllOrders($user_id){
+function getAllOrders(){
 
-    $sql = "SELECT * FROM orders WHERE user_id = :user_id ORDER BY id";
+    $sql = "SELECT * FROM orders";
             
             $dbh = dbConnect();
             $stmt = $dbh->prepare($sql);
-            $stmt->bindValue(':user_id', $user_id,PDO::PARAM_INT);
             $stmt->execute();
             $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -547,45 +491,6 @@ function getProductDetailsByDetailId($detail_id){
 }
 
 
-//product_details table のid を使ってproducts tableからその商品のデータを取得 これは上手くいくけど、問題ある？index０のところが心配。
-/*function getProductDataByDetailId($detail_id){
-
-    $sql = "SELECT product_id FROM product_details WHERE id = :id";
-
-    $dbh = dbConnect();
-            $stmt = $dbh->prepare($sql);
-            $stmt->bindValue(':id', $detail_id,PDO::PARAM_INT);
-            $stmt->execute();
-            $products_id = $stmt->fetch();
-
-            $product_id = $products_id[0];
-
-    $sql = "SELECT * FROM products WHERE id = :id";
-
-            $dbh = dbConnect();
-            $stmt = $dbh->prepare($sql);
-            $stmt->bindValue(':id', $product_id,PDO::PARAM_INT);
-            $stmt->execute();
-            $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-            return $results;
-}*/
-
-//第二案 失敗no need
-/*function getProductDataByDetailId($detail_id){
-
-    $sql = "SELECT products.* FROM products JOIN product_details ON products.id = product_details.product_id WHERE products.id = :id";
-
-    $dbh = dbConnect();
-            $stmt = $dbh->prepare($sql);
-            $stmt->bindValue(':id', $detail_id,PDO::PARAM_INT);
-            $stmt->execute();
-            $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-            return $results;
-} */
-
-
 //第３案は２回に分けて処理をする。
 function getProductIdByDetailId($detail_id){
 
@@ -611,50 +516,6 @@ function getProductDatasById($product_id){
 
             return $results;
 }
-
-
-
-
-
-
-
-
-//第二案detail_orders tableも同時にinsertと思ったけど、やめた。。。トランザクションを使いたいと思ったけど、oder_idは一度登録するだけだった。。 no need
-/*function putOrderDatas($user_id, $shipping_fee, $sub_total, $tax, $total_charge, $pay_ways){
-
-    $sql = "INSERT INTO orders (user_id, shipping_fee, sub_total, tax, total_charge, pay_ways)VALUES(:user_id, :shipping_fee, :sub_total, :tax, :total_charge, :pay_ways)";
-
-        $dbh = dbConnect();
-        $dbh->beginTransaction();
-
-    
-    try{
-        $stmt = $dbh->prepare($sql);
-        $stmt->bindValue(':user_id',$user_id,PDO::PARAM_INT);
-        $stmt->bindValue(':shipping_fee', $shipping_fee,PDO::PARAM_INT);
-        $stmt->bindValue(':sub_total', $sub_total,PDO::PARAM_INT);
-        $stmt->bindValue(':tax', $tax,PDO::PARAM_INT);
-        $stmt->bindValue(':total_charge',$total_charge,PDO::PARAM_INT);
-        $stmt->bindValue(':pay_ways',$pay_ways,PDO::PARAM_INT);
-
-        //$order_id = $dbh->lastInsertId();
- 
-    $sql = "INSERT INTO order_details (order_id)VALUES(:order_id, )";
- 
-    $stmt = $dbh->prepare($sql);
-    $stmt->bindValue(':order_id', $order_id,PDO::PARAM_STR);
-    $stmt->execute();
-
-    $result = $stmt->execute();
-        $dbh->commit();
-
-        }catch(PDOException $e){
-            $dbh->rollBack();
-            exit($e);
-        }
-}*/
-
-
 
 
 //--------------------------------------------------------------------------------------------
@@ -689,6 +550,39 @@ function createUser($userData, $addr_pref, $ship_area){
 
 }
 
+
+//update account info
+function updateUser($user_id, $userData, $addr_pref, $ship_area){
+
+    $result = false;
+
+    $sql = "UPDATE users SET title = :title, usr_name = :usr_name, usr_email = :usr_email, usr_pass = :usr_pass, tel = :tel, postal = :postal, addr_pref = :addr_pref, addr_city = :addr_city, addr_last = :addr_last, ship_area = :ship_area, ad_request = :ad_request
+                         WHERE id = :id";
+  
+  //パスワードはここでハッシュ化すること！！　DBに入れる時！「password_hash(パスワード,PASSWORD_DEFAULT);」 とする。
+  //第二引数は決まり文句。意味：デフォルトでハッシュ化する。
+
+    $dbh = dbConnect();
+    $stmt = $dbh->prepare($sql);
+    $stmt->bindValue(':id', $user_id,PDO::PARAM_INT);
+    $stmt->bindValue(':title', $userData['title'],PDO::PARAM_STR);
+    $stmt->bindValue(':usr_name', $userData['usr_name'],PDO::PARAM_STR);
+    $stmt->bindValue(':usr_email', $userData['usr_email'],PDO::PARAM_STR);
+    $stmt->bindValue(':usr_pass', password_hash($userData['usr_pass'],PASSWORD_DEFAULT),PDO::PARAM_STR);
+    $stmt->bindValue(':tel', $userData['tel'],PDO::PARAM_STR);
+    $stmt->bindValue(':postal', $userData['postal'],PDO::PARAM_STR);
+    $stmt->bindValue(':addr_pref', $addr_pref,PDO::PARAM_STR);
+    $stmt->bindValue(':addr_city', $userData['addr_city'],PDO::PARAM_STR);
+    $stmt->bindValue(':addr_last', $userData['addr_last'],PDO::PARAM_STR);
+    $stmt->bindValue(':ship_area', $ship_area,PDO::PARAM_INT);
+    $stmt->bindValue(':ad_request', $userData['ad_request'],PDO::PARAM_INT);
+
+    $result = $stmt->execute();
+
+    return $result;
+
+}
+
 // to log in  ok
 function findUserByEmail($dbh, $usr_email){
 
@@ -704,7 +598,7 @@ function findUserByEmail($dbh, $usr_email){
   
 }
 
-// get user data to get orders done.  ok
+// get user data to get orders done.  and update user data.   ok
 function findUserByUserId($usr_id){
 
     $sql = "SELECT * FROM users WHERE id = :id";
@@ -776,53 +670,18 @@ function getCountUsers(){
         }
     }
 
-    //ship_areaから送料を算出  no need
-    /*function setShippingFee($ship_area){
 
-        //北海道
-        if($ship_area == 1){
-            return 1300;
+    function setShippingStatus($shipping_status){
+        if($shipping_status == 1){
+            return 'Shipping is being prepared.';
         }
 
-        //東北
-        if($ship_area == 2){
-            return 1000;
+        if($shipping_status == 2){
+            return "Your oreder is on it's way.";
         }
+    }
 
-        //関東
-        if($ship_area == 3){
-            return 800;
-        }
-
-        //北信越
-        if($ship_area == 4){
-            return 800;
-        }
-
-        //中部
-        if($ship_area == 5){
-            return 800;
-        }
-
-        //関西
-        if($ship_area == 6){
-            return 1000;
-        }
-
-        //中国、四国
-        if($ship_area == 7 || 8){
-            return 1200;
-        }
-
-        //九州、沖縄
-        if($ship_area == 9 || 10){
-            return 1300;
-        }
-        //その他
-        if($ship_area == 11){
-            return 1500;
-        }
-    }*/
+    
 
 //ship_areaから送料を算出 
     function setShippingFee($ship_area){
@@ -906,14 +765,55 @@ function getCountUsers(){
 
             $dbh = dbConnect();
             $stmt = $dbh->prepare($sql);
+            $stmt->bindValue(':id', $product_id,PDO::PARAM_INT);
             $stmt->bindValue(':product_name', $product_name,PDO::PARAM_STR);
             $stmt->bindValue(':category', $category,PDO::PARAM_STR);
             $stmt->bindValue(':description', $description,PDO::PARAM_STR);
             $stmt->bindValue(':filename', $filename,PDO::PARAM_STR);
             $stmt->bindValue(':save_path', $save_path,PDO::PARAM_STR);
-            $stmt->bindValue(':id', $product_id,PDO::PARAM_INT);
+           
             $stmt->execute();
     }
+
+   function  updateProductDetail($detail_id, $product_id, $price, $gender, $weight, $color, $size, $stock){
+
+        $sql = "UPDATE product_details SET
+                    product_id = :product_id, price = :price, gender= :gender, weight = :weight, color = :color, size = :size, stock = :stock
+                    WHERE id = :id;";
+
+            $dbh = dbConnect();
+            $stmt = $dbh->prepare($sql);
+            $stmt->bindValue('id', $detail_id,PDO::PARAM_INT);
+            $stmt->bindValue(':product_id', $product_id,PDO::PARAM_INT);
+            $stmt->bindValue(':price', $price,PDO::PARAM_INT);
+            $stmt->bindValue(':gender', $gender,PDO::PARAM_INT);
+            $stmt->bindValue(':weight', $weight,PDO::PARAM_INT);
+            $stmt->bindValue(':color', $color,PDO::PARAM_STR);
+            $stmt->bindValue(':size', $size,PDO::PARAM_INT);
+            $stmt->bindValue(':stock', $stock,PDO::PARAM_INT);
+           
+            $stmt->execute();
+   }
+
+   //update product data with keeping previous image.
+   function updateProductWithoutImg($product_id, $product_name, $category, $description){
+
+        $sql = "UPDATE products SET
+                    product_name = :product_name, category = :category, description = :description
+                    WHERE id = :id;";
+
+            $dbh = dbConnect();
+            $stmt = $dbh->prepare($sql);
+            $stmt->bindValue(':id', $product_id,PDO::PARAM_INT);
+            $stmt->bindValue(':product_name', $product_name,PDO::PARAM_STR);
+            $stmt->bindValue(':category', $category,PDO::PARAM_STR);
+            $stmt->bindValue(':description', $description,PDO::PARAM_STR);
+
+            $stmt->execute();
+   }
+
+
+
 
 //token for purchase.php
     function generateCsrfToken() {
@@ -1050,4 +950,52 @@ function getCountUsers(){
             $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
              
             return $result;
+    }
+
+
+    function contact($title, $name, $email, $subject, $content){
+
+        $sql = "INSERT INTO inquiries (title, name, email, subject, content) 
+                              VALUE(:title, :name, :email, :subject, :content)";
+
+        $dbh = dbConnect();
+        $stmt = $dbh->prepare($sql);
+        $stmt->bindValue(':title', $title,PDO::PARAM_STR);
+        $stmt->bindValue(':name', $name,PDO::PARAM_STR);
+        $stmt->bindValue(':email', $email,PDO::PARAM_STR);
+        $stmt->bindValue(':subject', $subject,PDO::PARAM_STR);
+        $stmt->bindValue(':content', $content,PDO::PARAM_STR);
+
+        $result = $stmt->execute();
+
+        return $result;
+    }
+
+    
+    function getAllOrdersForLists(){
+
+        $sql = "SELECT * FROM orders";
+            
+        $dbh = dbConnect();
+         
+        $stmt = $dbh->prepare($sql);
+        $stmt->execute();
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+         
+        return $result;
+    }
+
+
+
+    function changeShippingStatus($order_id, $shipping_status){
+
+        $sql = "UPDATE orders SET
+                    shipping_status = :shipping_status WHERE id = :id;";
+
+            $dbh = dbConnect();
+            $stmt = $dbh->prepare($sql);
+            $stmt->bindValue('id', (int)$order_id,PDO::PARAM_INT);
+            $stmt->bindValue('shipping_status', (int)$shipping_status,PDO::PARAM_INT);
+
+            $stmt->execute();
     }
