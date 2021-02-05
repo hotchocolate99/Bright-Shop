@@ -7,22 +7,24 @@ require_once './../../private/functions.php';
 $errors =[];
 
 ini_set('display_errors', true);
+//error_reporting(E_ALL & ~ E_DEPRECATED & ~ E_USER_DEPRECATED & ~ E_NOTICE);
+
 //if(!empty($_POST)){}がないと、最初からフォーム画面にエラーメッセージが表示される。
 if(!empty($_POST)){
 
     $mgr_name = $_POST['mgr_name'];
     if(!$mgr_name || 20 < strlen($mgr_name)){
-        $errors[] = '名前を入力して下さい。';
+        $errors[] = 'Please type your name.';
     }
 
     $mgr_pass = $_POST['mgr_pass'];
     if(!preg_match("/\A[a-z\d]{8,100}+\z/i",$mgr_pass)){
-        $errors['mgr_pass'] = 'パスワードは英数字８文字以上１００文字以下にしてください。';
+        $errors['mgr_pass'] = 'Password must to be 8 to 100 alphanumeric characters.';
     }
 
     $mgr_pass_conf = $_POST['mgr_pass_conf'];
     if($mgr_pass !== $mgr_pass_conf){
-        $errors[] = '確認用パスワードが間違っています。';
+        $errors[] = 'Passowrd confirmation does not match password.';
     }
 
 
@@ -32,10 +34,10 @@ if(!empty($_POST)){
         //require '../functions/classes.php';
 
         $hasCreated = createManager($_POST);
-        header('Location: mng_login.php');
+        header('Location: /manage/mng_login.php');
 
         if(!$hasCreated){
-            $errors[] = '登録に失敗しました';
+            $errors[] = 'Sign up failed.';
         }
     }
 
@@ -77,7 +79,7 @@ if(!empty($_POST)){
                         <?php endif ?>
                         <br>
 
-                        <form action="m_register.php" method="post">
+                        <form action="mng_signup.php" method="post">
                             <div class="form_item">
                                 <label>Name<br>
                                 　　<input type="text" name="mgr_name" value="<?php if(isset($_POST['mgr_name'])){echo h($mgr_name);}?>" placeholder="Name"required>
@@ -99,7 +101,7 @@ if(!empty($_POST)){
                         　　</div>
                         　　<br>
 
-                        　　<input class="btn blue" type="submit" value="Sign Up">
+                        　　<input class="btn_b bg_blue" type="submit" value="Sign Up">
 
                         </form>
                     </div><!--typein-->

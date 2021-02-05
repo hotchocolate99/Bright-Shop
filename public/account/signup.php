@@ -1,12 +1,16 @@
 <?php
-ini_set('display_errors', true);
+session_start();
+
+//ini_set('display_errors', true);
+error_reporting(E_ALL & ~ E_DEPRECATED & ~ E_USER_DEPRECATED & ~ E_NOTICE);
 
 require_once './../../private/database.php';
 require_once './../../private/functions.php';
 
 $errors =[];
 
-ini_set('display_errors', true);
+//ini_set('display_errors', true);
+error_reporting(E_ALL & ~ E_DEPRECATED & ~ E_USER_DEPRECATED & ~ E_NOTICE);
 
 if(!empty($_POST)){
     //var_dump($_POST);
@@ -18,59 +22,59 @@ if(!empty($_POST)){
 
     $title = $_POST['title'];
     if(!$title){
-        $errors[] = '敬称を選択して下さい。';
+        $errors[] = 'Please choose your title.';
     }
 
     $usr_name = $_POST['usr_name'];
     if(!$usr_name || 20 < strlen($usr_name)){
-        $errors[] = '名前を入力して下さい。';
+        $errors[] = 'Please type your name.';
     }
 
     $usr_email = $_POST['usr_email'];
     if(!$usr_email || !filter_var($usr_email,FILTER_VALIDATE_EMAIL)){
-        $errors[] = 'メールアドレスを入力して下さい。';
+        $errors[] = 'Please type your E-mail address.';
     }
 
     $dbh = dbconnect();
     $usr = findUserByEmail($dbh, $usr_email);
     if($usr){
-        $errors[] = 'このメールアドレスは使えません。';
+        $errors[] = 'This E-mail address is not available.';
     }
 
     $usr_pass = $_POST['usr_pass'];
     if(!preg_match("/\A[a-z\d]{8,100}+\z/i",$usr_pass)){
-        $errors['usr_pass'] = 'パスワードは英数字８文字以上１００文字以下にしてください。';
+        $errors['usr_pass'] = 'Password must to be 8 to 100 alphanumeric characters.';
     }
 
     $usr_pass_conf = $_POST['usr_pass_conf'];
     if($usr_pass !== $usr_pass_conf){
-        $errors[] = '確認用パスワードが間違っています。';
+        $errors[] = 'Passowrd confirmation does not match password.';
     }
 
     //どうやってバリデーションかける？？
     $tel = $_POST['tel'];
     if(!$tel){
-        $errors[] = '電話番号を入力して下さい。';
+        $errors[] = 'Please type your phone number.';
     }
 
     $postal = $_POST['postal'];
     if(!$postal){
-        $errors[] = '郵便番号を入力して下さい。';
+        $errors[] = 'Please type your postal code.';
     }
 
     //$addr_pref = $_POST['addr_pref'];
     if(!$addr_pref){
-        $errors[] = '都道府県を選択して下さい。';
+        $errors[] = 'Please choose your prefecture.';
     }
 
     $addr_city = $_POST['addr_city'];
     if(!$addr_city){
-        $errors[] = '市群区(島)を入力して下さい。';
+        $errors[] = 'Please type your city or ward.';
     }
 
     $addr_last = $_POST['addr_last'];
     if(!$addr_last){
-        $errors[] = 'それ以降の住所を入力して下さい。';
+        $errors[] = 'Please type the rest of your address.';
     }
 
 
@@ -80,13 +84,19 @@ if(!empty($_POST)){
         header('Location: ./login.php');
 
         if(!$hasCreated){
-            $errors[] = '登録に失敗しました';
+            $errors[] = 'Sign up failed.';
         }
     }
 
 }
-
-    
+if($_SESSION['shopping_cart']){
+$total_in_cart = 0;
+foreach($_SESSION['shopping_cart'] as $detail){
+  if(!empty($_SESSION['shopping_cart'])){
+    $total_in_cart += $detail['detail_count'];
+  }
+}
+}
 ?>
 
 
@@ -97,21 +107,21 @@ if(!empty($_POST)){
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Sign Up</title>
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css">
-        <link rel="stylesheet" href="./../../public/css/form.css">
-        <link rel="stylesheet" href="./../../public/css/header.css">
+        <link rel="stylesheet" href="./../css/form.css">
+        <link rel="stylesheet" href="./../css/header.css">
     
     </head>
 
     <body>
 
-    　<?php include './../../public/header.php';?>
+    　<?php include './../header.php';?>
 
    
         <label for="check">
             <div class="wrapper">
                 <div class="container">
                     <div class="typein">
-                        <h1 class="form_title orange">Create Account</h1>
+                        <h1 class="form_title orange">Sign Up</h1>
                         <br>
 
                         <?php if(isset($errors)): ?> 
@@ -175,7 +185,7 @@ if(!empty($_POST)){
 
                             <div class="form_item">
                                 <label>Prefecture<br>
-                                    <select name="addrPref-shipArea">
+                                    <select class="pref" name="addrPref-shipArea">
                                         <option value="北海道-1">北海道</option>
 
                                         <option value=青森県-2">青森県</option>
@@ -233,7 +243,7 @@ if(!empty($_POST)){
 
                                         <option value="沖縄県-10">沖縄県</option>
 
-                                        <option value="その他-11>その他</option>
+                                        <option value="その他-11">その他</option>
 
 
                                     </select>

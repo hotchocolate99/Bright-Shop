@@ -2,28 +2,30 @@
 session_start();
 
 ini_set('display_errors', true);
+error_reporting(E_ALL & ~ E_DEPRECATED & ~ E_USER_DEPRECATED & ~ E_NOTICE);
 
 require_once './../../private/database.php';
 require_once './../../private/functions.php';
 
+
 $errors =[];
-var_dump($_POST);
+//var_dump($_POST);
 if(!empty($_POST)){
 
     $dbh = dbconnect();
     $mgr = findManagerByName($dbh, $_POST['mgr_name']);
 
         if($_POST['mgr_name'] !== $mgr[0]['mgr_name']){
-             $errors[] = '名前が違います。';
+             $errors[] = 'Incorrect name';
         }else if(password_verify($_POST["mgr_pass"], $mgr["0"]["mgr_pass"])){
               session_regenerate_id(true);
               $_SESSION['login'] = true;
               $_SESSION['mgr'] = $mgr;
-              header('Location: ./add_product.php');
+              header('Location: ./products_list.php');
               exit();
 
         }else{
-             $errors[] = 'パスワードが違います。';
+             $errors[] = 'Incorrect password';
         }
  }
 
@@ -56,9 +58,9 @@ if(!empty($_POST)){
 
                         <?php if(isset($errors)): ?> 
                             <ul class="error-box">
-                            <?php foreach($errors as $error): ?> 
-                                <li><?php echo $error; ?></li>
-                            <?php endforeach ?> 
+                                <?php foreach($errors as $error): ?> 
+                                     <li><?php echo $error; ?></li>
+                                <?php endforeach ?> 
                             </ul>
                         <?php endif ?>
                         <br>
@@ -68,7 +70,7 @@ if(!empty($_POST)){
                                 <label>Name<br>
                                 　　<input type="text" name="mgr_name" value="<?php if(isset($_POST['mgr_name'])){echo h($_POST['mgr_name']);}?>" required>
                                 </label>
-                        　　</div>
+                        　　 </div>
                             <br>
 
                             <div class="form-item">
