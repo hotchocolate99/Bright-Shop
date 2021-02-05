@@ -1,11 +1,23 @@
 <?php
 session_start();
+if (!$_SESSION['login']) {
+  header('Location: /manage/mng_login.php');
+  exit();
+}
+
 if ($_SESSION['login']= true) {
-    $mgr = $_SESSION['mgr'];
+    $mgrs = $_SESSION['mgr'];
   }
-  $managers_id = $manager[0]['mgr_id'];
+  //var_dump($mgrs);
+  foreach($mgrs as $mgr){
+    //var_dump($mgr['id']);
+  }
+  $managers_id = $mgr['id'];
+  //var_dump($managers_id);
 //--------------------------------
+
 ini_set('display_errors', true);
+//error_reporting(E_ALL & ~ E_DEPRECATED & ~ E_USER_DEPRECATED & ~ E_NOTICE);
 
 require_once './../../private/database.php';
 require_once './../../private/functions.php';
@@ -15,11 +27,6 @@ $AllProductsDatas = getAllProductsDatas();
 
 $count_products = getCountProducts();
 //var_dump($count_products);
-
-//$productDtailsDatas = getProductDetails(13);
-//print_r($productDtailsDatas);
-
-
 
 ?>
 
@@ -31,7 +38,7 @@ $count_products = getCountProducts();
         <title>Products List</title>
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css">
         <link rel="stylesheet" href="./../css/products_list.css">
-        <link rel="stylesheet" href="./../../../public/css/header.css">
+        <link rel="stylesheet" href="./../css/header.css">
     
     </head>
 
@@ -45,7 +52,6 @@ $count_products = getCountProducts();
                 <div class="container">
                     <div class="typein">
                         <h1 class="form_title blue">Products List&nbsp;(<?php echo $count_products[0];?>)</h1>
-                        <p>Click the product to update it's infomation.</p>
                         <br>
 
                         <div class="frame">
@@ -65,9 +71,10 @@ $count_products = getCountProducts();
                                         <table border=1>
                                           <tr><td>Product ID</td><td><?php echo h($AllProductsData['id'])?></td></tr>
                                           <tr><td>Name</td><td><?php echo h($AllProductsData['product_name'])?></td></tr>
+                                          <tr><td>Registration Date</td><td><?php echo h($AllProductsData['updated_at'])?></td></tr>
                                           <tr><td>Category</td><td><?php echo h($AllProductsData['category'])?></td></tr>
                                           <tr><td>Description</td><td><?php echo nl2br(h($AllProductsData['description']))?></td></tr>
-                                          <tr><td rowspan=2>Image</td><td rowspan=2><img src="/public/manage/<?php echo "{$AllProductsData['save_path']}";?>"　width="120px" height="200px" alt="product_image" ></td></tr>
+                                          <tr><td rowspan=2>Image</td><td rowspan=2><img src="/manage/<?php echo "{$AllProductsData['save_path']}";?>"　width="120px" height="200px" alt="product_image" ></td></tr>
                                         </table>
 
                                           <div class="details">
@@ -77,21 +84,28 @@ $count_products = getCountProducts();
                                                 <?php for($j=0; $j<$count_productDetails[0]; $j++):?>
                                                   <?php $productDetail = $productDetails[$j];?>
 
-                                                  <!--<a class="link_aa" href="./update_product.php?product_id=<?php //echo h($AllProductsData['id'])?>&details_id=<?php //echo h($productDtail['id'])?>">-->
-                                                    <table class="details_table" border=1>
-                                                    <tr><td>Details ID</td><td><?php echo h($productDetail['id'])?></td></tr>
+                                                  
+                                                    <div class="details_box">
+                                                    <table class="details_table detail_item" border=1>
+                                                      <tr><td>Details ID</td><td><?php echo h($productDetail['id'])?></td></tr>
+                                                      <tr><td>Registration Date</td><td><?php echo h($productDetail['updated_at'])?></td></tr>
                                                       <tr><td>Price(¥)</td><td><?php echo n($productDetail['price'])?></td></tr>
                                                       <tr><td>Gender</td><td><?php echo setGender($productDetail['gender'])?></td></tr>
                                                       <tr><td>Color</td><td><?php echo h($productDetail['color'])?></td></tr>
                                                       <tr><td>Size(cm)</td><td><?php echo h($productDetail['size'])?></td></tr>
-                                                      <tr><td>Stocks</td><td><?php echo h($productDetail['stock'])?></td></tr>
+                                                      <?php if ($productDetail['stock'] < 3):?>
+                                                          <tr><td>Stocks</td><td><p class="last"><?php echo h($productDetail['stock'])?></p></td></tr>
+                                                      <?php else:?>
+                                                           <tr><td>Stocks</td><td><?php echo h($productDetail['stock'])?></td></tr>
+                                                      <?php endif;?>
                                                     </table>
-                                                    <a class="btn_b bg_gray" href="./delete_product.php?productDetail_id=<?php echo h($productDetail['id']);?>"><p><?php echo h('Delete Detail ID'.$productDetail['id']);?></p></a>
-                                                <!--</a>-->
+
+                                                    <div class="delete_btn detail_item"><a class="btn_b bg_gray" href="./delete_product.php?productDetail_id=<?php echo h($productDetail['id']);?>"><?php echo h('Delete Detail ID'.$productDetail['id']);?></a></div>
+                                                </div><!--details_box-->
                                                 <?php endfor;?>
                                             </div><!--details-->
                                            
-                                            <p class="dividing"></p>
+                                            <div class="dividing"></div>
                                       </div><!--result_box-->
                                       <br>
                                       <?php endfor;?>

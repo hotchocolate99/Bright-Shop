@@ -1,16 +1,30 @@
 <?php
 session_start();
-if ($_SESSION['login']= true) {
-    $mgr = $_SESSION['mgr'];
+
+ if (!$_SESSION['login']) {
+    header('Location: /manage/mng_login.php');
+    exit();
   }
-  $managers_id = $manager[0]['mgr_id'];
+
+  if ($_SESSION['login']= true) {
+    $mgrs = $_SESSION['mgr'];
+  }
+  //var_dump($mgrs);
+  foreach($mgrs as $mgr){
+    //var_dump($mgr['id']);
+  }
+  $managers_id = $mgr['id'];
+  //var_dump($managers_id);
 //--------------------------------
+
 ini_set('display_errors', true);
+error_reporting(E_ALL & ~ E_DEPRECATED & ~ E_USER_DEPRECATED & ~ E_NOTICE);
+
 
 require_once './../../private/database.php';
 require_once './../../private/functions.php';
 
-var_dump($_GET['productDetail_id']);
+//var_dump($_GET['productDetail_id']);
 
 
 if(isset($_GET['product_id'])){
@@ -26,7 +40,7 @@ if(isset($_GET['productDetail_id'])){
   $deletedDetail = deleteDetails($productDetail_id);
 }
 
-
+header('Location: ./products_list.php');
 
 
 
@@ -40,7 +54,7 @@ if(isset($_GET['productDetail_id'])){
         <title>Delete Product</title>
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css">
         <link rel="stylesheet" href="./../css/form.css">
-        <link rel="stylesheet" href="./../../../public/css/header.css">
+        <link rel="stylesheet" href="./../css/header.css">
     </head>
 
     <body>
@@ -51,14 +65,7 @@ if(isset($_GET['productDetail_id'])){
             <div class="wrapper">
                 <div class="container">
                 　  <div class="typein">
-                
-                <!--上手く反映されない。----------------------------------        
-                <?php// if(!empty($deletedProduct)):?>
-                            <p class="form_title"><?php// echo "Whole this product data has been deleted.";?></p>
-                        <?php// elseif(!empty($deletedDetail)):?>
-                            <p class="form_title"><?php// echo "One details part of the product has been deleted.";?></p>
-                        <?php// endif;?>
-                    ---------------------------------------------------------------->
+                    
                     <h2 class="form_title">Deleted successfuly.</h2>
 
                     </div>

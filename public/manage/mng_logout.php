@@ -1,6 +1,8 @@
 <?php
 session_start();
 
+error_reporting(E_ALL & ~ E_DEPRECATED & ~ E_USER_DEPRECATED & ~ E_NOTICE);
+
 //ログアウトする時は、セッションの内容をdestroyで消去する。その前にセッションに空の配列を入れている。
 //var_dump($_SESSION);　
 $_SESSION = array();
@@ -21,7 +23,7 @@ session_destroy();
         <title>Log Out</title>
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css">
         <link rel="stylesheet" href="./../css/form.css">
-        <link rel="stylesheet" href="./../css/header.css">
+        <link rel="stylesheet" href="./../css/mng_header.css">
     </head>
     <body>
         <?php include './mng_header.php';?>

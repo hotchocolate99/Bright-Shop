@@ -1,11 +1,24 @@
 <?php
 session_start();
+
+if (!$_SESSION['login']) {
+  header('Location: /manage/mng_login.php');
+  exit();
+}
+
 if ($_SESSION['login']= true) {
-    $mgr = $_SESSION['mgr'];
+    $mgrs = $_SESSION['mgr'];
   }
-  $managers_id = $manager[0]['mgr_id'];
+  //var_dump($mgrs);
+  foreach($mgrs as $mgr){
+    //var_dump($mgr['id']);
+  }
+  $managers_id = $mgr['id'];
+  //var_dump($managers_id);
 //--------------------------------
+
 ini_set('display_errors', true);
+//error_reporting(E_ALL & ~ E_DEPRECATED & ~ E_USER_DEPRECATED & ~ E_NOTICE);
 
 require_once './../../private/database.php';
 require_once './../../private/functions.php';
@@ -20,9 +33,6 @@ foreach($usrDatas as $usrData){
         //echo $usrData['usr_name'];
 }
 
-
-
-
 ?>
 
 <!DOCTYPE html>
@@ -33,7 +43,7 @@ foreach($usrDatas as $usrData){
         <title>Members List</title>
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css">
         <link rel="stylesheet" href="./../css/form.css">
-        <link rel="stylesheet" href="./../../../public/css/header.css">
+        <link rel="stylesheet" href="./../css/mng_header.css">
     
     </head>
 
@@ -62,11 +72,9 @@ foreach($usrDatas as $usrData){
 
                                       <table border=1>
                                           <tr><td>ID</td><td><?php echo h($usrData['id'])?></td></tr>
-                                          <tr><td>Name</td><td><?php echo h($usrData['usr_name'])?>&nbsp;さん</td></tr>
+                                          <tr><td>Name</td><td><?php echo h($usrData['title'].' '.$usrData['usr_name'])?></td></tr>
                                           <tr><td>E-mail</td><td><?php echo h($usrData['usr_email'])?></td></tr>
                                           <tr><td>Phone number</td><td><?php echo h($usrData['tel'])?></td></tr>
-                                          <tr><td>Shopping history</td><td>---</td></tr>
-                                          <tr><td>Order</td><td>---</td></tr>
                                           <tr><td rowspan=2>Address</td><td rowspan=2>〒<?php echo h($usrData['postal'])?><br><?php echo h($usrData['addr_pref'].$usrData['addr_city'].$usrData['addr_last'])?></td></tr>
                                           
                                         </table>
