@@ -1,15 +1,30 @@
 <?php
 session_start();
+if (!$_SESSION['login']) {
+    header('Location: /manage/mng_login.php');
+    exit();
+  }
+  
+  if ($_SESSION['login']= true) {
+      $mgrs = $_SESSION['mgr'];
+    }
+    //var_dump($mgrs);
+    foreach($mgrs as $mgr){
+      //var_dump($mgr['id']);
+    }
+    $managers_id = $mgr['id'];
+    //var_dump($managers_id);
+  //--------------------------------
+  
 ini_set('display_errors', true);
+//error_reporting(E_ALL & ~ E_DEPRECATED & ~ E_USER_DEPRECATED & ~ E_NOTICE);
 
 require_once './../../private/database.php';
 require_once './../../private/functions.php';
 
 $errors =[];
 
-ini_set('display_errors', true);
-
-var_dump($_POST);
+//var_dump($_POST);
 
 //var_dump($_FILES);
 //var_dump($_GET);
@@ -19,165 +34,166 @@ if(!empty($_POST['product_name'])){
     $product_name = $_POST['product_name'];
 
     if(!$product_name || 20 < strlen($product_name)){
-        $errors[] = '商品名を入力して下さい。';
+        $errors[] = 'Please type product name.';
     }
 
     $price = $_POST['price'];
     if(!$price){
-        $errors[] = '単価を入力して下さい。';
+        $errors[] = 'Please type price.';
     }
 
     $gender = $_POST['gender'];
     if(!$gender){
-        $errors[] = '性別を選択して下さい。';
+        $errors[] = 'Please choose gender.';
     }
 
     $category = $_POST['category'];
     if(!$category){
-        $errors[] = 'カテゴリーを選択して下さい。';
+        $errors[] = 'Please choose category.';
     }
 
     $description = $_POST['description'];
     if(!$description){
-        $errors[] = '商品説明を入力して下さい。';
+        $errors[] = 'Please type product description.';
     }
 
     $weight = $_POST['weight'];
     if(!$weight){
-        $errors[] = '重量を入力して下さい。';
+        $errors[] = 'Please type product weight.';
     }
 
-//画像どうやってバリデーションかける？？
-$file = $_FILES['img'];
-//var_dump($file);
+    $file = $_FILES['img'];
+    //var_dump($file);
 
-//↓basename()関数で、ディレクトリトラバーサル対策。ファイルのパスを排除し、最後のファイル名の部分だけを返してくれるようにする。これでパスから情報を盗まれることはない。
-$filename = basename($file['name']);
-$tmp_path = $file['tmp_name'];
-$file_err = $file['error'];
-$filesize = $file['size'];
-$upload_dir = 'images/';
-$save_filename = date('YmdHis'). $filename;
-//↑fileに日付をつけることで、同じ画像も何度でも保存出来るようになる。
+    //↓basename()関数で、ディレクトリトラバーサル対策。ファイルのパスを排除し、最後のファイル名の部分だけを返してくれるようにする。これでパスから情報を盗まれることはない。
+    $filename = basename($file['name']);
+    $tmp_path = $file['tmp_name'];
+    $file_err = $file['error'];
+    $filesize = $file['size'];
+    $upload_dir = 'images/';
+    $save_filename = date('YmdHis'). $filename;
+    //↑fileに日付をつけることで、同じ画像も何度でも保存出来るようになる。
 
-if($filesize){
-    if($filesize > 1048576 || $file_err == 2){
-        $errors[] = 'ファイルサイズは１MB未満にして下さい。';
-    }
-  }
-
-  //ファイルの拡張子のバリデーション
-  //許容するファイルの拡張子↓
-  $allow_ext = array('jpg','jpeg','png');
-  //実際のファイルの拡張子を確認 ↓　pathinfo関数で。＄file_extには実際のファイルの拡張子が入る。
-  $file_ext = pathinfo($filename,PATHINFO_EXTENSION);
-  $save_path = $upload_dir.$save_filename;
-
-//in_array関数で＄file_ext が $allow_ext　のどれかに当てはまるかのチェック。strtolowerは実際のファイルの拡張子が大文字だったら小文字に直してくれる。
-  if($file_ext && $allow_ext){
-      if(!in_array(strtolower($file_ext),$allow_ext)){
-        $errors[] = '画像を選択して下さい。';
-        
-      }
-  }
-//ファイルがアップロードされているかのバリデーション。　アップロード＝一時保存　is_uploaded_file($tmp_path)関数で、$tmp_pathにアップロードされているかをみる。trueならアップロード成功。
-//次にmove_uploaded_file($tmp_path, $save_path）関数で、第一引数から第二引数に場所を移す。（一時保存場所から本当の保存先へ）
-$msg = [];
-if($tmp_path && $save_path && $upload_dir){
- if(is_uploaded_file($tmp_path)){
-      if(move_uploaded_file($tmp_path, $save_path)){
-          $msg[] = $filename .'を'.$upload_dir .'に保存しました。';
-      }else{
-          $errors[] = 'ファイルが保存できませんでした。';
-      }
-
-  }else{
-      $errors[] = 'ファイルが選択されていません。';
-  }
-}
-//var_dump($product_name);
-
-
-   if(count($errors) === 0 && $msg){
-
-      $product_id = registerProduct($product_name, $category, $description, $filename, $save_path);
-      //header('Location: ./products_list.php');
-
-      if(!$product_id){
-         $errors[] = '登録に失敗しました';
-      }
-   }
-   
-
-
-//product detail part------------------------------------------------
-
-//---------------------------------------------
-/*$array = array('apple', 'lemon', 'banana');
- 
-// 任意の文字列が配列に含まれるか検索
-$index = array_search('lemon', $array);
-print_r($index);
-
-// インデックスを指定して要素を削除
-array_splice($array, $index);
-print_r($array);*/
-//-----------------------------------------------
-
-    $product_id = $product_id['product_id'];
-    var_dump($product_id);
-    var_dump($price);
-    var_dump($gender);
-    var_dump($weight);
-
-    for($i=0;$i<8;$i++){
-
-        $errorsD = [];
-
-      /*if($_POST['color'][$i] !=='opt' && $_POST['size'][$i] =='opt' || $_POST['stock'][$i] =='opt'){
-
-                $errorsD[] = 'サイズ、在庫数のいづれかが未入力です。全て入力してください。';
-
-        }else if($_POST['size'][$i] !=='opt' && $_POST['color'][$i] =='opt' || $_POST['stock'][$i] =='opt'){
-
-                    $errorsD[] = '色、在庫数のいづれかが未入力です。全て入力してください。';
-
-        }else if($_POST['stock'][$i] !=='opt' && $_POST['color'][$i] =='opt' || $_POST['size'][$i] =='opt){
-            
-                    $errorsD[] = '色、サイズのいづれかが未入力です。全て入力してください。';
-
-        }*/
-
-
-        if($_POST['color'][$i] !=='opt' && $_POST['size'][$i] !=='opt' && $_POST['stock'][$i] !=='opt'){
-            //$_POST['color'][0] && $_POST['size'][0] && $_POST['stock'][0]){
-            $color = $_POST['color'][$i];
-            $size = $_POST['size'][$i];
-            $stock = $_POST['stock'][$i];
-
-            $completedRegisteringProduct = registerProductDetail($product_id, $price, $gender, $weight, $color, $size, $stock);
-            //header('Location: ./products_list.php');
-
-            if(!$completedRegisteringProduct){
-                $errorsD[] = '登録に失敗しました';
-            }
-            /*else if($_POST['color'][$i] =='option' && $_POST['size'][$i] =='option' && $_POST['stock'][$i] =='option'){
-
-            $color = $_POST['color'][$i];
-            $color = null;
-
-            $size = $_POST['size'][$i];
-            $size = null;
-
-            $stock = $_POST['stock'][$i];
-            $stock = null;*/
-
+    if($filesize){
+        if($filesize > 1048576 || $file_err == 2){
+            $errors[] = 'Image file size must be less than 1MB.';
         }
     }
 
+    //ファイルの拡張子のバリデーション
+    //許容するファイルの拡張子↓
+    $allow_ext = array('jpg','jpeg','png');
+    //実際のファイルの拡張子を確認 ↓　pathinfo関数で。＄file_extには実際のファイルの拡張子が入る。
+    $file_ext = pathinfo($filename,PATHINFO_EXTENSION);
+    $save_path = $upload_dir.$save_filename;
+
+    //in_array関数で＄file_ext が $allow_ext　のどれかに当てはまるかのチェック。strtolowerは実際のファイルの拡張子が大文字だったら小文字に直してくれる。
+    if($file_ext && $allow_ext){
+        if(!in_array(strtolower($file_ext),$allow_ext)){
+            $errors[] = 'Please choose image file.';
+
+        }
+    }
+    
+    //ファイルがアップロードされているかのバリデーション。　アップロード＝一時保存　is_uploaded_file($tmp_path)関数で、$tmp_pathにアップロードされているかをみる。trueならアップロード成功。
+    //次にmove_uploaded_file($tmp_path, $save_path）関数で、第一引数から第二引数に場所を移す。（一時保存場所から本当の保存先へ）
+        $msg = [];
+        if($tmp_path && $save_path && $upload_dir){
+            if(is_uploaded_file($tmp_path)){
+                if(move_uploaded_file($tmp_path, $save_path)){
+                    $msg[] = $filename .'has been saved in '.$upload_dir;
+                }else{
+
+                $errors[] = 'File failed to be saved.';
+                }
+
+            }else{
+                $errors[] = 'File is not chosen.';
+            }
+        }
+        //var_dump($product_name);
+
+
+        //details tableの方のバリデーション
+        
+        for($i=0;$i<8;$i++){
+
+            //3つとも空だったらバリデーションは掛けない。
+              if ($_POST['color'][$i] == '' && $_POST['size'][$i] == '' && $_POST['stock'][$i] == '') {
+                  continue;
+              }
+    
+             //ここからバリデーション 
+             $errorsD = [];
+              if(empty($_POST['color'][$i])){
+           
+                 $errorsD[] = 'Please type color.';
+    
+              }
+            
+              if(empty($_POST['size'][$i])){
+            
+                  $errorsD[] = 'Please type size.';
+    
+              }
+            
+              if(empty($_POST['stock'][$i])){
+           
+                $errorsD[] = 'Please type stock.';
+    
+              }
+    
+            
+
+
+            if(count($errorsD) == 0 && count($errors) == 0 && $msg ){
+
+                $product_id = registerProduct($product_name, $category, $description, $filename, $save_path);
+                //header('Location: ./products_list.php');
+
+                if(!$product_id){
+                   $errors[] = 'Registration failed.';
+                }
+            }
+        
+
+
+
+            //product detail part------------------------------------------------
+
+                $product_id = $product_id['product_id'];
+                //var_dump($product_id);
+                //var_dump($price);
+                //var_dump($gender);
+                //var_dump($weight);
+
+                
+
+                if(count($errorsD) == 0){
+
+
+                    //if($_POST['color'][$i] !=='' && $_POST['size'][$i] !=='' && $_POST['stock'][$i] !==''){
+                        //$_POST['color'][0] && $_POST['size'][0] && $_POST['stock'][0]){
+                        $color = $_POST['color'][$i];
+                        $size = $_POST['size'][$i];
+                        $stock = $_POST['stock'][$i];
+                    
+
+                
+                        $completedRegisteringProduct = registerProductDetail($product_id, $price, $gender, $weight, $color, $size, $stock);
+                        //header('Location: ./products_list.php');
+
+                        if(!$completedRegisteringProduct){
+                            $errorsD[] = 'Registration failed.';
+                        }
+
+                    // }
+                    
+                    
+
+                }
+        }
 }
-
-
 
 ?>
 
@@ -189,7 +205,7 @@ print_r($array);*/
         <title>Add New Product</title>
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css">
         <link rel="stylesheet" href="./../css/form.css">
-        <link rel="stylesheet" href="./../../public/css/header.css">
+        <link rel="stylesheet" href="./../css/header.css">
     
     </head>
 
@@ -217,7 +233,7 @@ print_r($array);*/
                         <?php endif ?>
                         <br>
 
-                        <form action="add_product.php" method="post" enctype="multipart/form-data"> //novalidate
+                        <form action="add_product.php" method="post" enctype="multipart/form-data"> <!--novalidate-->
                             
                             <div class="form_item">
                                 <label>Product Name<br>
@@ -260,7 +276,7 @@ print_r($array);*/
 
                             <div class="form_item">
                                 <label>Description(in 400 words or less)<br>
-                            　　　　　<textarea class="description" name="description" cols="80" rows="6"></textarea>
+                            　　　　　<textarea class="description" name="description" cols="80" rows="6"><?php if(isset($_POST['description'])){echo nl2br(h($_POST['description']));}?></textarea>
                             　　
                                 </label>
                             </div>
@@ -299,19 +315,19 @@ print_r($array);*/
                         <div class="form_item_box">
                                 <div class="form-item">
                                     <label>Color<br>
-                                    　　<input calss="narrow inline" type="text" name="color[]" value="opt">
+                                    　　<input calss="narrow inline" type="text" name="color[]">
                                     </label>
                                 </div>
                                 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
                                 <div class="form_item">
                                     <label>Size<br>
-                                    　　<input calss="narrow inline" type="text" name="size[]" value="opt">&nbsp;cm
+                                    　　<input calss="narrow inline" type="text" name="size[]">&nbsp;cm
                                     </label>
                             　　</div>
 
                                 <div class="form-item ">
                                     <label>Stock<br>
-                                    　　<input calss="narrow inline" type="text" name="stock[]" value="opt">
+                                    　　<input calss="narrow inline" type="text" name="stock[]">
                                     </label>
                                 </div>
                         </div><!--form_item_box-->
@@ -323,19 +339,19 @@ print_r($array);*/
                        <div class="form_item_box">
                                     <div class="form-item">
                                         <label>Color<br>
-                                        　　<input calss="narrow inline" type="text" name="color[]" value="opt">
+                                        　　<input calss="narrow inline" type="text" name="color[]">
                                         </label>
                                     </div>
                                     <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
                                     <div class="form_item">
                                         <label>Size<br>
-                                        　　<input calss="narrow inline" type="text" name="size[]" value="opt">&nbsp;cm
+                                        　　<input calss="narrow inline" type="text" name="size[]">&nbsp;cm
                                         </label>
                                 　　</div>
 
                                     <div class="form-item ">
                                         <label>Stock<br>
-                                        　　<input calss="narrow inline" type="text" name="stock[]" value="opt">
+                                        　　<input calss="narrow inline" type="text" name="stock[]">
                                         </label>
                                     </div>
                             </div><!--form_item_box-->
@@ -347,19 +363,19 @@ print_r($array);*/
                             <div class="form_item_box">
                                     <div class="form-item">
                                         <label>Color<br>
-                                        　　<input calss="narrow inline" type="text" name="color[]" value="opt">
+                                        　　<input calss="narrow inline" type="text" name="color[]">
                                         </label>
                                     </div>
                                     <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
                                     <div class="form_item">
                                         <label>Size<br>
-                                        　　<input calss="narrow inline" type="text" name="size[]" value="opt">&nbsp;cm
+                                        　　<input calss="narrow inline" type="text" name="size[]">&nbsp;cm
                                         </label>
                                 　　</div>
 
                                     <div class="form-item ">
                                         <label>Stock<br>
-                                        　　<input calss="narrow inline" type="text" name="stock[]" value="opt">
+                                        　　<input calss="narrow inline" type="text" name="stock[]">
                                         </label>
                                     </div>
                             </div><!--form_item_box-->
@@ -371,19 +387,19 @@ print_r($array);*/
                              <div class="form_item_box">
                                     <div class="form-item">
                                         <label>Color<br>
-                                        　　<input calss="narrow inline" type="text" name="color[]" value="opt">
+                                        　　<input calss="narrow inline" type="text" name="color[]">
                                         </label>
                                     </div>
                                     <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
                                     <div class="form_item">
                                         <label>Size<br>
-                                        　　<input calss="narrow inline" type="text" name="size[]" value="opt">&nbsp;cm
+                                        　　<input calss="narrow inline" type="text" name="size[]">&nbsp;cm
                                         </label>
                                 　　</div>
 
                                     <div class="form-item ">
                                         <label>Stock<br>
-                                        　　<input calss="narrow inline" type="text" name="stock[]" value="opt">
+                                        　　<input calss="narrow inline" type="text" name="stock[]">
                                         </label>
                                     </div>
                             </div><!--form_item_box-->
@@ -395,19 +411,19 @@ print_r($array);*/
                             <div class="form_item_box">
                                     <div class="form-item">
                                         <label>Color<br>
-                                        　　<input calss="narrow inline" type="text" name="color[]" value="opt">
+                                        　　<input calss="narrow inline" type="text" name="color[]">
                                         </label>
                                     </div>
                                     <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
                                     <div class="form_item">
                                         <label>Size<br>
-                                        　　<input calss="narrow inline" type="text" name="size[]" value="opt">&nbsp;cm
+                                        　　<input calss="narrow inline" type="text" name="size[]">&nbsp;cm
                                         </label>
                                 　　</div>
 
                                     <div class="form-item ">
                                         <label>Stock<br>
-                                        　　<input calss="narrow inline" type="text" name="stock[]" value="opt">
+                                        　　<input calss="narrow inline" type="text" name="stock[]">
                                         </label>
                                     </div>
                             </div><!--form_item_box-->
@@ -419,19 +435,19 @@ print_r($array);*/
                             <div class="form_item_box">
                                     <div class="form-item">
                                         <label>Color<br>
-                                        　　<input calss="narrow inline" type="text" name="color[]" value="opt">
+                                        　　<input calss="narrow inline" type="text" name="color[]">
                                         </label>
                                     </div>
                                     <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
                                     <div class="form_item">
                                         <label>Size<br>
-                                        　　<input calss="narrow inline" type="text" name="size[]" value="opt">&nbsp;cm
+                                        　　<input calss="narrow inline" type="text" name="size[]">&nbsp;cm
                                         </label>
                                 　　</div>
 
                                     <div class="form-item ">
                                         <label>Stock<br>
-                                        　　<input calss="narrow inline" type="text" name="stock[]" value="opt">
+                                        　　<input calss="narrow inline" type="text" name="stock[]">
                                         </label>
                                     </div>
                             </div><!--form_item_box-->
@@ -442,19 +458,19 @@ print_r($array);*/
                              <div class="form_item_box">
                                     <div class="form-item">
                                         <label>Color<br>
-                                        　　<input calss="narrow inline" type="text" name="color[]" value="opt">
+                                        　　<input calss="narrow inline" type="text" name="color[]">
                                         </label>
                                     </div>
                                     <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
                                     <div class="form_item">
                                         <label>Size<br>
-                                        　　<input calss="narrow inline" type="text" name="size[]" value="opt">&nbsp;cm
+                                        　　<input calss="narrow inline" type="text" name="size[]">&nbsp;cm
                                         </label>
                                 　　</div>
 
                                     <div class="form-item ">
                                         <label>Stock<br>
-                                        　　<input calss="narrow inline" type="text" name="stock[]" value="opt">
+                                        　　<input calss="narrow inline" type="text" name="stock[]">
                                         </label>
                                     </div>
                             </div><!--form_item_box-->
@@ -466,19 +482,19 @@ print_r($array);*/
                              <div class="form_item_box">
                                     <div class="form-item">
                                         <label>Color<br>
-                                        　　<input calss="narrow inline" type="text" name="color[]" value="opt">
+                                        　　<input calss="narrow inline" type="text" name="color[]">
                                         </label>
                                     </div>
                                     <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
                                     <div class="form_item">
                                         <label>Size<br>
-                                        　　<input calss="narrow inline" type="text" name="size[]" value="opt">&nbsp;cm
+                                        　　<input calss="narrow inline" type="text" name="size[]">&nbsp;cm
                                         </label>
                                 　　</div>
 
                                     <div class="form-item ">
                                         <label>Stock<br>
-                                        　　<input calss="narrow inline" type="text" name="stock[]" value="opt">
+                                        　　<input calss="narrow inline" type="text" name="stock[]">
                                         </label>
                                     </div>
                             </div><!--form_item_box-->
