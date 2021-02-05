@@ -12,6 +12,7 @@ header{
 
     font-family:'Hiragino Mincho ProN','Javanese Text','Mongolian Baiti','Palatino Linotype';
     background-color: white;
+    color:#626063;
 }
 
 .h_container{
@@ -31,6 +32,7 @@ font-weight: bold;
 .navi{
     font-size: 1.2rem;
     z-index: 1;
+
 }
 
 .navi ul{
@@ -50,16 +52,19 @@ font-weight: bold;
 
 .listH ul{
     position: absolute;
+    left: -50px;
     display: none;
+
     
 }
 
 .listH:hover ul{
+    position: absolute;
     background-color:white;
     display:block;
     font-size: 1rem;
     margin: 0;
-    width: 9rem;
+    width: 20rem;
 }
 
 .link_a{

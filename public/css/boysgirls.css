@@ -158,7 +158,11 @@ li{
 }
 
 .text_part{
-  padding-left: 30px;
+  padding: 0 30px;
+}
+
+.text_part h2{
+  margin: 1rem 0rem;
 }
 
 .img_box {

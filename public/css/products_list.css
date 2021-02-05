@@ -8,7 +8,8 @@ h1, h2, h3, h4, h5, h6, div{
 }
 
 body{
-    font-family:'Javanese Text','Mongolian Baiti','Palatino Linotype';
+    font-family:'Hiragino Mincho ProN','Javanese Text','Mongolian Baiti','Palatino Linotype';
+    
     min-height: 100vh;
 }
 
@@ -32,10 +33,10 @@ li{
     background-color:#fcf6e8;
     border-radius: 15px;
     padding: 2rem;
-    width: 800px;
+    width: 1000px;
     margin: 0 auto;
     position: relative;
-    height: 20rem;
+    min-height: 20rem;
 }
 
 .error-box li{
@@ -55,12 +56,10 @@ li{
     border-bottom: solid 0.5rem #ecac73;
 }
 
-.dividing{
-    border-top: solid 2px #64686a;
-}
-
 .details{
     display: flex;
+    flex-wrap: wrap;
+    align-content: stretch;
 }
 
 .details_table{
@@ -93,6 +92,7 @@ table{
     border: none;  /* 枠線を消す */
     outline: none;
     text-decoration: none;
+    font-family:'Hiragino Mincho ProN','Javanese Text','Mongolian Baiti','Palatino Linotype';
 
 }
 
@@ -108,5 +108,24 @@ table{
 .bg_gray{
     background-color: #707070;
 }
-/*
 
+.details_box{
+    display: flex;
+    flex-direction: column;
+    margin-right: 1rem;
+
+}
+
+table{
+    margin-top: 1rem;
+}
+
+.result_box{
+    border-bottom: solid 2px #64686a;
+    padding-bottom: 1rem;
+}
+
+
+.last{
+    background-color: red;
+}

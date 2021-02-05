@@ -107,6 +107,7 @@ li{
     color: #fcf6e8;
     border: none;  /* 枠線を消す */
     outline: none;
+    font-family:'Hiragino Mincho ProN','Javanese Text','Mongolian Baiti','Palatino Linotype';
     
   }
 .btn_b{
@@ -121,6 +122,7 @@ li{
     border: none;  /* 枠線を消す */
     outline: none;
     text-decoration: none;
+    font-family:'Hiragino Mincho ProN','Javanese Text','Mongolian Baiti','Palatino Linotype';
 
 }
 
@@ -197,6 +199,17 @@ li{
     right: 5%;
 }
 
+.pref{
+    margin-left: 2rem;
+}
 
+.content{
+    margin-left: 0;
+    padding-left: 0;
+}
+
+.textarea{
+    padding-left: 30px;
+}
 
 

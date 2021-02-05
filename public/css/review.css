@@ -52,7 +52,7 @@ li{
     margin-top: 1rem;
     padding: 2rem;
     width: 1000px;
-    margin: 0 auto;
+    margin: 2rem auto;
     position: relative;
     height: 400px;
 }
@@ -63,6 +63,13 @@ li{
     width: 500px;
     margin-bottom: 25px;
     margin-left: 160px;
+}
+
+.form_title2{
+  display: inline-block;
+  width: 500px;
+  margin-bottom: 25px;
+  
 }
 
 .orange{
@@ -112,6 +119,7 @@ li{
     color: #fcf6e8;
     border: none;  /* 枠線を消す */
     outline: none;
+    font-family:'Hiragino Mincho ProN','Javanese Text','Mongolian Baiti','Palatino Linotype';
     
   }
 
@@ -157,6 +165,11 @@ li{
   padding-left: 0px;
 }
 
+.text_part h2{
+  margin: 1rem 0rem;
+}
+
+
 .img_box {
   width: 100%;
   text-align: center;
@@ -193,7 +206,7 @@ li{
   color: #fcf6e8;
   border: none;  /* 枠線を消す */
   outline: none;
-  position: absolute;
+  /*position: absolute;*/
   bottom: 38%;
   right: 15%;
   
