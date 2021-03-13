@@ -48,7 +48,7 @@ if($_SESSION['shopping_cart']){
             <div class="wrapper">
                 <div class="container">
                 　  <div class="typein">
-                        <h2>Your message has been sent successfuly.<br>We will response within 2 business days.<br>Thank you.</h2>
+                        <h2>Your message has been sent successfuly.<br>We will response within 2 business days.<br>Thank you for your patience.</h2>
                     </div>
                 </div>
             </div>

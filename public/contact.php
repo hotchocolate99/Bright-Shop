@@ -84,9 +84,11 @@ if($_SESSION['shopping_cart']){
         <link rel="stylesheet" href="./css/header.css">
     </head>
 
+    <?php include './header.php';?>
+
     <body>
 
-        <?php include './header.php';?>
+        
 
    
         <label for="check">
