@@ -95,6 +95,9 @@ if($_SESSION['shopping_cart']){
                         　　<input class="btn bg_green" type="submit" value="Log In">
 
                         </form>
+
+                        <a href="/account/signup.php" class="link_b line_color_orange">Sign up here!</a>
+
                     </div><!--typein-->
                 </div><!--container-->
         　　 </div><!--wrappr-->

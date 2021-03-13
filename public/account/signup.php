@@ -81,7 +81,7 @@ if(!empty($_POST)){
     if(count($errors) === 0){
 
         $hasCreated = createUser($_POST, $addr_pref, $ship_area);
-        header('Location: ./login.php');
+        header('Location: ./signedup.php');
 
         if(!$hasCreated){
             $errors[] = 'Sign up failed.';
