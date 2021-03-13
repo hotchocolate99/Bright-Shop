@@ -70,21 +70,24 @@ function registerProduct($product_name, $category, $description, $filename, $sav
 //商品の詳細(色、サイズ、在庫)の登録  ok
 function registerProductDetail($product_id, $price, $gender, $weight, $color, $size, $stock){
 
-    $sql = "INSERT INTO product_details(product_id, price, gender, weight, color, size, stock)VALUES(:product_id, :price, :gender, :weight, :color, :size, :stock)";
+        $sql = "INSERT INTO product_details(product_id, price, gender, weight, color, size, stock)VALUES(:product_id, :price, :gender, :weight, :color, :size, :stock)";
 
-        $dbh = dbConnect();
+            $dbh = dbConnect();
+        try{
+            $stmt = $dbh->prepare($sql);
+            $stmt->bindValue(':product_id',$product_id,PDO::PARAM_INT);
+            $stmt->bindValue(':price', $price,PDO::PARAM_INT);
+            $stmt->bindValue(':gender', $gender,PDO::PARAM_INT);
+            $stmt->bindValue(':weight', $weight,PDO::PARAM_INT);
+            $stmt->bindValue(':color',$color,PDO::PARAM_STR);
+            $stmt->bindValue(':size',$size,PDO::PARAM_INT);
+            $stmt->bindValue(':stock',$stock,PDO::PARAM_INT);
+            $stmt->execute();
 
-        $stmt = $dbh->prepare($sql);
-        $stmt->bindValue(':product_id',$product_id,PDO::PARAM_INT);
-        $stmt->bindValue(':price', $price,PDO::PARAM_INT);
-        $stmt->bindValue(':gender', $gender,PDO::PARAM_INT);
-        $stmt->bindValue(':weight', $weight,PDO::PARAM_INT);
-        $stmt->bindValue(':color',$color,PDO::PARAM_STR);
-        $stmt->bindValue(':size',$size,PDO::PARAM_INT);
-        $stmt->bindValue(':stock',$stock,PDO::PARAM_INT);
-        $result = $stmt->execute();
-
-    return $result;
+        }catch(PDOException $e){
+        //exit($e);
+        }
+        
 }
 
 //商品データ(product table)の取得
@@ -598,6 +601,7 @@ function findUserByEmail($dbh, $usr_email){
   
 }
 
+
 // get user data to get orders done.  and update user data.   ok
 function findUserByUserId($usr_id){
 
@@ -677,7 +681,7 @@ function getCountUsers(){
         }
 
         if($shipping_status == 2){
-            return "Your oreder is on it's way.";
+            return  " Your oreder is on it's way.";
         }
     }
 
@@ -985,6 +989,20 @@ function getCountUsers(){
         return $result;
     }
 
+    function getAllOrdersByUser($user_id){
+
+        $sql = "SELECT * FROM orders WHERE user_id = :user_id";
+            
+        $dbh = dbConnect();
+         
+        $stmt = $dbh->prepare($sql);
+        $stmt->bindValue('user_id', $user_id,PDO::PARAM_INT);
+        $stmt->execute();
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+         
+        return $result;
+    }
+
 
 
     function changeShippingStatus($order_id, $shipping_status){
@@ -998,4 +1016,36 @@ function getCountUsers(){
             $stmt->bindValue('shipping_status', (int)$shipping_status,PDO::PARAM_INT);
 
             $stmt->execute();
+    }
+
+
+    function getNewestProductId(){
+        
+        $sql = "SELECT id FROM products ORDER BY id DESC limit 1";
+            
+            $dbh = dbConnect();
+             
+            $stmt = $dbh->prepare($sql);
+            $stmt->execute();
+            $result = $stmt->fetch();
+             
+            return $result;
+    }
+
+//商品データの更新か新規登録かを判別するために、product_details tableのidを取得
+    function findDetailId($detail_id){
+
+        $result = false;
+
+        $sql = "SELECT * FROM product_details WHERE id = :id";
+    
+        $dbh = dbConnect();
+        $stmt = $dbh->prepare($sql);
+        $stmt->bindValue(':id', $detail_id, PDO::PARAM_STR);
+        $stmt->execute();
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+        return $result;
+      
+    
     }

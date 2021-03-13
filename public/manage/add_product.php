@@ -23,13 +23,20 @@ require_once './../../private/database.php';
 require_once './../../private/functions.php';
 
 $errors =[];
+//$errorsD = [];
 
 //var_dump($_POST);
+//var_dump($_POST['color'][0]);
 
 //var_dump($_FILES);
 //var_dump($_GET);
 
+
+//var_dump($_POST);
+var_dump($errorsD);
+
 if(!empty($_POST['product_name'])){
+
 
     $product_name = $_POST['product_name'];
 
@@ -111,7 +118,6 @@ if(!empty($_POST['product_name'])){
                 $errors[] = 'File is not chosen.';
             }
         }
-        //var_dump($product_name);
 
 
         //details tableの方のバリデーション
@@ -125,25 +131,23 @@ if(!empty($_POST['product_name'])){
     
              //ここからバリデーション 
              $errorsD = [];
-              if(empty($_POST['color'][$i])){
+              if($_POST['color'][$i] == ''){
            
                  $errorsD[] = 'Please type color.';
     
               }
             
-              if(empty($_POST['size'][$i])){
+              if($_POST['size'][$i] == ''){
             
                   $errorsD[] = 'Please type size.';
     
               }
             
-              if(empty($_POST['stock'][$i])){
+              if($_POST['stock'][$i] == ''){
            
                 $errorsD[] = 'Please type stock.';
     
               }
-    
-            
 
 
             if(count($errorsD) == 0 && count($errors) == 0 && $msg ){
@@ -154,26 +158,21 @@ if(!empty($_POST['product_name'])){
                 if(!$product_id){
                    $errors[] = 'Registration failed.';
                 }
-            }
-        
-
-
+            }    
 
             //product detail part------------------------------------------------
+                if($product_id['product_id']){
+                    $product_id = $product_id['product_id'];
 
-                $product_id = $product_id['product_id'];
-                //var_dump($product_id);
-                //var_dump($price);
-                //var_dump($gender);
-                //var_dump($weight);
+                }else{
+                     $product_ids = getNewestProductId();
+                     $product_id = $product_ids['id'];
+                }
 
-                
+
 
                 if(count($errorsD) == 0){
 
-
-                    //if($_POST['color'][$i] !=='' && $_POST['size'][$i] !=='' && $_POST['stock'][$i] !==''){
-                        //$_POST['color'][0] && $_POST['size'][0] && $_POST['stock'][0]){
                         $color = $_POST['color'][$i];
                         $size = $_POST['size'][$i];
                         $stock = $_POST['stock'][$i];
@@ -181,20 +180,18 @@ if(!empty($_POST['product_name'])){
 
                 
                         $completedRegisteringProduct = registerProductDetail($product_id, $price, $gender, $weight, $color, $size, $stock);
-                        //header('Location: ./products_list.php');
+                        
 
-                        if(!$completedRegisteringProduct){
-                            $errorsD[] = 'Registration failed.';
-                        }
-
-                    // }
-                    
-                    
+                        //if(!$completedRegisteringProduct){
+                          //  $errorsD[] = 'Registration failed.';
+                        //}
 
                 }
+                 
         }
 }
 
+//header('Location: ./products_list.php');
 ?>
 
 <!DOCTYPE html>
@@ -315,19 +312,19 @@ if(!empty($_POST['product_name'])){
                         <div class="form_item_box">
                                 <div class="form-item">
                                     <label>Color<br>
-                                    　　<input calss="narrow inline" type="text" name="color[]">
+                                    　　<input calss="narrow inline" type="text" name="color[]" value="<?php if(isset($_POST['color'][0])){ echo h($_POST['color'][0]);}?>">
                                     </label>
                                 </div>
                                 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
                                 <div class="form_item">
                                     <label>Size<br>
-                                    　　<input calss="narrow inline" type="text" name="size[]">&nbsp;cm
+                                    　　<input calss="narrow inline" type="text" name="size[]" value="<?php if(isset($_POST['size'][0])){ echo h($_POST['size'][0]);}?>"> &nbsp;cm
                                     </label>
                             　　</div>
 
                                 <div class="form-item ">
                                     <label>Stock<br>
-                                    　　<input calss="narrow inline" type="text" name="stock[]">
+                                    　　<input calss="narrow inline" type="text" name="stock[]" value="<?php if(isset($_POST['stock'][0])){ echo h($_POST['stock'][0]);}?>">
                                     </label>
                                 </div>
                         </div><!--form_item_box-->
@@ -339,19 +336,19 @@ if(!empty($_POST['product_name'])){
                        <div class="form_item_box">
                                     <div class="form-item">
                                         <label>Color<br>
-                                        　　<input calss="narrow inline" type="text" name="color[]">
+                                        　　<input calss="narrow inline" type="text" name="color[]" value="<?php if(isset($_POST['color'][1])){ echo h($_POST['color'][1]);}?>">
                                         </label>
                                     </div>
                                     <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
                                     <div class="form_item">
                                         <label>Size<br>
-                                        　　<input calss="narrow inline" type="text" name="size[]">&nbsp;cm
+                                        　　<input calss="narrow inline" type="text" name="size[]" value="<?php if(isset($_POST['size'][1])){ echo h($_POST['size'][1]);}?>">&nbsp;cm
                                         </label>
                                 　　</div>
 
                                     <div class="form-item ">
                                         <label>Stock<br>
-                                        　　<input calss="narrow inline" type="text" name="stock[]">
+                                        　　<input calss="narrow inline" type="text" name="stock[]" value="<?php if(isset($_POST['stock'][1])){ echo h($_POST['stock'][1]);}?>">
                                         </label>
                                     </div>
                             </div><!--form_item_box-->
@@ -363,19 +360,19 @@ if(!empty($_POST['product_name'])){
                             <div class="form_item_box">
                                     <div class="form-item">
                                         <label>Color<br>
-                                        　　<input calss="narrow inline" type="text" name="color[]">
+                                        　　<input calss="narrow inline" type="text" name="color[]" value="<?php if(isset($_POST['color'][2])){ echo h($_POST['color'][2]);}?>">
                                         </label>
                                     </div>
                                     <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
                                     <div class="form_item">
                                         <label>Size<br>
-                                        　　<input calss="narrow inline" type="text" name="size[]">&nbsp;cm
+                                        　　<input calss="narrow inline" type="text" name="size[]" value="<?php if(isset($_POST['size'][2])){ echo h($_POST['size'][2]);}?>">&nbsp;cm
                                         </label>
                                 　　</div>
 
                                     <div class="form-item ">
                                         <label>Stock<br>
-                                        　　<input calss="narrow inline" type="text" name="stock[]">
+                                        　　<input calss="narrow inline" type="text" name="stock[]" value="<?php if(isset($_POST['stock'][2])){ echo h($_POST['stock'][3]);}?>">
                                         </label>
                                     </div>
                             </div><!--form_item_box-->
@@ -387,19 +384,19 @@ if(!empty($_POST['product_name'])){
                              <div class="form_item_box">
                                     <div class="form-item">
                                         <label>Color<br>
-                                        　　<input calss="narrow inline" type="text" name="color[]">
+                                        　　<input calss="narrow inline" type="text" name="color[]" value="<?php if(isset($_POST['color'][3])){ echo h($_POST['color'][3]);}?>">
                                         </label>
                                     </div>
                                     <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
                                     <div class="form_item">
                                         <label>Size<br>
-                                        　　<input calss="narrow inline" type="text" name="size[]">&nbsp;cm
+                                        　　<input calss="narrow inline" type="text" name="size[]" value="<?php if(isset($_POST['size'][3])){ echo h($_POST['size'][3]);}?>">&nbsp;cm
                                         </label>
                                 　　</div>
 
                                     <div class="form-item ">
                                         <label>Stock<br>
-                                        　　<input calss="narrow inline" type="text" name="stock[]">
+                                        　　<input calss="narrow inline" type="text" name="stock[]" value="<?php if(isset($_POST['stock'][3])){ echo h($_POST['stock'][3]);}?>">
                                         </label>
                                     </div>
                             </div><!--form_item_box-->
@@ -411,19 +408,19 @@ if(!empty($_POST['product_name'])){
                             <div class="form_item_box">
                                     <div class="form-item">
                                         <label>Color<br>
-                                        　　<input calss="narrow inline" type="text" name="color[]">
+                                        　　<input calss="narrow inline" type="text" name="color[]" value="<?php if(isset($_POST['color'][4])){ echo h($_POST['color'][4]);}?>">
                                         </label>
                                     </div>
                                     <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
                                     <div class="form_item">
                                         <label>Size<br>
-                                        　　<input calss="narrow inline" type="text" name="size[]">&nbsp;cm
+                                        　　<input calss="narrow inline" type="text" name="size[]" value="<?php if(isset($_POST['size'][4])){ echo h($_POST['size'][4]);}?>">&nbsp;cm
                                         </label>
                                 　　</div>
 
                                     <div class="form-item ">
                                         <label>Stock<br>
-                                        　　<input calss="narrow inline" type="text" name="stock[]">
+                                        　　<input calss="narrow inline" type="text" name="stock[]" value="<?php if(isset($_POST['stock'][4])){ echo h($_POST['stock'][4]);}?>">
                                         </label>
                                     </div>
                             </div><!--form_item_box-->
@@ -435,19 +432,19 @@ if(!empty($_POST['product_name'])){
                             <div class="form_item_box">
                                     <div class="form-item">
                                         <label>Color<br>
-                                        　　<input calss="narrow inline" type="text" name="color[]">
+                                        　　<input calss="narrow inline" type="text" name="color[]" value="<?php if(isset($_POST['color'][5])){ echo h($_POST['color'][5]);}?>">
                                         </label>
                                     </div>
                                     <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
                                     <div class="form_item">
                                         <label>Size<br>
-                                        　　<input calss="narrow inline" type="text" name="size[]">&nbsp;cm
+                                        　　<input calss="narrow inline" type="text" name="size[]" value="<?php if(isset($_POST['size'][5])){ echo h($_POST['size'][5]);}?>">&nbsp;cm
                                         </label>
                                 　　</div>
 
                                     <div class="form-item ">
                                         <label>Stock<br>
-                                        　　<input calss="narrow inline" type="text" name="stock[]">
+                                        　　<input calss="narrow inline" type="text" name="stock[]" value="<?php if(isset($_POST['stock'][5])){ echo h($_POST['stock'][5]);}?>">
                                         </label>
                                     </div>
                             </div><!--form_item_box-->
@@ -458,19 +455,19 @@ if(!empty($_POST['product_name'])){
                              <div class="form_item_box">
                                     <div class="form-item">
                                         <label>Color<br>
-                                        　　<input calss="narrow inline" type="text" name="color[]">
+                                        　　<input calss="narrow inline" type="text" name="color[]" value="<?php if(isset($_POST['color'][6])){ echo h($_POST['color'][6]);}?>">
                                         </label>
                                     </div>
                                     <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
                                     <div class="form_item">
                                         <label>Size<br>
-                                        　　<input calss="narrow inline" type="text" name="size[]">&nbsp;cm
+                                        　　<input calss="narrow inline" type="text" name="size[]" value="<?php if(isset($_POST['size'][6])){ echo h($_POST['size'][6]);}?>">&nbsp;cm
                                         </label>
                                 　　</div>
 
                                     <div class="form-item ">
                                         <label>Stock<br>
-                                        　　<input calss="narrow inline" type="text" name="stock[]">
+                                        　　<input calss="narrow inline" type="text" name="stock[]" value="<?php if(isset($_POST['stock'][6])){ echo h($_POST['stock'][6]);}?>">
                                         </label>
                                     </div>
                             </div><!--form_item_box-->
@@ -482,19 +479,19 @@ if(!empty($_POST['product_name'])){
                              <div class="form_item_box">
                                     <div class="form-item">
                                         <label>Color<br>
-                                        　　<input calss="narrow inline" type="text" name="color[]">
+                                        　　<input calss="narrow inline" type="text" name="color[]" value="<?php if(isset($_POST['color'][7])){ echo h($_POST['color'][7]);}?>">
                                         </label>
                                     </div>
                                     <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
                                     <div class="form_item">
                                         <label>Size<br>
-                                        　　<input calss="narrow inline" type="text" name="size[]">&nbsp;cm
+                                        　　<input calss="narrow inline" type="text" name="size[]" value="<?php if(isset($_POST['size'][7])){ echo h($_POST['size'][7]);}?>">&nbsp;cm
                                         </label>
                                 　　</div>
 
                                     <div class="form-item ">
                                         <label>Stock<br>
-                                        　　<input calss="narrow inline" type="text" name="stock[]">
+                                        　　<input calss="narrow inline" type="text" name="stock[]" value="<?php if(isset($_POST['stock'][7])){ echo h($_POST['stock'][7]);}?>">
                                         </label>
                                     </div>
                             </div><!--form_item_box-->
