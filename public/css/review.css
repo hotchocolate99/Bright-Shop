@@ -8,7 +8,7 @@ h1, h2, h3, h4, h5, h6, div {
 }
 
 body{
-  font-family:'Hiragino Mincho ProN','Javanese Text','Mongolian Baiti','Palatino Linotype';
+  font-family: 'Yu Mincho Light','YuMincho','Yu Mincho','游明朝体',sans-serif;
   min-height: 100vh;
 }
 
@@ -24,10 +24,10 @@ li{
     color:#64686a;
 }
 
-
 .container{
-    margin-top: 2rem;
-    background-color: white;
+  margin-top: 2rem;
+  padding-top: 5rem;
+  background-color: white;
 }
 
 .typein{
@@ -119,7 +119,7 @@ li{
     color: #fcf6e8;
     border: none;  /* 枠線を消す */
     outline: none;
-    font-family:'Hiragino Mincho ProN','Javanese Text','Mongolian Baiti','Palatino Linotype';
+    font-family: 'Yu Mincho Light','YuMincho','Yu Mincho','游明朝体',sans-serif;
     
   }
 

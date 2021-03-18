@@ -8,8 +8,7 @@ h1, h2, h3, h4, h5, h6, div{
 }
 
 body{
-    font-family:'Hiragino Mincho ProN','Javanese Text','Mongolian Baiti','Palatino Linotype';
-    
+   font-family: 'Yu Mincho Light','YuMincho','Yu Mincho','游明朝体',sans-serif;
     min-height: 100vh;
 }
 
@@ -92,7 +91,7 @@ table{
     border: none;  /* 枠線を消す */
     outline: none;
     text-decoration: none;
-    font-family:'Hiragino Mincho ProN','Javanese Text','Mongolian Baiti','Palatino Linotype';
+   font-family: 'Yu Mincho Light','YuMincho','Yu Mincho','游明朝体',sans-serif;
 
 }
 
@@ -125,7 +124,14 @@ table{
     padding-bottom: 1rem;
 }
 
-
 .last{
-    background-color: red;
+    background-color: yellow;
+    margin: 0;
 }
+
+.zero{
+    background-color: red;
+    margin: 0;
+}
+
+

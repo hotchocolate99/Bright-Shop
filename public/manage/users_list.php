@@ -43,7 +43,7 @@ foreach($usrDatas as $usrData){
         <title>Members List</title>
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css">
         <link rel="stylesheet" href="./../css/form.css">
-        <link rel="stylesheet" href="./../css/mng_header.css">
+        <link rel="stylesheet" href="./../css/header.css">
     
     </head>
 

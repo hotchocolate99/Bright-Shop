@@ -64,15 +64,12 @@ if($_SESSION['shopping_cart']){
 
       <?php include './../header.php';?>
 
-      <div class="menu">
-          <ul>
-              <li><a class="link_aa" href="/view/boys.php"><h2 class="form_title green">Boys</h2></a></li>
-              
-          </ul>
-      </div>
-
       <div class="wrapper">
           <div class="container">
+              <ul class="bit_left">
+                  <li class="boys_girls"><a class="link_aa" href="/view/boys.php"><h2 class="form_title green">Boys</h2></a></li>
+              </ul>
+
               <div class="typein">
                     <h1 class="form_title pink">Girls</h1><br>
                     <div class="product_info">
@@ -87,18 +84,18 @@ if($_SESSION['shopping_cart']){
                                 <?php $prices = getPriceByProductId($girls_all_products_data['id']);?>
 
                                     <div class="product_box">
-                                        <div class="main_part">
+                                        <!--<div class="main_part">-->
                                             <div class="img_box">
                                                 <img src="/manage/<?php echo "{$girls_all_products_data['save_path']}";?>"　width="240px" height="400px" alt="product_image">
                                               </div>
-                                        </div>
+                                        <!--</div>-->
 
                                         <div class="text_part">
                                             <h2 class="product_name"><?php echo $girls_all_products_data['product_name'];?></h2>
                                             <h2>¥&nbsp;<?php echo n($prices['price']);?>&nbsp;(Tax not included)</h2>
                                             <h3><?php echo $girls_all_products_data['description'];?></h3>
                                             <a class="button" href="/view/product_details.php?id=<?php echo h($girls_all_products_data['id'])?>">Go To Details</a>
-                                        </div>
+                                       </div>
                                     </div><!--product_box-->
                                     
                             <?php endforeach;?>

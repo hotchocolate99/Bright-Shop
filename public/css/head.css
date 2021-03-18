@@ -9,8 +9,7 @@ h1, h2, h3, h4, h5, h6, div ,a{
 }
 
 header{
-
-    font-family:'Hiragino Mincho ProN','Javanese Text','Mongolian Baiti','Palatino Linotype';
+    font-family: 'Yu Mincho Light','YuMincho','Yu Mincho','游明朝体',sans-serif;
     background-color: white;
     color:#626063;
 }
@@ -42,7 +41,7 @@ font-weight: bold;
 }
 
 .navi ul li{
-    /*margin-left: 2rem;*/
+    margin-left: 2rem;
 
 }
 
@@ -52,13 +51,14 @@ font-weight: bold;
 
 .listH ul{
     position: absolute;
-    left: -50px;
+    left: -70px;
     display: none;
 
     
 }
 
 .listH:hover ul{
+    position: absolute;
     background-color:white;
     display:block;
     font-size: 1rem;

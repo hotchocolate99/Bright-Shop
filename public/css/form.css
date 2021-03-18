@@ -25,7 +25,9 @@ li{
 }
 
 .container{
-    margin-top: 5rem;
+    margin-top: 2rem;
+    padding-top: 5rem;
+    background-color: white;
 }
 
 .typein{

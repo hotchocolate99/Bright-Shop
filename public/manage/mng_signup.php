@@ -34,7 +34,7 @@ if(!empty($_POST)){
         //require '../functions/classes.php';
 
         $hasCreated = createManager($_POST);
-        header('Location: /manage/mng_login.php');
+        header('Location: /manage/mng_signedup.php');
 
         if(!$hasCreated){
             $errors[] = 'Sign up failed.';

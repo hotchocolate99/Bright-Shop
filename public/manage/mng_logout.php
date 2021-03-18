@@ -23,7 +23,7 @@ session_destroy();
         <title>Log Out</title>
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css">
         <link rel="stylesheet" href="./../css/form.css">
-        <link rel="stylesheet" href="./../css/mng_header.css">
+        <link rel="stylesheet" href="./../css/header.css">
     </head>
     <body>
         <?php include './mng_header.php';?>

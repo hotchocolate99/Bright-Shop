@@ -13,7 +13,7 @@ a{
 }
 
 body{
-    font-family:'Hiragino Mincho ProN','Javanese Text','Mongolian Baiti','Palatino Linotype';
+   font-family: 'Yu Mincho Light','YuMincho','Yu Mincho','游明朝体',sans-serif;
     min-height: 100vh;
 }
 
@@ -105,13 +105,11 @@ li{
 }
 
 .product_info{
-    /*flex-direction: row;*/
-    /*justify-content: space-evenly;*/
    
     margin: 0 auto;
     display: flex;
     flex-wrap: wrap;
-    /*align-items: baseline;*/
+    justify-content: space-around;
 }
 
 .product_box{
@@ -122,8 +120,18 @@ li{
   flex-wrap: wrap;
   margin: 2rem;
   position: relative;
-  
 }
+
+.product_info::after {
+  display: block;
+  content:"";
+  /*height: 800px;*/
+  flex-wrap: wrap;
+  width: 40%;
+  margin: 2rem;
+  position: relative;
+  }
+
 
 .button{
     color:#fcf6e8;

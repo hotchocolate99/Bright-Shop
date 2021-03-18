@@ -8,7 +8,7 @@ h1, h2, h3, h4, h5, h6, div {
 }
 
 body{
-    font-family:'Hiragino Mincho ProN','Javanese Text','Mongolian Baiti','Palatino Linotype';
+    font-family: 'Yu Mincho Light','YuMincho','Yu Mincho','游明朝体',sans-serif;
     min-height: 100vh;
 }
 
@@ -25,7 +25,9 @@ li{
 }
 
 .container{
-    margin-top: 5rem;
+    margin-top: 2rem;
+    padding-top: 5rem;
+    background-color: white;
 }
 
 .typein{

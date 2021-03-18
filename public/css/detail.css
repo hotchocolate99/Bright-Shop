@@ -8,7 +8,7 @@ h1, h2, h3, h4, h5, h6, div {
 }
 
 body{
-  font-family:'Hiragino Mincho ProN','Javanese Text','Mongolian Baiti','Palatino Linotype';
+  font-family: 'Yu Mincho Light','YuMincho','Yu Mincho','游明朝体',sans-serif;
   min-height: 100vh;
 }
 
@@ -119,7 +119,8 @@ li{
     color: #fcf6e8;
     border: none;  /* 枠線を消す */
     outline: none;
-    font-family:'Hiragino Mincho ProN','Javanese Text','Mongolian Baiti','Palatino Linotype';
+    font-family: 'Yu Mincho Light','YuMincho','Yu Mincho','游明朝体',sans-serif;
+    
     
   }
 
@@ -206,9 +207,9 @@ li{
   border: none;  /* 枠線を消す */
   outline: none;
   position: absolute;
-  bottom: 38%;
+  bottom: 25%;
   right: 15%;
-  font-family:'Hiragino Mincho ProN','Javanese Text','Mongolian Baiti','Palatino Linotype';
+  font-family: 'Yu Mincho Light','YuMincho','Yu Mincho','游明朝体',sans-serif;
   
 }
 
@@ -229,7 +230,8 @@ li{
     position: absolute;
     bottom:0px;
     right:20px;
-    font-family:'Hiragino Mincho ProN','Javanese Text','Mongolian Baiti','Palatino Linotype';
+    font-family: 'Yu Mincho Light','YuMincho','Yu Mincho','游明朝体',sans-serif;
+    
 
   }
 
@@ -239,6 +241,7 @@ li{
     margin-bottom: 2rem;
     width: 20rem;
     text-align: center;
+  
   }
 
 /*.round input[type=”checkbox”]{

@@ -38,6 +38,9 @@ if(isset($_SESSION['shopping_cart'])){
         }
     }
 }
+//var_dump($user_id);
+$all_orders = getAllOrdersByUser($user_id);
+//var_dump($all_orders);
 
 ?>
 
@@ -64,7 +67,12 @@ if(isset($_SESSION['shopping_cart'])){
                       <div class="order_box">
 
                           <!--ユーザーidでorders tableからこのユーザーの全注文データを取得-->
-                          <?php $all_orders = getAllOrders($user_id);?>
+                          <?php $all_orders = getAllOrdersByUser($user_id);?>
+                          
+                          <?php if(empty($all_orders)):?>
+                                <h3><?php echo 'You have not purchased yet.';?></h3>
+                          <?php endif ;?>
+
                           <?php foreach($all_orders as $all_order):?>
                               <?php $order_id = $all_order['id'];?>
                           <?php endforeach;?>

@@ -65,15 +65,14 @@ if($_SESSION['shopping_cart']){
 
     <?php include './../header.php';?>
 
-    <div class="menu">
-        <ul>
-            
-            <li><a class="link_aa" href="/view/girls.php"><h2 class="form_title pink">Girls</h2></a></li>
-        </ul>
-    </div>
+    
 
     <div class="wrapper">
         <div class="container">
+            <ul class="bit_left">
+                <li class="boys_girls"><a class="link_aa" href="/view/girls.php"><h2 class="form_title pink">Girls</h2></a></li>
+            </ul>
+
             <div class="typein">
                 <h1 class="form_title green">Boys</h1><br>
                 <div class="product_info">

@@ -68,7 +68,7 @@ $second_newest_girls = $secondNewestGirlsProductDatas[0];
       <link rel="stylesheet" href="./css/header.css">
   </head>
   <body>
-    <?php include './header.php';?>
+  <?php include './header.php';?>
 
     <!--image-->
       <div class="image">

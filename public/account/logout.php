@@ -36,7 +36,7 @@ session_destroy();
                     <div class="typein">
                         <h1 class="form_title orange">Log Out</h1>
                         <br>
-                        <h2>You have logged out successfully.<br>Thank you for visiting our shop.<br>We hope to see you again soon.<br>Have a bright day!</h2>
+                        <h2>You have logged out successfully.Thank you for visiting our shop.<br>We hope to see you again soon.Have a bright day!</h2>
                         <br>
                         
 

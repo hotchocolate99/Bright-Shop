@@ -290,7 +290,12 @@ if($_SESSION['shopping_cart']){
                             <h2 class="form_title2">Reviews</h2>
                             <?php $allReviews = getAllReviewsByProductId($product_id);?>
 
+                            <?php if(empty($allReviews)):?>
+                                 <h3><?php echo 'There is no reviews of this product yet.';?></h3>
+                            <?php endif ;?>
+                            
                             <?php for($i=0;$i<count($allReviews);$i++):?>
+                                
                                 <?php $allReview = $allReviews[$i];?>
                                 <?php// var_dump($allReview);?>
                                 <div class="review_box">

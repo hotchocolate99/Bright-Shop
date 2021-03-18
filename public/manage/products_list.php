@@ -28,6 +28,14 @@ $AllProductsDatas = getAllProductsDatas();
 $count_products = getCountProducts();
 //var_dump($count_products);
 
+//var_dump($_GET);
+if(!empty($_GET['product_id'])){
+     $product_id = $_GET['product_id'];
+          if($product_id){
+            header("Location:/manage/products_list.php#".$product_id);
+          }
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -55,6 +63,10 @@ $count_products = getCountProducts();
                         <br>
 
                         <div class="frame">
+
+                        <p><strong class="last">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</strong>   indicates 1 left in stock.</p>
+                        <p><strong class="zero">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</strong>   indicates 0 left in stock.</p>
+                        <br>
                         <table>
                             <tr>
                               <td>
@@ -69,7 +81,7 @@ $count_products = getCountProducts();
 
                                        
                                         <table border=1>
-                                          <tr><td>Product ID</td><td><?php echo h($AllProductsData['id'])?></td></tr>
+                                          <tr><td>Product ID</td><td><a name=<?php echo h($AllProductsData['id'])?>><?php echo h($AllProductsData['id'])?></td></tr>
                                           <tr><td>Name</td><td><?php echo h($AllProductsData['product_name'])?></td></tr>
                                           <tr><td>Registration Date</td><td><?php echo h($AllProductsData['updated_at'])?></td></tr>
                                           <tr><td>Category</td><td><?php echo h($AllProductsData['category'])?></td></tr>
@@ -93,8 +105,10 @@ $count_products = getCountProducts();
                                                       <tr><td>Gender</td><td><?php echo setGender($productDetail['gender'])?></td></tr>
                                                       <tr><td>Color</td><td><?php echo h($productDetail['color'])?></td></tr>
                                                       <tr><td>Size(cm)</td><td><?php echo h($productDetail['size'])?></td></tr>
-                                                      <?php if ($productDetail['stock'] < 3):?>
+                                                      <?php if ($productDetail['stock'] === 1):?>
                                                           <tr><td>Stocks</td><td><p class="last"><?php echo h($productDetail['stock'])?></p></td></tr>
+                                                      <?php elseif ($productDetail['stock'] <= 0):?>
+                                                          <tr><td>Stocks</td><td><p class="zero"><?php echo h($productDetail['stock'])?></p></td></tr>
                                                       <?php else:?>
                                                            <tr><td>Stocks</td><td><?php echo h($productDetail['stock'])?></td></tr>
                                                       <?php endif;?>
