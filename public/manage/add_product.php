@@ -22,16 +22,14 @@ error_reporting(E_ALL & ~ E_DEPRECATED & ~ E_USER_DEPRECATED & ~ E_NOTICE);
 require_once './../../private/database.php';
 require_once './../../private/functions.php';
 
-$errors =[];
-//$errorsD = [];
 
 var_dump($_POST);
 //var_dump($_POST['color'][0]);
 
-//var_dump($_FILES);
+var_dump($_FILES);
 //var_dump($_GET);
 
-
+$errors = [];
 if(!empty($_POST['product_name'])){
 
 
@@ -66,66 +64,65 @@ if(!empty($_POST['product_name'])){
         $errors[] = 'Please type product weight.';
     }
 
-    $file = $_FILES['img'];
-    //var_dump($file);
+    if(!empty($_FILES['img']['name'])){
+        $file = $_FILES['img'];
+        //var_dump($file);
 
-    //↓basename()関数で、ディレクトリトラバーサル対策。ファイルのパスを排除し、最後のファイル名の部分だけを返してくれるようにする。これでパスから情報を盗まれることはない。
-    $filename = basename($file['name']);
-    $tmp_path = $file['tmp_name'];
-    $file_err = $file['error'];
-    $filesize = $file['size'];
-    $upload_dir = 'images/';
-    $save_filename = date('YmdHis'). $filename;
-    //↑fileに日付をつけることで、同じ画像も何度でも保存出来るようになる。
+        //↓basename()関数で、ディレクトリトラバーサル対策。ファイルのパスを排除し、最後のファイル名の部分だけを返してくれるようにする。これでパスから情報を盗まれることはない。
+        $filename = basename($file['name']);
+        $tmp_path = $file['tmp_name'];
+        $file_err = $file['error'];
+        $filesize = $file['size'];
+        $upload_dir = 'images/';
+        $save_filename = date('YmdHis'). $filename;
+        //↑fileに日付をつけることで、同じ画像も何度でも保存出来るようになる。
 
-    if($filesize){
-        if($filesize > 1048576 || $file_err == 2){
-            $errors[] = 'Image file size must be less than 1MB.';
+        if($filesize){
+            if($filesize > 1048576 || $file_err == 2){
+                $errors[] = 'Image file size must be less than 1MB.';
+            }
         }
-    }
 
-    //ファイルの拡張子のバリデーション
-    //許容するファイルの拡張子↓
-    $allow_ext = array('jpg','jpeg','png');
-    //実際のファイルの拡張子を確認 ↓　pathinfo関数で。＄file_extには実際のファイルの拡張子が入る。
-    $file_ext = pathinfo($filename,PATHINFO_EXTENSION);
-    $save_path = $upload_dir.$save_filename;
+        //ファイルの拡張子のバリデーション
+        //許容するファイルの拡張子↓
+        $allow_ext = array('jpg','jpeg','png');
+        //実際のファイルの拡張子を確認 ↓　pathinfo関数で。＄file_extには実際のファイルの拡張子が入る。
+        $file_ext = pathinfo($filename,PATHINFO_EXTENSION);
+        $save_path = $upload_dir.$save_filename;
 
-    //in_array関数で＄file_ext が $allow_ext　のどれかに当てはまるかのチェック。strtolowerは実際のファイルの拡張子が大文字だったら小文字に直してくれる。
-    if($file_ext && $allow_ext){
-        if(!in_array(strtolower($file_ext),$allow_ext)){
-            $errors[] = 'Please choose image file.';
+        //in_array関数で＄file_ext が $allow_ext　のどれかに当てはまるかのチェック。strtolowerは実際のファイルの拡張子が大文字だったら小文字に直してくれる。
+        if($file_ext && $allow_ext){
+            if(!in_array(strtolower($file_ext),$allow_ext)){
+                $errors[] = 'Please choose image file.';
 
+            }
         }
-    }
-    
-    //ファイルがアップロードされているかのバリデーション。　アップロード＝一時保存　is_uploaded_file($tmp_path)関数で、$tmp_pathにアップロードされているかをみる。trueならアップロード成功。
-    //次にmove_uploaded_file($tmp_path, $save_path）関数で、第一引数から第二引数に場所を移す。（一時保存場所から本当の保存先へ）
-        $msg = [];
-        if($tmp_path && $save_path && $upload_dir){
-            if(is_uploaded_file($tmp_path)){
-                if(move_uploaded_file($tmp_path, $save_path)){
-                    $msg[] = $filename .'has been saved in '.$upload_dir;
+        
+        //ファイルがアップロードされているかのバリデーション。　アップロード＝一時保存　is_uploaded_file($tmp_path)関数で、$tmp_pathにアップロードされているかをみる。trueならアップロード成功。
+        //次にmove_uploaded_file($tmp_path, $save_path）関数で、第一引数から第二引数に場所を移す。（一時保存場所から本当の保存先へ）
+            $msg = [];
+            if($tmp_path && $save_path && $upload_dir){
+                if(is_uploaded_file($tmp_path)){
+                    if(move_uploaded_file($tmp_path, $save_path)){
+                        $msg[] = $filename .'has been saved in '.$upload_dir;
+                    }else{
+
+                    $errors[] = 'File failed to be saved.';
+                    }
+
                 }else{
-
-                $errors[] = 'File failed to be saved.';
+                    $errors[] = 'File is not chosen.';
                 }
-
-            }else{
-                $errors[] = 'File is not chosen.';
             }
-        }
 
-        if(count($errors) == 0 && $msg ){
+    
+    }elseif(empty($_FILES['img']['name'])){
+         $errors[] = 'Please choose image file.';
+    }
 
-            $product_id = registerProduct($product_name, $category, $description, $filename, $save_path);
-            //header('Location: ./products_list.php');
+    //if(count($errors) == 0 && $msg ){
 
-            if(!$product_id){
-               $errors[] = 'Registration failed.';
-            }
-        }    
-
+        //$product_id = registerProduct($product_name, $category, $description, $filename, $save_path);
 
         //details tableの方のバリデーション
         $errorsD = [];
@@ -159,38 +156,51 @@ if(!empty($_POST['product_name'])){
         }
             //product detail part------------------------------------------------
 
-        if(empty($errorsD)){
+        //if(empty($errorsD)){
+        if(empty($errors) && empty($rrorsD) && !empty($msg)){
 
+            $product_ids = registerProduct($product_name, $category, $description, $filename, $save_path);
+            $product_id = $product_ids['product_id'];
+
+var_dump($product_id['product_id']);
             for($i=0;$i<8;$i++){ 
-
-                    //if(empty($_POST['color'][$i]) && empty($_POST['size'][$i]) && empty($_POST['stock'][$i])){
-                     // continue;
-                    //}
                           
-                    if($product_id['product_id']){
-                        $product_id = $product_id['product_id'];
+                   // if($product_id['product_id']){
+                       // $product_id = $product_id['product_id'];
 
-                    }else{
-                        $product_ids = getNewestProductId();
-                        $product_id = $product_ids['id'];
-                    }
+                        if(empty($_POST['color'][$i]) && empty($_POST['size'][$i]) && empty($_POST['stock'][$i])){
+                            continue;
+                          }
 
-                    $color = $_POST['color'][$i];
-                    $size = $_POST['size'][$i];
-                    $stock = $_POST['stock'][$i];
+                          $color = $_POST['color'][$i];
+                          $size = $_POST['size'][$i];
+                          $stock = $_POST['stock'][$i];
                     
+                          $completedRegisteringProduct = registerProductDetail($product_id, $price, $gender, $weight, $color, $size, $stock);
 
-                    $completedRegisteringProduct = registerProductDetail($product_id, $price, $gender, $weight, $color, $size, $stock);
 
-                        //if(!$completedRegisteringProduct){
-                          //  $errorsD[] = 'Registration failed.';
-                        //}
+                    //}else{
+                        //$product_ids = getNewestProductId();
+                        //$product_id = $product_ids['id'];
 
-            }
+                        //if(empty($_POST['color'][$i]) && empty($_POST['size'][$i]) && empty($_POST['stock'][$i])){
+                            
+                          //continue;
+                          //}
+
+                       // $color = $_POST['color'][$i];
+                       // $size = $_POST['size'][$i];
+                      //  $stock = $_POST['stock'][$i];
+
+                       // $completedRegisteringProduct = registerProductDetail($product_id, $price, $gender, $weight, $color, $size, $stock);
+
+                   //}
+
+            }//for
             
-            header("Location:./added_product.php?product_id=".$product_id);
+            
         }
-
+    
 }
 
 
