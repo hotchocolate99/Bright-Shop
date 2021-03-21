@@ -24,7 +24,7 @@ error_reporting(E_ALL & ~ E_DEPRECATED & ~ E_USER_DEPRECATED & ~ E_NOTICE);
 require_once './../../private/database.php';
 require_once './../../private/functions.php';
 
-//var_dump($_GET['productDetail_id']);
+var_dump($_GET['productDetail_id']);
 
 
 if(isset($_GET['product_id'])){
@@ -32,15 +32,23 @@ if(isset($_GET['product_id'])){
    //products tableから削除
    $deletedProduct = deleteProduct($product_id);
 
+  //product_details tableから削除
+   $deletedDetails = deletedDetailsByProduct_id($product_id);
+   header("Location: ./products_list.php");
 }
 
 if(isset($_GET['productDetail_id'])){
    $productDetail_id = $_GET['productDetail_id'];
-   //details tableから削除
-  $deletedDetail = deleteDetails($productDetail_id);
-}
+   $productIds= getProductIdByDetailId($productDetail_id);
 
-header('Location: ./products_list.php');
+    $product_id = $productIds['product_id'];
+   
+   //details tableから削除
+  $deleted_detail = deleteDetails($productDetail_id);
+
+header("Location: ./products_list.php?product_id=".$product_id);
+
+}
 
 
 
@@ -65,7 +73,7 @@ header('Location: ./products_list.php');
             <div class="wrapper">
                 <div class="container">
                 　  <div class="typein">
-                    
+                
                     <h2 class="form_title">Deleted successfuly.</h2>
 
                     </div>

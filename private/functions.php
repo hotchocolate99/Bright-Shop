@@ -749,6 +749,17 @@ function getCountUsers(){
         $stmt->execute();
     }
 
+    function deletedDetailsByProduct_id($product_id){
+
+        $sql = "DELETE FROM product_details WHERE product_id = :product_id";
+        
+        $dbh = dbConnect();
+        $stmt = $dbh->prepare($sql);
+        $stmt->bindValue(':product_id', $product_id, PDO::PARAM_INT);
+        $stmt->execute();
+
+    }
+
     //delete detail from product details table  ok
     function deleteDetails($productDetail_id){
         
@@ -758,7 +769,7 @@ function getCountUsers(){
         $stmt = $dbh->prepare($sql);
         $stmt->bindValue(':id', $productDetail_id, PDO::PARAM_INT);
         $stmt->execute();
-    }
+    } 
 
 
     function updateProduct($product_id, $product_name, $category, $description, $filename, $save_path){
@@ -1018,7 +1029,7 @@ function getCountUsers(){
             $stmt->execute();
     }
 
-
+// no longer need this due to have chaged the way of register new product detials....but just keep this.
     function getNewestProductId(){
         
         $sql = "SELECT id FROM products ORDER BY id DESC limit 1";
