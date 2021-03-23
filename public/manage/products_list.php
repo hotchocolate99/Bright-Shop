@@ -33,6 +33,7 @@ if(!empty($_GET['product_id'])){
      $product_id = $_GET['product_id'];
           if($product_id){
             header("Location:/manage/products_list.php#".$product_id);
+           
           }
 }
 
@@ -77,7 +78,7 @@ if(!empty($_GET['product_id'])){
                                     <div class="result_box"> 
                                       <h5 class="number"><strong><?php echo $i+1;?>.</strong></P>
                                       <a class="btn_b bg_blue" href="./update_product.php?product_id=<?php echo h($AllProductsData['id']);?>">Go To Update</a>
-                                            <a class="btn_b bg_gray" href="./delete_product.php?product_id=<?php echo h($AllProductsData['id']);?>">Delete Whole Data</a>
+                                            <a class="btn_b bg_gray" href="./delete_product.php?product_id=<?php echo h($AllProductsData['id']);?>" onclick="return confirm('Are you sure?')">Delete Whole Data</a>
 
                                        
                                         <table border=1>
@@ -106,15 +107,15 @@ if(!empty($_GET['product_id'])){
                                                       <tr><td>Color</td><td><?php echo h($productDetail['color'])?></td></tr>
                                                       <tr><td>Size(cm)</td><td><?php echo h($productDetail['size'])?></td></tr>
                                                       <?php if ($productDetail['stock'] === 1):?>
-                                                          <tr><td>Stocks</td><td><p class="last"><?php echo h($productDetail['stock'])?></p></td></tr>
+                                                          <tr><td>Stock</td><td><p class="last"><?php echo h($productDetail['stock'])?></p></td></tr>
                                                       <?php elseif ($productDetail['stock'] <= 0):?>
-                                                          <tr><td>Stocks</td><td><p class="zero"><?php echo h($productDetail['stock'])?></p></td></tr>
+                                                          <tr><td>Stock</td><td><p class="zero"><?php echo h($productDetail['stock'])?></p></td></tr>
                                                       <?php else:?>
-                                                           <tr><td>Stocks</td><td><?php echo h($productDetail['stock'])?></td></tr>
+                                                           <tr><td>Stock</td><td><?php echo h($productDetail['stock'])?></td></tr>
                                                       <?php endif;?>
                                                     </table>
 
-                                                    <div class="delete_btn detail_item"><a class="btn_b bg_gray" href="./delete_product.php?productDetail_id=<?php echo h($productDetail['id']);?>"><?php echo h('Delete Detail ID'.$productDetail['id']);?></a></div>
+                                                    <div class="delete_btn detail_item"><a class="btn_b bg_gray" onclick="return confirm('Are you sure?')" href="./delete_product.php?productDetail_id=<?php echo h($productDetail['id']);?>"><?php echo h('Delete Detail ID'.$productDetail['id']);?></a></div>
                                                 </div><!--details_box-->
                                                 <?php endfor;?>
                                             </div><!--details-->

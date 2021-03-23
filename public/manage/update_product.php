@@ -28,37 +28,37 @@ require_once './../../private/functions.php';
 $errors =[];
 if(isset($_POST['update'])){
 
-        $product_id = $_POST['product_id'];
+                $product_id = $_POST['product_id'];
 
-        $product_name = $_POST['product_name'];
-        if(!$product_name || 20 < strlen($product_name)){
-            $errors[] = 'Please type product name.';
-        }
+                $product_name = $_POST['product_name'];
+                if(!$product_name || 20 < strlen($product_name)){
+                    $errors[] = 'Please type product name.';
+                }
 
-        $price = $_POST['price'];
-        if(!$price){
-            $errors[] = 'Please type price.';
-        }
+                $price = $_POST['price'];
+                if(!$price){
+                    $errors[] = 'Please type price.';
+                }
 
-        $gender = $_POST['gender'];
-        if(!$gender){
-            $errors[] = 'Please choose gender.';
-        }
+                $gender = $_POST['gender'];
+                if(!$gender){
+                    $errors[] = 'Please choose gender.';
+                }
 
-        $category = $_POST['category'];
-        if(!$category){
-            $errors[] = 'Please choose category.';
-        }
+                $category = $_POST['category'];
+                if(!$category){
+                    $errors[] = 'Please choose category.';
+                }
 
-        $description = $_POST['description'];
-        if(!$description){
-            $errors[] = 'Please type product description.';
-        }
+                $description = $_POST['description'];
+                if(!$description){
+                    $errors[] = 'Please type product description.';
+                }
 
-        $weight = $_POST['weight'];
-        if(!$weight){
-            $errors[] = 'Please type product weight.';
-        }
+                $weight = $_POST['weight'];
+                if(!$weight){
+                    $errors[] = 'Please type product weight.';
+                }
 
 
                 if(!empty($_FILES['img']['name'])){
@@ -115,11 +115,11 @@ if(isset($_POST['update'])){
                     //var_dump($errors);
 
 
-                    if(empty($errors)){
+                   // if(empty($errors)){
 
-                        $update_product = updateProduct($product_id, $product_name, $category, $description, $filename, $save_path);
+                       // $update_product = updateProduct($product_id, $product_name, $category, $description, $filename, $save_path);
 
-                    }
+                   // }
 
 
                 }else if(empty($_FILES['img']['name']) && count($errors) == 0 ){
@@ -288,6 +288,7 @@ foreach($productDetails as $productDetail){
 }
 
 var_dump($_POST);
+var_dump($productDetails[0]['gender']);
 ?>
 
 <!DOCTYPE html>
@@ -313,7 +314,7 @@ var_dump($_POST);
                     <div class="typein">
                         <h1 class="form_title blue">Update Product</h1>
                         <br>
-
+<?php var_dump($productDetails);?>
 
                         <h2>Product Common Part</h2>
 
@@ -347,8 +348,13 @@ var_dump($_POST);
 
                             <div class="form_item">
                                 <label>Gender<br>
+                                <?php if($productDetails[0]['gender'] !== null):?>
                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input class="radio" type="radio" name="gender" value="1" <?php echo $productDetails[0]['gender'] == '1' ? 'checked' : '' ?>>Boys
                                     <input class="radio" type="radio" name="gender" value="2" <?php echo $productDetails[0]['gender'] == '2' ? 'checked' : '' ?>>Girls
+                                <?php elseif($productDetails[0]['gender'] == null):?>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input class="radio" type="radio" name="gender" value="1" checked>Boys
+                                    <input class="radio" type="radio" name="gender" value="2">Girls
+                                <?php endif ;?>
                                 </label>
                             </div>
                             <br>
