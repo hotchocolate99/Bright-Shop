@@ -206,7 +206,7 @@ $productDatas = getProductDataByDetail($detail['detail_id']);
                                     <div class="pickup_box">
                                             <p><?php echo $i+1;?>.&nbsp;<strong><?php echo "{$product_name_file['product_name']}"?>&nbsp;&nbsp;(Stock:&nbsp;<?php echo $detail_stock['stock'];?>&nbsp;left)</strong></p>
                                             <?php if($detail_stock['stock'] > 0 && $detail['detail_count'] > $detail_stock['stock']):?>
-                                                <p class="attention"><strong><?php echo"Sorry. We don't have enough stock. Please change the Qty to less than".' '.$detail_stock['stock'].".";?></strong></p>
+                                                <p class="attention"><strong><?php echo"Sorry. We don't have enough stock. Please change the Qty to ".' '.$detail_stock['stock']."or less.";?></strong></p>
                                             <?php elseif($detail_stock['stock'] < 1 && $detail['detail_count'] > $detail_stock['stock']):?>
                                                 <p class="attention"><strong><?php echo"Sorry. This product is currently out of stock.";?></strong></p>
                                             <?php endif;?>
