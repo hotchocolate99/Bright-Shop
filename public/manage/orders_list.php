@@ -30,6 +30,8 @@ if($_POST){
     $order_id = $_POST['order_id'];
 
     $chage_shipping_status = changeShippingStatus($_POST['order_id'], $_POST['shipping_status']);
+    //header("Location: ./orders_list.php?order_id=".$order_id);
+    header("Location:" .$_SERVER['PHP_SELF']."#$order_id");
 }
 
 ?>
@@ -68,11 +70,13 @@ if($_POST){
                               
                             <?php for($i=0;$i<count($all_orders);$i++):?>
                                 <?php $all_order = $all_orders[$i];?>
+                                
                                 <div class="row_box3">
-                                    <div class="row_item"><h3 class="begin"><?php echo $i+1;?>.&nbsp;<strong>Order No:&nbsp;<?php echo $all_order['id'];?>&nbsp;&nbsp;(Purchase Date:&nbsp;<?php echo "{$all_order['ordered_at']}";?>)</strong></h3></div>
+                                    <div class="row_item"><h3 class="begin"><?php echo $i+1;?>.&nbsp;<strong>Order No:&nbsp;<?php echo $all_order['id'];?>&nbsp;&nbsp;(Purchase Date:&nbsp;<?php echo "{$all_order['ordered_at']}";?>)</strong></h3><a name=<?php echo'                       ';?><?php echo h($all_order['id']);?>></a></div>
                                         &nbsp;&nbsp;&nbsp;&nbsp;
-                                    
+                                        
                                     <div class="row_item">
+                                    
                                         <form action="orders_list.php" method="post">
 
                                             <?php if($all_order['shipping_status'] ==2):?>
