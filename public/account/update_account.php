@@ -33,6 +33,7 @@ foreach($users as $user){
 //var_dump($user);
 }
 
+
 $errors =[];
 
 if(isset($_POST['update'])){
@@ -120,11 +121,11 @@ if(isset($_POST['update'])){
 if($_SESSION['shopping_cart']){
     $total_in_cart = 0;
     foreach($_SESSION['shopping_cart'] as $detail){
-      if(!empty($details)){
-         $total_in_cart += $detail['detail_count'];
+      if(!empty($_SESSION['shopping_cart'])){
+        $total_in_cart += $detail['detail_count'];
       }
     }
-}
+  }
 
 ?>
 
@@ -152,7 +153,7 @@ if($_SESSION['shopping_cart']){
                     <div class="typein">
                         <h1 class="form_title orange">Update Account</h1>
                         <br>
-
+                        <?php var_dump($details) ?> 
                         <?php if(isset($errors)): ?> 
                             <ul class="error-box">
                             <?php foreach($errors as $error): ?> 

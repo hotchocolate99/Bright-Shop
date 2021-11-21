@@ -54,7 +54,7 @@ li{
     width: 1000px;
     margin: 2rem auto;
     position: relative;
-    height: 400px;
+    /*height: 400px;*/
 }
 
 .form_title{
@@ -245,5 +245,9 @@ li{
 }*/
 .form{
   position: relative;
+}
+
+.checked{
+  color: orange;
 }
 

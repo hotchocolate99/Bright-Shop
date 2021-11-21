@@ -261,3 +261,36 @@ li{
 dd{
   font-weight: bold;
 }
+
+.big{
+  font-size: 40px;
+  width:10px;
+  margin: 0;
+  padding: 0;
+}
+
+.fa-star{
+  font-size: 15px;
+  width:7px;
+  margin: 0;
+  padding: 0;
+}
+
+.fa-star-half-alt{
+  font-size: 15px;
+  width:7px;
+  margin: 0;
+  padding: 0;
+}
+
+.checked{
+  color: orange;
+}
+
+.unchecked{
+  color: orange;
+}
+
+.line{
+  display: inline;
+}

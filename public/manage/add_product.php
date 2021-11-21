@@ -23,7 +23,7 @@ require_once './../../private/database.php';
 require_once './../../private/functions.php';
 
 
-var_dump($_POST);
+//var_dump($_POST);
 //var_dump($_POST['color'][0]);
 
 var_dump($_FILES);
@@ -229,7 +229,7 @@ var_dump($product_id['product_id']);
                     <div class="typein">
                         <h1 class="form_title blue">Add New Product</h1>
                         <br>
-                        
+                        <?php var_dump($_FILES);?>
 
                         <h2>Product Common Part</h2>
 
@@ -300,8 +300,16 @@ var_dump($product_id['product_id']);
 
                             <div class="form_item">
                                 <label>Image<br>
-                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input name="img" type="file" accept="image/*"/><br>
+                                <!--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input name="img" type="file" accept="image/*"/><br>
                                     　<input type="hidden" name="MAX_FILE_SIZE" value="1048576" />
+                                </label>-->
+
+                                <?php if(!empty($_FILE['img'])):?>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $_FILES['tmp_name'];?>
+                                <?php else:?>
+                                    　<input name="img" type="file" accept="image/*"/><br>
+                                    　<input type="hidden" name="MAX_FILE_SIZE" value="1048576" />
+                                <?php endif ;?>
                                 </label>
                             </div>
                             <br>

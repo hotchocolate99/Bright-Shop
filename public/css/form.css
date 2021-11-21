@@ -253,7 +253,19 @@ justify-content: space-evenly;
 /*justify-content: space-between;*/
 }
 
+.inquiry_no{
+    width: 50px;
+}
 
+.inquiry_name{
+    width: 150px;
+}
 
+.inquiry_subject{
+    width: 100px;
+}
 
+.inquiry_date{
+    width: 300px;
+}
 

@@ -16,7 +16,7 @@ error_reporting(E_ALL & ~ E_DEPRECATED & ~ E_USER_DEPRECATED & ~ E_NOTICE);
 require_once './../../private/database.php';
 require_once './../../private/functions.php';
 
-
+$test = getTest();
 //var_dump($_GET);
 if($_GET['id']){
     $product_id = $_GET['id'];
@@ -71,6 +71,22 @@ for($a=0;$a<$count_colors;$a++){
 //print_r($detailCSs[1][0]); //[id] => 2 [product_id] => 55 [price] => 3000 [gender] => 1 [weight] => 200 [color] => Light Gray [size] => 60 [stock] => 10 [created_at] => 2021-01-09 14:17:40 [updated_at] => 2021-01-09 14:17:40 ) 
 //print_r($detailCSs[1][1]);//[id] => 3 [product_id] => 55 [price] => 3000 [gender] => 1 [weight] => 200 [color] => Light Gray [size] => 70 [stock] => 10 [created_at] => 2021-01-09 17:03:20 [updated_at] => 2021-01-09 17:03:20 ) 
 //----------------------------------------------
+$total_reviews = getTotalReviews($product_id);
+foreach($total_reviews as $total_review){
+    //echo $total_review["count(*)"];
+}
+$reviews_count = $total_review["count(*)"];
+
+$total_stars = getTotalStars($product_id);
+foreach($total_stars as $total_star){
+   // echo $total_star;
+}
+$stars = $total_star["SUM(star)"];
+
+$star_rating = $stars / $reviews_count;
+
+
+//---------------------------------------------
 
 if($_SESSION['shopping_cart']){
     $total_in_cart = 0;
@@ -112,12 +128,12 @@ if($_SESSION['shopping_cart']){
                                 </div>
 
                                 <div class="text_part">
-                                  <h2 class="product_name"><?php echo $common['product_name'];?></h2>
+                                  <h1 class="product_name"><?php echo $common['product_name'];?></h1>
                                   <h2>¥&nbsp;<?php echo n($details[0]['price']);?>&nbsp;(Tax not included)</h2>
                                   <h3><?php echo $common['description'];?></h3>
                                 </div>
                             </div>
-
+                            
                             <div class="right_side">
                                 <form action="./../shopping/shopping_cart.php" method="post">
                                     <input type="hidden" name="detail_count" value="1" >
@@ -287,22 +303,184 @@ if($_SESSION['shopping_cart']){
 
                     <div class="typein2">
 
-                            <h2 class="form_title2">Reviews</h2>
+                            <h2 class="form_title2 line">Customer Reviews</h2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             <?php $allReviews = getAllReviewsByProductId($product_id);?>
+                            <a class="atReview" name="review"></a>
+                            <div class="line">
+                            <?php if($star_rating <= 0.1):?>
+                                <span><i class="big far fa-star unchecked"></i></span>
+                                <span><i class="far fa-star unchecked"></i></span>
+                                <span><i class="far fa-star unchecked"></i></span>
+                                <span><i class="far fa-star unchecked"></i></span>
+                                <span><i class="far fa-star unchecked"></i></span>
+                            <?php endif;?>
+                                        
+                            <?php if($star_rating >= 0.2 && $star_rating <= 0.6):?>
+                                <span><i class="fas fa-star-half-alt checked"></i></span>
+                                <span><i class="fas fa-star unchecked"></i></span>
+                                <span><i class="fas fa-star unchecked"></i></span>
+                                <span><i class="fas fa-star unchecked"></i></span>
+                                <span><i class="fas fa-star unchecked"></i></span>
+                            <?php endif;?>
+                                          
+                            <?php if($star_rating >= 0.7 && $star_rating <= 1.2):?>
+                                <span><i class="fas fa-star checked"></i></span>
+                                <span><i class="fas fa-star unchecked"></i></span>
+                                <span><i class="fas fa-star unchecked"></i></span>
+                                <span><i class="fas fa-star unchecked"></i></span>
+                                <span><i class="fas fa-star unchecked"></i></span>
+                            <?php endif;?>
+                                        
+                            <?php if($star_rating >= 1.3 && $star_rating <= 1.7):?>
+                                <span><i class="fas fa-star checked"></i></span>
+                                <span><i class="fas fa-star-half-alt checked"></i></span>
+                                <span><i class="far fa-star unchecked"></i></span>
+                                <span><i class="far fa-star unchecked"></i></span>
+                                <span><i class="far fa-star unchecked"></i></span>
+                            <?php endif;?>
 
-                            <?php if(empty($allReviews)):?>
-                                 <h3><?php echo 'There is no reviews of this product yet.';?></h3>
+                            <?php if($star_rating >= 1.8 && $star_rating <= 2.2):?>
+                                <span><i class="fas fa-star checked"></i></span>
+                                <span><i class="fas fa-star checked"></i></span>
+                                <span><i class="far fa-star unchecked"></i></span>
+                                <span><i class="far fa-star unchecked"></i></span>
+                                <span><i class="far fa-star unchecked"></i></span>
+                            <?php endif;?>
+
+                            <?php if($star_rating >= 2.3 && $star_rating <= 2.7):?>
+                                <span><i class="fas fa-star checked"></i></span>
+                                <span><i class="fas fa-star checked"></i></span>
+                                <span><i class="fas fa-star-half-alt checked"></i></span>
+                                <span><i class="far fa-star unchecked"></i></span>
+                                <span><i class="far fa-star unchecked"></i></span>
+                            <?php endif;?>
+
+                            <?php if($star_rating >= 2.8 && $star_rating <= 3.2):?>
+                                <span><i class="fas fa-star checked"></i></span>
+                                <span><i class="fas fa-star checked"></i></span>
+                                <span><i class="fas fa-star checked"></i></span>
+                                <span><i class="far fa-star unchecked"></i></span>
+                                <span><i class="far fa-star unchecked"></i></span>
+                            <?php endif;?>
+
+                            <?php if($star_rating >= 3.3 && $star_rating <= 3.7):?>
+                                <span><i class="fas fa-star big checked"></i></span>
+                                <span><i class="fas fa-star big checked"></i></span>
+                                <span><i class="fas fa-star big checked"></i></span>
+                                <span><i class="fas fa-star-half-alt big checked"></i></span>
+                                <span><i class="far fa-star big unchecked"></i></span>
+                            <?php endif;?>
+
+                            <?php if($star_rating >= 3.8 && $star_rating <= 4.2):?>
+                                <span><i class="fas fa-star checked"></i></span>
+                                <span><i class="fas fa-star checked"></i></span>
+                                <span><i class="fas fa-star checked"></i></span>
+                                <span><i class="fas fa-star checked"></i></span>
+                                <span><i class="far fa-star unchecked"></i></span>
+                            <?php endif;?>
+
+                            <?php if($star_rating >= 4.3 && $star_rating <= 4.7):?>
+                                <span><i class="fas fa-star checked"></i></span>
+                                <span><i class="fas fa-star checked"></i></span>
+                                <span><i class="fas fa-star checked"></i></span>
+                                <span><i class="fas fa-star checked"></i></span>
+                                <span><i class="far fa-star-half-alt checked"></i></span>
+                            <?php endif;?>
+
+                            <?php if($star_rating >= 4.8 && $star_rating <= 5.0):?>
+                                <span><i class="fas fa-star checked"></i></span>
+                                <span><i class="fas fa-star checked"></i></span>
+                                <span><i class="fas fa-star checked"></i></span>
+                                <span><i class="fas fa-star checked"></i></span>
+                                <span><i class="fas fa-star checked"></i></span>
+                            <?php endif;?>
+                        </div>&nbsp;
+
+                            <?php if(!empty($allReviews)):?>
+                                <?php if($reviews_count == 1):?>
+                                    <h3 class="line"><?php echo $star_rating."  "."out of"."  "."5"."  "."($reviews_count"." "."review)";?></h3><br><br><br>
+                                <?php endif;?>
+
+                                <?php if($reviews_count > 1):?>
+                                    <h3 class="line"><?php echo (floor($star_rating * 10) / 10)."  "."out of"."  "."5"."  "."($reviews_count"." "."reviews)";?></h3><br><br><br>
+                                <?php endif;?>
+                            <?php endif ;?>
+
+                            <?php if(empty($allReviews['review_comment'])):?>
+                                 <h3><?php echo 'There are currently no comments for this product.';?></h3>
                             <?php endif ;?>
                             
                             <?php for($i=0;$i<count($allReviews);$i++):?>
                                 
                                 <?php $allReview = $allReviews[$i];?>
-                                <?php// var_dump($allReview);?>
-                                <div class="review_box">
-                                    <p><?php echo $i+1;?>.&nbsp;Code Name:&nbsp;<strong><?php echo $allReview['code_name'];?></strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(Date:&nbsp;<?php echo $allReview['created_at'];?>)</p>
-                                        <dt>&nbsp;&nbsp;&nbsp;Review Comment:</dt>
-                                        <dd><?php echo nl2br($allReview['review_comment']);?></dd>
-                                </div>
+                                    <?php// var_dump($allReview);?>
+                               
+                                    
+                                        <div class="review_box">
+                                        
+                                                <p><?php echo $i+1;?>.
+                                                &nbsp;&nbsp;&nbsp;<i class="fas fa-user"></i><strong><?php echo $allReview['user_name'];?></strong> &nbsp;&nbsp;&nbsp;
+                                    
+                                    
+                                                <?php if($allReview['star'] == 0):?>
+                                                    <span><i class="far fa-star unchecked"></i></span>
+                                                    <span><i class="far fa-star unchecked"></i></span>
+                                                    <span><i class="far fa-star unchecked"></i></span>
+                                                    <span><i class="far fa-star unchecked"></i></span>
+                                                    <span><i class="far fa-star unchecked"></i></span>
+                                                <?php endif;?>    
+                                    
+                                                <?php if($allReview['star'] == 1):?>
+                                                    <span><i class="fas fa-star checked"></i></span>
+                                                    <span><i class="far fa-star unchecked"></i></span>
+                                                    <span><i class="far fa-star unchecked"></i></span>
+                                                    <span><i class="far fa-star unchecked"></i></span>
+                                                    <span><i class="far fa-star unchecked"></i></span>
+                                                <?php endif;?>
+
+                                                <?php if($allReview['star'] == 2):?>
+                                                    <span><i class="fas fa-star checked"></i></span>
+                                                    <span><i class="fas fa-star checked"></i></span>
+                                                    <span><i class="far fa-star unchecked"></i></span>
+                                                    <span><i class="far fa-star unchecked"></i></span>
+                                                    <span><i class="far fa-star unchecked"></i></span>
+                                                <?php endif;?>
+
+                                                <?php if($allReview['star'] == 3):?>
+                                                    <span><i class="fas fa-star checked"></i></span>
+                                                    <span><i class="fas fa-star checked"></i></span>
+                                                    <span><i class="fas fa-star checked"></i></span>
+                                                    <span><i class="far fa-star unchecked"></i></span>
+                                                    <span><i class="far fa-star unchecked"></i></span>
+                                                <?php endif;?>
+                                    
+                                                <?php if($allReview['star'] == 4):?>
+                                                    <span><i class="fas fa-star checked"></i></span>
+                                                    <span><i class="fas fa-star checked"></i></span>
+                                                    <span><i class="fas fa-star checked"></i></span>
+                                                    <span><i class="fas fa-star checked"></i></span>
+                                                    <span><i class="far fa-star unchecked"></i></span>
+                                                <?php endif;?>
+
+                                                <?php if($allReview['star'] == 5):?>
+                                                    <span><i class="fas fa-star checked"></i></span>
+                                                    <span><i class="fas fa-star checked"></i></span>
+                                                    <span><i class="fas fa-star checked"></i></span>
+                                                    <span><i class="fas fa-star checked"></i></span>
+                                                    <span><i class="fas fa-star checked"></i></span>
+                                                <?php endif;?>
+
+                                                &nbsp;&nbsp;(Date:&nbsp;<?php echo $allReview['created_at'];?>)
+                                            
+                                            </p>
+
+                                        
+                                            <!-- <dt>&nbsp;&nbsp;&nbsp;Review Comment:</dt>-->
+                                            <?php if($allReview['review_comment'] != null || $allReview['review_comment'] > 1):?>
+                                                <dd><?php echo nl2br($allReview['review_comment']);?></dd>                                   
+                                            <?php endif;?>
+
+                                        </div>
                             <?php endfor;?>
                     </div><!--typein2-->
 

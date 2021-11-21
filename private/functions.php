@@ -209,7 +209,7 @@ function getSecondNewestProductsDatas($gender, $newest_id){
 
 //products table　の全データを取得
 function getAllProductsDatas(){
-        $sql = "SELECT * FROM products";
+        $sql = "SELECT * FROM products ORDER BY id DESC";
     
                  $dbh = dbConnect();
          
@@ -635,6 +635,7 @@ function getAllusersDatas(){
 //users_list ok
 function getCountUsers(){
 
+   
     $sql = "SELECT count(*) as count_usrs FROM users";
 
     $dbh = dbConnect();
@@ -681,7 +682,7 @@ function getCountUsers(){
         }
 
         if($shipping_status == 2){
-            return  " Your oreder is on it's way.";
+            return  " Your order is on it's way.";
         }
     }
 
@@ -769,7 +770,7 @@ function getCountUsers(){
         $stmt = $dbh->prepare($sql);
         $stmt->bindValue(':id', $productDetail_id, PDO::PARAM_INT);
         $stmt->execute();
-    } 
+    }
 
 
     function updateProduct($product_id, $product_name, $category, $description, $filename, $save_path){
@@ -884,18 +885,19 @@ function getCountUsers(){
 
 
     //レビューの投稿
-    function postedReview($user_id, $product_id, $code_name, $review_comment){
+    function postedReview($user_id, $product_id, $user_name, $star, $review_comment){
 
         $result = false;
 
-        $sql = "INSERT INTO reviews (user_id, product_id, code_name, review_comment) 
-                              VALUE(:user_id, :product_id, :code_name, :review_comment)";
+        $sql = "INSERT INTO reviews (user_id, product_id, user_name, star, review_comment) 
+                              VALUE(:user_id, :product_id, :user_name, :star, :review_comment)";
 
         $dbh = dbConnect();
         $stmt = $dbh->prepare($sql);
         $stmt->bindValue(':user_id', $user_id,PDO::PARAM_INT);
         $stmt->bindValue(':product_id', $product_id,PDO::PARAM_INT);
-        $stmt->bindValue(':code_name', $code_name,PDO::PARAM_STR);
+        $stmt->bindValue(':user_name', $user_name,PDO::PARAM_STR);
+        $stmt->bindValue(':star', $star,PDO::PARAM_INT);
         $stmt->bindValue(':review_comment', $review_comment,PDO::PARAM_STR);
 
         $result = $stmt->execute();
@@ -918,6 +920,37 @@ function getCountUsers(){
              
             return $result;
     }
+
+//レビューの数
+    function getTotalReviews($product_id){
+
+        $sql = "SELECT count(*) FROM reviews WHERE product_id = :product_id";
+            
+            $dbh = dbConnect();
+             
+            $stmt = $dbh->prepare($sql);
+            $stmt->bindValue(':product_id', $product_id,PDO::PARAM_INT);
+            $stmt->execute();
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+             
+            return $result;
+    }
+
+
+//星の数
+   function  getTotalStars($product_id){
+       
+       $sql = "SELECT SUM(star) FROM reviews WHERE product_id = :product_id";
+            
+            $dbh = dbConnect();
+    
+            $stmt = $dbh->prepare($sql);
+            $stmt->bindValue(':product_id', $product_id,PDO::PARAM_INT);
+            $stmt->execute();
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+   return $result;
+}
 
 
 
@@ -989,7 +1022,7 @@ function getCountUsers(){
     
     function getAllOrdersForLists(){
 
-        $sql = "SELECT * FROM orders";
+        $sql = "SELECT * FROM orders ORDER BY id DESC";
             
         $dbh = dbConnect();
          
@@ -1002,7 +1035,7 @@ function getCountUsers(){
 
     function getAllOrdersByUser($user_id){
 
-        $sql = "SELECT * FROM orders WHERE user_id = :user_id";
+        $sql = "SELECT * FROM orders WHERE user_id = :user_id ORDER BY id DESC";
             
         $dbh = dbConnect();
          
@@ -1057,6 +1090,215 @@ function getCountUsers(){
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
     
         return $result;
-      
-    
+
     }
+
+    //問い合わせを受けた時のお知らせ機能
+function getUnrepliedInquiry($reply_status){
+
+    $sql = "SELECT COUNT(*) FROM inquiries WHERE reply_status = :reply_status";
+
+    $dbh = dbConnect();
+    $stmt = $dbh->prepare($sql);
+    $stmt->bindValue(':reply_status', $reply_status, PDO::PARAM_INT);
+    $stmt->execute();
+    $result = $stmt->fetch();
+
+    return $result;
+
+}
+
+    
+
+    function getCountInquiries(){
+
+        $sql = "SELECT count(*) as count_inquiries FROM inquiries";
+        
+        $dbh = dbConnect();
+        $stmt = $dbh->prepare($sql);
+        $stmt->execute();
+        $result = $stmt->fetch();
+        
+        return $result;
+    }
+
+
+    function getAllinquirysDatas(){
+
+    $sql = "SELECT * FROM inquiries";
+
+    $dbh = dbConnect();
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute();
+    $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    return $results;
+}
+
+
+function getInquiryDetails($inquiry_id){
+
+    $sql = "SELECT * FROM inquiries WHERE id = :id";
+
+    $dbh = dbConnect();
+    $stmt = $dbh->prepare($sql);
+    $stmt->bindValue(':id', $inquiry_id, PDO::PARAM_INT);
+    $stmt->execute();
+    $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    return $results;
+}
+
+function getTest(){
+
+    echo'<span><i class="fas fa-star checked"></i></span>';
+    
+}
+
+function getStarRate($product_id){
+
+    $sql = "SELECT SUM(star), COUNT(id) FROM reviews WHERE product_id = :product_id";
+            
+            $dbh = dbConnect();
+    
+            $stmt = $dbh->prepare($sql);
+            $stmt->bindValue(':product_id', $product_id,PDO::PARAM_INT);
+            $stmt->execute();
+            $results = $stmt->fetchall(PDO::FETCH_ASSOC);
+
+            foreach($results as $result){
+                
+                echo ' <style>';
+                    echo '.checked {color: orange;}';
+                    echo '.unchecked {color: orange;}';
+                    echo '.fa-star {margin: 0; padding: 0;}';
+                    echo '.fa-star-half-alt {margin: 0; padding: 0;}';
+                echo '</style>';
+
+                echo '<div class="line" style="display: inline;">';
+
+                    if(empty($result['COUNT(id)'])){
+
+                        echo '<span><i class="far fa-star unchecked"></i></span>';
+                        echo '<span><i class="far fa-star unchecked"></i></span>';
+                        echo '<span><i class="far fa-star unchecked"></i></span>';
+                        echo '<span><i class="far fa-star unchecked"></i></span>';
+                        echo '<span><i class="far fa-star unchecked"></i></span>';
+                        echo ' (0 rating)';
+                    }else{
+                       $star_rating = floor($result['SUM(star)'] / $result['COUNT(id)'] * 10) / 10;
+
+
+                        if($star_rating <= 0.1){
+                            echo '<span><i class="far fa-star unchecked"></i></span>';
+                            echo '<span><i class="far fa-star unchecked"></i></span>';
+                            echo '<span><i class="far fa-star unchecked"></i></span>';
+                            echo '<span><i class="far fa-star unchecked"></i></span>';
+                            echo '<span><i class="far fa-star unchecked"></i></span>';
+                        }
+                                
+                        if($star_rating >= 0.2 && $star_rating <= 0.6){
+                            echo '<span><i class="fas fa-star-half-alt checked"></i></span>';
+                            echo '<span><i class="fas fa-star unchecked"></i></span>';
+                            echo '<span><i class="fas fa-star unchecked"></i></span>';
+                            echo '<span><i class="fas fa-star unchecked"></i></span>';
+                            echo '<span><i class="fas fa-star unchecked"></i></span>';
+                        }
+                                  
+                        if($star_rating >= 0.7 && $star_rating <= 1.2){
+                            echo '<span><i class="fas fa-star checked"></i></span>';
+                            echo '<span><i class="fas fa-star unchecked"></i></span>';
+                            echo '<span><i class="fas fa-star unchecked"></i></span>';
+                            echo '<span><i class="fas fa-star unchecked"></i></span>';
+                            echo '<span><i class="fas fa-star unchecked"></i></span>';
+                        }
+                                
+                        if($star_rating >= 1.3 && $star_rating <= 1.7){
+                            echo '<span><i class="fas fa-star checked"></i></span>';
+                            echo '<span><i class="fas fa-star-half-alt checked"></i></span>';
+                            echo '<span><i class="far fa-star unchecked"></i></span>';
+                            echo '<span><i class="far fa-star unchecked"></i></span>';
+                            echo '<span><i class="far fa-star unchecked"></i></span>';
+                        }
+
+                       if($star_rating >= 1.8 && $star_rating <= 2.2){
+                            echo '<span><i class="fas fa-star checked"></i></span>';
+                            echo '<span><i class="fas fa-star checked"></i></span>';
+                            echo '<span><i class="far fa-star unchecked"></i></span>';
+                            echo '<span><i class="far fa-star unchecked"></i></span>';
+                            echo '<span><i class="far fa-star unchecked"></i></span>';
+                            echo ' ('.$result['COUNT(id)'].'ratings)';
+                        }
+
+                       if($star_rating >= 2.3 && $star_rating <= 2.7){
+                            echo '<span><i class="fas fa-star checked"></i></span>';
+                            echo '<span><i class="fas fa-star checked"></i></span>';
+                            echo '<span><i class="fas fa-star-half-alt checked"></i></span>';
+                            echo '<span><i class="far fa-star unchecked"></i></span>';
+                            echo '<span><i class="far fa-star unchecked"></i></span>';
+                        }
+
+                       if($star_rating >= 2.8 && $star_rating <= 3.2){
+                            echo '<span><i class="fas fa-star checked"></i></span>';
+                            echo '<span><i class="fas fa-star checked"></i></span>';
+                            echo '<span><i class="fas fa-star checked"></i></span>';
+                            echo '<span><i class="far fa-star unchecked"></i></span>';
+                            echo '<span><i class="far fa-star unchecked"></i></span>';
+                        }
+
+                       if($star_rating >= 3.3 && $star_rating <= 3.7){
+                            echo '<span><i class="fas fa-star big checked"></i></span>';
+                            echo '<span><i class="fas fa-star big checked"></i></span>';
+                            echo '<span><i class="fas fa-star big checked"></i></span>';
+                            echo '<span><i class="fas fa-star-half-alt big checked"></i></span>';
+                            echo '<span><i class="far fa-star big unchecked"></i></span>';
+                        }
+
+                       if($star_rating >= 3.8 && $star_rating <= 4.2){
+                            echo '<span><i class="fas fa-star checked"></i></span>';
+                            echo ' <span><i class="fas fa-star checked"></i></span>';
+                            echo '<span><i class="fas fa-star checked"></i></span>';
+                            echo '<span><i class="fas fa-star checked"></i></span>';
+                            echo '<span><i class="far fa-star unchecked"></i></span>';
+                        }
+
+                       if($star_rating >= 4.3 && $star_rating <= 4.7){
+                            echo '<span><i class="fas fa-star checked"></i></span>';
+                            echo '<span><i class="fas fa-star checked"></i></span>';
+                            echo '<span><i class="fas fa-star checked"></i></span>';
+                            echo '<span><i class="fas fa-star checked"></i></span>';
+                            echo '<span><i class="far fa-star-half-alt checked"></i></span>';
+                        }
+
+                       if($star_rating >= 4.8 && $star_rating <= 5.0){
+                            echo '<span><i class="fas fa-star checked"></i></span>';
+                            echo '<span><i class="fas fa-star checked"></i></span>';
+                            echo '<span><i class="fas fa-star checked"></i></span>';
+                            echo '<span><i class="fas fa-star checked"></i></span>';
+                            echo '<span><i class="fas fa-star checked"></i></span>';
+                        }
+
+                        if($result['COUNT(id)'] == 0){
+                            echo ' ('.'no ratings'.')';
+                            }
+
+                        if($result['COUNT(id)'] == 1){
+                            echo ' ('.$result['COUNT(id)'].' rating)';
+                            }
+
+                        if($result['COUNT(id)'] > 1){
+                        echo ' ('.$result['COUNT(id)'].' ratings)';
+                        }
+
+                        
+
+                    
+                   }
+
+                echo '</div>';
+            }
+             
+             return $star_rating;
+}
+
+

@@ -35,6 +35,7 @@ foreach($girls_all_products_ids as $girls_all_products_id){
   }
 }
 
+
 if($_SESSION['shopping_cart']){
   $total_in_cart = 0;
   foreach($_SESSION['shopping_cart'] as $detail){
@@ -92,6 +93,112 @@ if($_SESSION['shopping_cart']){
 
                                         <div class="text_part">
                                             <h2 class="product_name"><?php echo $girls_all_products_data['product_name'];?></h2>
+                                            <?php $allReviews = getAllReviewsByProductId($product_id);?>
+                            
+                            <div class="line">
+                            <?php if($star_rating <= 0.1):?>
+                                <span><i class="big far fa-star unchecked"></i></span>
+                                <span><i class="far fa-star unchecked"></i></span>
+                                <span><i class="far fa-star unchecked"></i></span>
+                                <span><i class="far fa-star unchecked"></i></span>
+                                <span><i class="far fa-star unchecked"></i></span>
+                            <?php endif;?>
+                                        
+                            <?php if($star_rating >= 0.2 && $star_rating <= 0.6):?>
+                                <span><i class="fas fa-star-half-alt checked"></i></span>
+                                <span><i class="fas fa-star unchecked"></i></span>
+                                <span><i class="fas fa-star unchecked"></i></span>
+                                <span><i class="fas fa-star unchecked"></i></span>
+                                <span><i class="fas fa-star unchecked"></i></span>
+                            <?php endif;?>
+                                          
+                            <?php if($star_rating >= 0.7 && $star_rating <= 1.2):?>
+                                <span><i class="fas fa-star checked"></i></span>
+                                <span><i class="fas fa-star unchecked"></i></span>
+                                <span><i class="fas fa-star unchecked"></i></span>
+                                <span><i class="fas fa-star unchecked"></i></span>
+                                <span><i class="fas fa-star unchecked"></i></span>
+                            <?php endif;?>
+                                        
+                            <?php if($star_rating >= 1.3 && $star_rating <= 1.7):?>
+                                <span><i class="fas fa-star checked"></i></span>
+                                <span><i class="fas fa-star-half-alt checked"></i></span>
+                                <span><i class="fas fa-star unchecked"></i></span>
+                                <span><i class="fas fa-star unchecked"></i></span>
+                                <span><i class="fas fa-star unchecked"></i></span>
+                            <?php endif;?>
+
+                            <?php if($star_rating >= 1.8 && $star_rating <= 2.2):?>
+                                <span><i class="fas fa-star checked"></i></span>
+                                <span><i class="fas fa-star checked"></i></span>
+                                <span><i class="far fa-star unchecked"></i></span>
+                                <span><i class="far fa-star unchecked"></i></span>
+                                <span><i class="far fa-star unchecked"></i></span>
+                            <?php endif;?>
+
+                            <?php if($star_rating >= 2.3 && $star_rating <= 2.7):?>
+                                <span><i class="fas fa-star checked"></i></span>
+                                <span><i class="fas fa-star checked"></i></span>
+                                <span><i class="fas fa-star-half-alt checked"></i></span>
+                                <span><i class="far fa-star unchecked"></i></span>
+                                <span><i class="far fa-star nchecked"></i></span>
+                            <?php endif;?>
+
+                            <?php if($star_rating >= 2.8 && $star_rating <= 3.2):?>
+                                <span><i class="fas fa-star checked"></i></span>
+                                <span><i class="fas fa-star checked"></i></span>
+                                <span><i class="fas fa-star checked"></i></span>
+                                <span><i class="far fa-star unchecked"></i></span>
+                                <span><i class="far fa-star unchecked"></i></span>
+                            <?php endif;?>
+
+                            <?php if($star_rating >= 3.3 && $star_rating <= 3.7):?>
+                                <span><i class="fas fa-star big checked"></i></span>
+                                <span><i class="fas fa-star big checked"></i></span>
+                                <span><i class="fas fa-star big checked"></i></span>
+                                <span><i class="fas fa-star-half-alt big checked"></i></span>
+                                <span><i class="far fa-star big unchecked"></i></span>
+                            <?php endif;?>
+
+                            <?php if($star_rating >= 3.8 && $star_rating <= 4.2):?>
+                                <span><i class="fas fa-star checked"></i></span>
+                                <span><i class="fas fa-star checked"></i></span>
+                                <span><i class="fas fa-star checked"></i></span>
+                                <span><i class="fas fa-star checked"></i></span>
+                                <span><i class="far fa-star unchecked"></i></span>
+                            <?php endif;?>
+
+                            <?php if($star_rating >= 4.3 && $star_rating <= 4.7):?>
+                                <span><i class="fas fa-star checked"></i></span>
+                                <span><i class="fas fa-star checked"></i></span>
+                                <span><i class="fas fa-star checked"></i></span>
+                                <span><i class="fas fa-star checked"></i></span>
+                                <span><i class="far fa-star-half-alt checked"></i></span>
+                            <?php endif;?>
+
+                            <?php if($star_rating >= 4.8 && $star_rating <= 5.0):?>
+                                <span><i class="fas fa-star checked"></i></span>
+                                <span><i class="fas fa-star checked"></i></span>
+                                <span><i class="fas fa-star checked"></i></span>
+                                <span><i class="fas fa-star checked"></i></span>
+                                <span><i class="fas fa-star checked"></i></span>
+                            <?php endif;?>
+                        </div>&nbsp;
+
+                        <?php if(!empty($allReviews)):?>
+                                <?php if($reviews_count == 1):?>
+                                    <p class="line"><?php echo $star_rating."  "."out of"."  "."5"."  "."($reviews_count"." "."review)";?></p><br><br><br>
+                                <?php endif;?>
+
+                                <?php if($reviews_count > 1):?>
+                                    <p class="line"><?php echo (floor($star_rating * 10) / 10)."  "."out of"."  "."5"."  "."($reviews_count"." "."reviews)";?></p><br><br><br>
+                                <?php endif;?>
+                            <?php endif ;?>
+
+                            <?php if(empty($allReviews)):?>
+                                 <p><?php echo 'There is no reviews of this product yet.';?></p>
+                            <?php endif ;?>
+
                                             <h2>¥&nbsp;<?php echo n($prices['price']);?>&nbsp;(Tax not included)</h2>
                                             <h3><?php echo $girls_all_products_data['description'];?></h3>
                                             <a class="button" href="/view/product_details.php?id=<?php echo h($girls_all_products_data['id'])?>">Go To Details</a>

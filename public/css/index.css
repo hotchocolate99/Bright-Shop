@@ -2,10 +2,15 @@
 
 html,body
 ul, ol,
-h1, h2, h3, h4, h5, h6, div {
+h1, h2,h3, h4, div {
   margin: 0;
   padding: 0;
   color: #64686a;
+}
+
+.text_part h2{
+  margin: 10px 0;
+  
 }
 
 a{
@@ -125,7 +130,7 @@ li{
   position: relative;
 }
 
-.product_box h2{
+.product_box h1{
   margin: 5px 0;
 }
 
@@ -141,7 +146,7 @@ li{
   padding: 0 30px;
 }
 
-.text_part h2{
+.text_part h1{
   margin: 1rem 0rem;
 }
 
@@ -263,5 +268,9 @@ a .btn{
 
   .menu li{
     margin-left: 2rem;
+  }
+
+  .search_item{
+    display: inline-block;
   }
 

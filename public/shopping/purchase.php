@@ -43,12 +43,22 @@ $sub_datas = $_SESSION['sub_datas'];
 //var_dump($_SESSION['stock_count']);
 
 
-$total_in_cart = '';
-foreach($_SESSION['checkout'] as $detail){
-  if(!empty($details)){
-    $total_in_cart += $detail['detail_count'];
+
+//$total_in_cart = '';
+//foreach($_SESSION['checkout'] as $detail){
+  //if(!empty($details)){
+   // $total_in_cart += $detail['detail_count'];
+  //}
+//}
+
+if($_SESSION['shopping_cart']){
+    $total_in_cart = 0;
+    foreach($_SESSION['shopping_cart'] as $detail){
+      if(!empty($_SESSION['shopping_cart'])){
+        $total_in_cart += $detail['detail_count'];
+      }
+    }
   }
-}
 
 ?>
 
@@ -75,6 +85,7 @@ foreach($_SESSION['checkout'] as $detail){
                     <div class="typein">
                         <h1 class="form_title orange">Purchase</h1>
                         <br>
+                        <?php var_dump($details)?>
                         <div class="form_item">
                             <dt><h2>How would you like to pay?</h2></dt>
                                 <dd><input class="radio" type="radio" id="paymentoption" form="pay_ways" name="pay_ways" value="1" checked>Credit Card
@@ -139,10 +150,10 @@ foreach($_SESSION['checkout'] as $detail){
                                                   <div class="item">Color:&nbsp;<?php echo "{$detail_data['color']}";?></div>
                                                   <div class="item">Size:&nbsp;<?php echo "{$detail_data['size']}";?></div>
                                                   <div class="item"><?php echo 'Qty:'.' '."{$checkout['detail_count']}";?></div>
-                                              
+
                                               </div><!--row_box1-->
                                           </div><!--group_box-->
-                                         
+
 
                                           <!--もし、在庫数より注文数の方が多かったらエラーメッセージを$error配列に入れる。-->
                                           <?php if($detail_data['stock'] < $checkout['detail_count']):?>
@@ -185,8 +196,8 @@ foreach($_SESSION['checkout'] as $detail){
                                       <?php else:?>
 
                                           <div class="link_box">
-                                              <a class="btn_b bg_orange item spase" href="./../account/update_account.php">Change your info</a>
-                                              <a class="btn_b bg_gray item" href="./shopping_cart.php">Go back to the cart</a>
+                                              <a class="btn_b bg_orange item spase" href="./../account/update_account.php">Edit your info</a>
+                                              <a class="btn_b bg_gray item" href="./shopping_cart.php">Retun to the cart</a>
                                               <form class="item" action="./purchased.php" method="post" id="pay_ways">
                                                   <input class="btn bg_green" type="submit" value="Finalize your order">
                                                   <input type="hidden" name="token" value="<?php echo $csrfToken;?>">

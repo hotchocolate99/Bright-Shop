@@ -29,21 +29,26 @@ if(!empty($_POST)){
 
     $product_id = $_POST['product_id'];
 
-    $code_name = $_POST['code_name'];
-    if(!$code_name){
-        $errors[] = '名前を入力して下さい。';
+    $user_name = $_POST['user_name'];
+    if(!$user_name){
+        $errors[] = 'Please type your user name.';
+    }
+
+    $star = $_POST['star'];
+    if(!$star || $star == 0){
+        $errors[] = 'Please rate the item with star(s).';
     }
 
     $review_comment = $_POST['review_comment'];
-    if(!$review_comment || 400 < strlen($review_comment)){
-        $errors[] = 'レビューは400字以下で入力して下さい。';
+    if(400 < strlen($review_comment)){
+        $errors[] = 'Your comment needs to be 400 words or less.';
     }
 
     if(count($errors) === 0){
 
-        $hasPosted = postedReview($user_id, $product_id, $code_name, $review_comment);
+        $hasPosted = postedReview($user_id, $product_id, $user_name, $star, $review_comment);
         //echo '<script type="text/javascript"> alert("Your review was posted successfully.")</script>';
-        header('Location: /view/product_details.php?product_id='.$product_id);
+        header('Location: /view/product_details.php?product_id='.$product_id.'#review');
         if(!$hasPosted){
 
             echo '<script type="text/javascript"> alert("Your review failed to be posted.")</script>';
@@ -94,6 +99,8 @@ for($a=0;$a<$count_colors;$a++){
      $detailCSs[] = $detailCS[$i];
  }
 
+ //----------------------------------------------
+$star_rate = getStarRate($product_id, $star);
 
 //----------------------------------------------
 if($_SESSION['shopping_cart']){
@@ -307,13 +314,40 @@ if($_SESSION['shopping_cart']){
                             <form action="./review.php" method="POST">
                                 <input type="hidden" name="product_id" value="<?php echo "{$product_id}";?>">
 
-                                <p class="form_item">Code Name</p>
-                                   <input type="text" class="form_text" name="code_name">
+                                <p class="form_item">User Name</p>
+                                   <input type="text" class="form_text" name="user_name" value="<?php if(isset($_POST['user_name'])){echo h($user_name);}?>">
+                                   
                                 <br>
                                 <br>
 
+                                <div class="form_item">
+                                <label>Rating<br><br>
+                                &nbsp;<span><i class="fas fa-star checked"></i></span>×&nbsp;&nbsp;
+                                
+                                <select class="wide" name="star">
+
+                                    <?php if(empty($_POST['star'])):?>
+                                        <option value=0>0</option>        
+                                        <option value=1>1</option>
+                                        <option value=2>2</option>
+                                        <option value=3>3</option>
+                                        <option value=4>4</option>
+                                        <option value=5>5</option>
+                                    <?php elseif(!empty($_POST['star'])):?>
+                                        <option value=0 <?php echo h($star) == '0'? 'selected' : '' ?>>0</option>
+                                        <option value=1 <?php echo h($star) == '1'? 'selected' : '' ?>>１</option>
+                                        <option value=2 <?php echo h($star) == '2'? 'selected' : '' ?>>2</option>
+                                        <option value=3 <?php echo h($star) == '3'? 'selected' : '' ?>>3</option>
+                                        <option value=4 <?php echo h($star) == '4'? 'selected' : '' ?>>4</option>
+                                        <option value=5 <?php echo h($star) == '5'? 'selected' : '' ?>>5</option>
+                                    <?php endif;?>
+                                </select>
+                                </label>
+                            </div>
+                            <br>
+
                                 <div class="form_item"><p>Review Comment&nbsp;(in 400 words or less)</p></div>
-                                   <textarea name="review_comment" id="review_comment" cols="100" rows="6"></textarea>
+                                   <textarea name="review_comment" id="review_comment" cols="100" rows="6"><?php if(isset($review_comment)){echo h($review_comment);}?></textarea>
                                 <br>
                                 <input type="submit" value="Send" class="btn bg_green">
                             </form>

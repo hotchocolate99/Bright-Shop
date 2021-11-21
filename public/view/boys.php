@@ -45,6 +45,7 @@ if($_SESSION['shopping_cart']){
     }
   }
 
+  $test = getTest();
 ?>
 
 
@@ -75,6 +76,7 @@ if($_SESSION['shopping_cart']){
 
             <div class="typein">
                 <h1 class="form_title green">Boys</h1><br>
+                <?php var_dump($test);?>
                 <div class="product_info">
                     <?php $boys_all_products_ids = getAllProductsIdByGender(1);?>
                     <?php foreach($boys_all_products_ids as $boys_all_products_id):?>

@@ -1,3 +1,6 @@
+<?php
+$unRepliedInquiry = getUnrepliedInquiry(1);
+?>
 <!--header for pc-->
 <div class="header_pc">
 <header>
@@ -16,8 +19,10 @@
                 </ul>
                 </li>
                   <?php endif;?>
-                  <li class="badj"><a href="/manage/orders_list.php" class="blink_a"><span><i class="fas fa-stopwatch"></i>Orders List</span></a></li>
-                  <li class="badj"><a href="/manage/users_list.php" class="blink_a"><span><i class="fas fa-address-book"></i>Users List</span></a></li>
+                  <li class="badj"><a href="/manage/orders_list.php" class="blink_a"><span><i class="fas fa-stopwatch"></i>Orders</span></a></li>
+                  <li class="badj"><a href="/manage/users_list.php" class="blink_a"><span><i class="fas fa-address-book"></i>Users</span></a></li>
+                  <li class="badj"><a href="/manage/mng_inquiry.php" class="blink_a"><span><i class="fas fa-bell"></i>Message(<?php echo $unRepliedInquiry['COUNT(*)'];?>)</span></a></li>
+                  
                   <!--<li class="adj"><a href="/manage/send_info.php" class="link_a"><span>Send Info</span></a></li>-->
 
                 <?php if(empty($_SESSION['mgr'])):?>
